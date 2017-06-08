@@ -1,14 +1,25 @@
-gradle
-out
-*.class
-.idea
 .gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
 *.iml
-*.xml
-*.mp3
-*.csv
-*.jar
-application.properties
-gradle-app.setting
-!gradle-wrapper.jar
-.gradletasknamecache
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
