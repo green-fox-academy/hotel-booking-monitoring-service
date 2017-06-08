@@ -1,22 +1,18 @@
 package com.greenfox.kryptonite.projectx.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
 
 @Getter
 @Setter
-public class Response {
+public class Response extends Status{
 
   private String status;
   private String database;
 
   public Response(String status, String database) {
-    this.status = status;
+    super(status);
     this.database = database;
   }
 

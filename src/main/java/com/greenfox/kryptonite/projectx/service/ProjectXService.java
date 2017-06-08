@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProjectXService {
 
-  public Object databaseCheck(StatusRepository statusRepository) {
+  public Status databaseCheck(StatusRepository statusRepository) {
     if (statusRepository == null) {
       return new Status("ok");
     } else if(statusRepository.count() > 0) {
