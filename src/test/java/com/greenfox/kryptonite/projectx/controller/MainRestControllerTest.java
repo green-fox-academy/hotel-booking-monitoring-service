@@ -12,9 +12,11 @@ import com.greenfox.kryptonite.projectx.service.ProjectXService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -39,8 +41,10 @@ public class MainRestControllerTest {
           Charset.forName("utf8"));
 
   private MockMvc mockMvc;
-  private StatusRepository statusRepository;
-  ProjectXService service;
+  private StatusRepository statusRepositoryMock;
+  private ProjectXService service;
+  @MockBean
+  StatusRepository statusRepository;
 
 
   @Autowired
@@ -50,9 +54,8 @@ public class MainRestControllerTest {
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
-    this.statusRepository = Mockito.mock(StatusRepository.class);
+    this.statusRepositoryMock = Mockito.mock(StatusRepository.class);
     this.service = new ProjectXService();
-
   }
 
   @Test
@@ -65,13 +68,33 @@ public class MainRestControllerTest {
 
   @Test
   public void testResponseWhenNoElementInDatabase() throws Exception {
-    Mockito.when(statusRepository.count()).thenReturn(0L);
-    assertEquals(((Response) service.databaseCheck(statusRepository)).getDatabase(), "error");
+    Mockito.when(statusRepositoryMock.count()).thenReturn(0L);
+    assertEquals(((Response) service.databaseCheck(statusRepositoryMock)).getDatabase(), "error");
   }
 
   @Test
   public void testResponseWhenElementInDatabase() throws Exception {
-    Mockito.when(statusRepository.count()).thenReturn(3L);
-    assertEquals(((Response)service.databaseCheck(statusRepository)).getDatabase(), "ok");
+    Mockito.when(statusRepositoryMock.count()).thenReturn(3L);
+    assertEquals(((Response)service.databaseCheck(statusRepositoryMock)).getDatabase(), "ok");
+  }
+
+  @Test
+  public void testGetEndpointWithFilledDatabase() throws Exception {
+    BDDMockito.given(statusRepository.count()).willReturn(1l);
+    mockMvc.perform(get("/hearthbeat"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.status", is("ok")))
+            .andExpect(jsonPath("$.database", is("ok")));
+  }
+
+  @Test
+  public void testGetEndpointWithEmptyDatabase() throws Exception {
+    BDDMockito.given(statusRepository.count()).willReturn(0l);
+    mockMvc.perform(get("/hearthbeat"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.status", is("ok")))
+            .andExpect(jsonPath("$.database", is("error")));
   }
 }
