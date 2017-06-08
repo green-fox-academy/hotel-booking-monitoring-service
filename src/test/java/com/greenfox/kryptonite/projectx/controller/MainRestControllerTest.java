@@ -53,6 +53,6 @@ public class MainRestControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")))
-            .andExpect(jsonPath("$.database", is("error")));
+            .andExpect(jsonPath("$.database", is("ok")));
   }
 }
