@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Response extends Status{
-
-  private String status;
+  
   private String database;
 
   public Response(String status, String database) {
