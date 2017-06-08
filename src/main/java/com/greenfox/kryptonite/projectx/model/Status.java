@@ -7,14 +7,11 @@ import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-@Entity
+
 @Getter
 @Setter
 public class Status {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
   private String status;
   private String database;
 
