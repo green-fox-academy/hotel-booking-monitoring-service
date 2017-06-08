@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MainRestController {
 
   @Autowired
-  StatusRepository statusRepo;
+  private StatusRepository statusRepo;
 
   @RequestMapping(value = "/hearthbeat", method = RequestMethod.GET)
   public Status hearthBeat() {
@@ -21,9 +21,5 @@ public class MainRestController {
     } else {
       return new Status("ok", "error");
     }
-  }
-
-  public MainRestController(StatusRepository statusRepo) {
-    this.statusRepo = statusRepo;
   }
 }
