@@ -16,11 +16,11 @@ public class Status {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   private String status;
-  private String datebase;
+  private String database;
 
-  public Status(String status, String datebase) {
+  public Status(String status, String database) {
     this.status = status;
-    this.datebase = datebase;
+    this.database = database;
   }
 
   public Status() {
