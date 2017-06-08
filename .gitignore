@@ -1,0 +1,14 @@
+gradle
+out
+*.class
+.idea
+.gradle
+*.iml
+*.xml
+*.mp3
+*.csv
+*.jar
+application.properties
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
