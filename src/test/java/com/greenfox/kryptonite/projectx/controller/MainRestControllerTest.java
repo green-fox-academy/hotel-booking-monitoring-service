@@ -5,9 +5,11 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
+import com.greenfox.kryptonite.projectx.repository.StatusRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -35,8 +37,10 @@ public class MainRestControllerTest {
 
   private MockMvc mockMvc;
 
+
   @Autowired
   private WebApplicationContext webApplicationContext;
+
 
   @Before
   public void setup() throws Exception {
@@ -48,6 +52,7 @@ public class MainRestControllerTest {
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.status", is("ok")));
+            .andExpect(jsonPath("$.status", is("ok")))
+            .andExpect(jsonPath("$.database", is("error")));
   }
 }

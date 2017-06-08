@@ -22,4 +22,8 @@ public class MainRestController {
       return new Status("ok", "error");
     }
   }
+
+  public MainRestController(StatusRepository statusRepo) {
+    this.statusRepo = statusRepo;
+  }
 }
