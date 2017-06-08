@@ -45,7 +45,7 @@ public class MainRestControllerTest {
 
   @Test
   public void testGetEndpoint() throws Exception {
-    mockMvc.perform(post("/heathbeat"))
+    mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")));
