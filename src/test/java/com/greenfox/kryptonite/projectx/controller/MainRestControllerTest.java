@@ -1,11 +1,14 @@
 package com.greenfox.kryptonite.projectx.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
+import com.greenfox.kryptonite.projectx.model.Response;
 import com.greenfox.kryptonite.projectx.repository.StatusRepository;
+import com.greenfox.kryptonite.projectx.service.ProjectXService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +39,8 @@ public class MainRestControllerTest {
           Charset.forName("utf8"));
 
   private MockMvc mockMvc;
+  private StatusRepository statusRepository;
+  ProjectXService service;
 
 
   @Autowired
@@ -45,6 +50,9 @@ public class MainRestControllerTest {
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
+    this.statusRepository = Mockito.mock(StatusRepository.class);
+    this.service = new ProjectXService();
+
   }
 
   @Test
@@ -52,8 +60,18 @@ public class MainRestControllerTest {
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.status", is("ok")))
-            .andExpect(jsonPath("$.database", is("ok")));
+            .andExpect(jsonPath("$.status", is("ok")));
+  }
 
+  @Test
+  public void testResponseWhenNoElementInDatabase() throws Exception {
+    Mockito.when(statusRepository.count()).thenReturn(0L);
+    assertEquals(((Response) service.databaseCheck(statusRepository)).getDatabase(), "error");
+  }
+
+  @Test
+  public void testResponseWhenElementInDatabase() throws Exception {
+    Mockito.when(statusRepository.count()).thenReturn(3L);
+    assertEquals(((Response)service.databaseCheck(statusRepository)).getDatabase(), "ok");
   }
 }
