@@ -15,6 +15,7 @@ public class MainRestController {
 
   @RequestMapping(value = "/hearthbeat", method = RequestMethod.GET)
   public Status hearthBeat() {
+    System.out.println("Hello kriptonite!");
     if(statusRepo.count() > 0) {
       return new Status("ok", "ok");
     } else {
