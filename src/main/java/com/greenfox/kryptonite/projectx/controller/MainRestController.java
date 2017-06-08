@@ -1,6 +1,5 @@
 package com.greenfox.kryptonite.projectx.controller;
 
-import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.StatusRepository;
 import com.greenfox.kryptonite.projectx.service.ProjectXService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ public class MainRestController {
   private ProjectXService projectXService;
 
   @RequestMapping(value = "/hearthbeat", method = RequestMethod.GET)
-  public Status hearthBeat() {
+  public Object hearthBeat() {
     return projectXService.databaseCheck(statusRepo);
   }
 }
