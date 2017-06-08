@@ -52,7 +52,24 @@ public class MainRestControllerTest {
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.status", is("ok")))
-            .andExpect(jsonPath("$.database", is("error")));
+            .andExpect(jsonPath("$.status", is("ok")));
+  }
+
+  @Test
+  public void testResponsWhenNoElementInDatabse() throws Exception {
+    StatusRepository statusRepository = Mockito.mock(StatusRepository.class);
+    Mockito.when(statusRepository.count()).thenReturn(0L);
+
+    ProjectXService service = new ProjectXService();
+    assertEquals(service.databaseCheck(statusRepository).getDatabase(), "error");
+  }
+
+  @Test
+  public void testResponsWhenNoElementInDatabse() throws Exception {
+    StatusRepository statusRepository = Mockito.mock(StatusRepository.class);
+    Mockito.when(statusRepository.count()).thenReturn(1L);
+
+    ProjectXService service = new ProjectXService();
+    assertEquals(service.databaseCheck(statusRepository).getDatabase(), "ok");
   }
 }
