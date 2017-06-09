@@ -1,1 +1,1 @@
-ALTER TABLE hearthbeat add id (id bigint )
+ALTER TABLE hearthbeat ADD id BIGINT AUTO_INCREMENT PRIMARY KEY;
