@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import com.greenfox.kryptonite.projectx.repository.HearthbeatRepository;
+
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
@@ -75,7 +76,7 @@ public class MainRestControllerTest {
   @Test
   public void testResponseWhenElementInDatabase() throws Exception {
     Mockito.when(hearthbeatRepositoryMock.count()).thenReturn(3L);
-    assertEquals(((Response)service.databaseCheck(hearthbeatRepositoryMock)).getDatabase(), "ok");
+    assertEquals(((Response) service.databaseCheck(hearthbeatRepositoryMock)).getDatabase(), "ok");
   }
 
   @Test
