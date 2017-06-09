@@ -1,2 +1,4 @@
 CREATE TABLE hearthbeat (status bit PRIMARY KEY);
 
+ALTER TABLE hearthbeat ADD id BIGINT AUTO_INCREMENT PRIMARY KEY;
+
