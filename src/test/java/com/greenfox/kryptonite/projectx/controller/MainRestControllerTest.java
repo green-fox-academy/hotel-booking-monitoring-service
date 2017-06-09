@@ -80,7 +80,7 @@ public class MainRestControllerTest {
 
   @Test
   public void testGetEndpointWithFilledDatabase() throws Exception {
-    BDDMockito.given(statusRepository.count()).willReturn(1l);
+    BDDMockito.given(statusRepository.count()).willReturn(1L);
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
@@ -90,7 +90,7 @@ public class MainRestControllerTest {
 
   @Test
   public void testGetEndpointWithEmptyDatabase() throws Exception {
-    BDDMockito.given(statusRepository.count()).willReturn(0l);
+    BDDMockito.given(statusRepository.count()).willReturn(0L);
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
