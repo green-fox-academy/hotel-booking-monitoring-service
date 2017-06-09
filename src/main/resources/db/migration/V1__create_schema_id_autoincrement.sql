@@ -1,4 +1,2 @@
-CREATE TABLE hearthbeat (status boolean PRIMARY KEY);
-
-ALTER TABLE hearthbeat ADD id BIGINT AUTO_INCREMENT PRIMARY KEY;
+CREATE TABLE hearthbeat (status bit PRIMARY KEY);
 
