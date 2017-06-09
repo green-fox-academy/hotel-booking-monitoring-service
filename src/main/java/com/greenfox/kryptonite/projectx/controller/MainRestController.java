@@ -18,8 +18,6 @@ public class MainRestController {
   private ProjectXService projectXService;
 
   @RequestMapping(value = "/hearthbeat", method = RequestMethod.GET)
-//  public Status hearthBeat() {
-//    return projectXService.databaseCheck(statusRepo);
   public Status hearthbeat() {
     return projectXService.databaseCheck(hearthbeatRepository);
   }
