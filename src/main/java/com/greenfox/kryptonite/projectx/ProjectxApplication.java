@@ -8,14 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ProjectxApplication {
 
   public static void main(String[] args) {
-
     SpringApplication.run(ProjectxApplication.class, args);
-
-    Flyway flyway = new Flyway();
-    flyway.setDataSource(System.getenv("JDBC_DATABASE_URL"),
-        System.getenv("JDBC_DATABASE_USERNAME"),
-        System.getenv("JDBC_DATABASE_PASSWORD"));
-    flyway.migrate();
   }
 }
 
