@@ -1,0 +1,1 @@
+ALTER TABLE hearthbeat add id (id bigint )
