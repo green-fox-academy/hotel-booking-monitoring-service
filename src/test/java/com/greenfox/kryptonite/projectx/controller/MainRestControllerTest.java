@@ -3,11 +3,11 @@ package com.greenfox.kryptonite.projectx.controller;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.greenfox.kryptonite.projectx.repository.HearthbeatRepository;
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import com.greenfox.kryptonite.projectx.model.Response;
-import com.greenfox.kryptonite.projectx.repository.StatusRepository;
 import com.greenfox.kryptonite.projectx.service.ProjectXService;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,10 +41,10 @@ public class MainRestControllerTest {
           Charset.forName("utf8"));
 
   private MockMvc mockMvc;
-  private StatusRepository statusRepositoryMock;
+  private HearthbeatRepository hearthbeatRepositoryMock;
   private ProjectXService service;
   @MockBean
-  StatusRepository statusRepository;
+  HearthbeatRepository hearthbeatRepository;
 
 
   @Autowired
@@ -54,7 +54,7 @@ public class MainRestControllerTest {
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
-    this.statusRepositoryMock = Mockito.mock(StatusRepository.class);
+    this.hearthbeatRepositoryMock = Mockito.mock(HearthbeatRepository.class);
     this.service = new ProjectXService();
   }
 
@@ -68,19 +68,19 @@ public class MainRestControllerTest {
 
   @Test
   public void testResponseWhenNoElementInDatabase() throws Exception {
-    Mockito.when(statusRepositoryMock.count()).thenReturn(0L);
-    assertEquals(((Response) service.databaseCheck(statusRepositoryMock)).getDatabase(), "error");
+    Mockito.when(hearthbeatRepositoryMock.count()).thenReturn(0L);
+    assertEquals(((Response) service.databaseCheck(hearthbeatRepositoryMock)).getDatabase(), "error");
   }
 
   @Test
   public void testResponseWhenElementInDatabase() throws Exception {
-    Mockito.when(statusRepositoryMock.count()).thenReturn(3L);
-    assertEquals(((Response)service.databaseCheck(statusRepositoryMock)).getDatabase(), "ok");
+    Mockito.when(hearthbeatRepositoryMock.count()).thenReturn(3L);
+    assertEquals(((Response)service.databaseCheck(hearthbeatRepositoryMock)).getDatabase(), "ok");
   }
 
   @Test
   public void testGetEndpointWithFilledDatabase() throws Exception {
-    BDDMockito.given(statusRepository.count()).willReturn(1l);
+    BDDMockito.given(hearthbeatRepository.count()).willReturn(1l);
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
@@ -90,7 +90,7 @@ public class MainRestControllerTest {
 
   @Test
   public void testGetEndpointWithEmptyDatabase() throws Exception {
-    BDDMockito.given(statusRepository.count()).willReturn(0l);
+    BDDMockito.given(hearthbeatRepository.count()).willReturn(0l);
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
