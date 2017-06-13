@@ -61,7 +61,7 @@ public class MainRestControllerTest {
 
   @Test
   public void testGetEndpoint() throws Exception {
-    mockMvc.perform(get("/hearthbeat"))
+    mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")));
@@ -82,7 +82,7 @@ public class MainRestControllerTest {
   @Test
   public void testGetEndpointWithFilledDatabase() throws Exception {
     BDDMockito.given(heartbeatRepository.count()).willReturn(1L);
-    mockMvc.perform(get("/hearthbeat"))
+    mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")))
@@ -92,7 +92,7 @@ public class MainRestControllerTest {
   @Test
   public void testGetEndpointWithEmptyDatabase() throws Exception {
     BDDMockito.given(heartbeatRepository.count()).willReturn(0L);
-    mockMvc.perform(get("/hearthbeat"))
+    mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")))
