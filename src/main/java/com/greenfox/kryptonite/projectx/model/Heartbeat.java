@@ -10,12 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Hearthbeat {
+public class Heartbeat {
 
   @Id
   boolean status;
 
-  public Hearthbeat(boolean status) {
+  public Heartbeat(boolean status) {
     this.status = status;
   }
 }
