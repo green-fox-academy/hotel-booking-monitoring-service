@@ -27,6 +27,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile("org.flywaydb:flyway-core:4.2.0")
+	testCompile group: 'com.h2database', name: 'h2', version: '1.4.195'
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('org.postgresql:postgresql')
 	compileOnly('org.projectlombok:lombok')
