@@ -19,7 +19,6 @@ public class MainRestController {
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public Status hearthbeat() {
-    System.out.println("endpoint loaded");
     return projectXService.databaseCheck(heartbeatRepository);
   }
 }
