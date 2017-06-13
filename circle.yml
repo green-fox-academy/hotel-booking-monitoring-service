@@ -1,0 +1,6 @@
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: greenfox-kryptonite
+               Open app More
