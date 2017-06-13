@@ -1,2 +1,2 @@
-ALTER TABLE hearthbeat
+ALTER TABLE heartbeat
   ADD COLUMN id INT NOT NULL;
