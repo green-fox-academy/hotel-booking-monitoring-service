@@ -1,2 +1,3 @@
-ALTER TABLE heartbeat
-	ADD COLUMN id INT NOT NULL;
+ALTER TABLE heartbeat ADD COLUMN id INT NOT NULL;
+ALTER TABLE heartbeat DROP CONSTRAINT heartbeat_pkey;
+ALTER TABLE heartbeat ADD PRIMARY KEY (id);
