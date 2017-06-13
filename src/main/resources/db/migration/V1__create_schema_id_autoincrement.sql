@@ -1,1 +1,1 @@
-CREATE TABLE heartbeat (status bit PRIMARY KEY);
+CREATE TABLE heartbeat (status bit NOT NULL, PRIMARY KEY (status))
