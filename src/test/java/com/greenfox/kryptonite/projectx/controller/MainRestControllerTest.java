@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import com.greenfox.kryptonite.projectx.model.Response;
+import com.greenfox.kryptonite.projectx.service.LogService;
 import com.greenfox.kryptonite.projectx.service.ProjectXService;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,6 +48,7 @@ public class MainRestControllerTest {
   private HeartbeatRepository heartbeatRepositoryMock;
   private ProjectXService service;
   private HeartbeatRepository nullRepo;
+  private LogService logging;
   @MockBean
   HeartbeatRepository heartbeatRepository;
 
@@ -60,6 +62,7 @@ public class MainRestControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new ProjectXService();
+    this.logging = new LogService();
   }
 
   @Test
@@ -105,5 +108,25 @@ public class MainRestControllerTest {
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")))
             .andExpect(jsonPath("$.database", is("error")));
+  }
+
+  @Test
+  public void testInfoLogging() {
+    assertEquals(logging.info("message"), 400);
+  }
+
+  @Test
+  public void testDebugLogging() {
+    assertEquals(logging.debug("message"), 500);
+  }
+
+  @Test
+  public void testWarnLogging() {
+    assertEquals(logging.warn("message"), 300);
+  }
+
+  @Test
+  public void testErrorLogging() {
+    assertEquals(logging.error("message"), 200);
   }
 }
