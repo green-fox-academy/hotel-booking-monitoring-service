@@ -5,36 +5,22 @@ import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-
 @Service
 public class ProjectXService {
+  private LogService logging = new LogService();
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) {
     if (heartbeatRepository == null) {
-      logMessages(heartbeatRepository);
-      return new Status("ok");
+      logging.error("Database not presented.");
+      logging.debug("Database may not exist. Check database connection or existence.");
+      return new Status ("ok");
     } else if(heartbeatRepository.count() > 0) {
-      logMessages(heartbeatRepository);
+      logging.info("Database connection is ok and contains " + heartbeatRepository.count() +  " element(s).");
       return new Response("ok", "ok");
     } else {
-      logMessages(heartbeatRepository);
+      logging.info("Database connection is ok.");
+      logging.warn("Database is empty.");
       return new Response("ok", "error");
-    }
-  }
-
-  public void logMessages(HeartbeatRepository heartbeatRepository) {
-    String date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
-    if (heartbeatRepository == null) {
-      System.err.println("ERROR " + date + " greenfox-kryptonite.herokuapp.com " + "Database not presented.");
-      System.out.println("DEBUG " + date + " greenfox-kryptonite.herokuapp.com " + "Database may not exist. Check database connection or existence.");
-    } else if(heartbeatRepository.count() > 0) {
-      System.out.println("INFO " + date + " greenfox-kryptonite.herokuapp.com " + "Database connection is ok and contains " + heartbeatRepository.count() +  " element(s).");
-    } else {
-      System.out.println("INFO " + date + " greenfox-kryptonite.herokuapp.com " + "Database connection is ok.");
-      System.out.println("WARN " + date + " greenfox-kryptonite.herokuapp.com " + "Database is empty.");
     }
   }
 }
