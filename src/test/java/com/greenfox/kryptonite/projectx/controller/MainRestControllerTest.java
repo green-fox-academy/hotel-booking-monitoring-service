@@ -114,8 +114,8 @@ public class MainRestControllerTest {
 
   @Test
   public void testRabbitMQ() throws Exception{
-    send.consume();
     send.send();
+    send.consume();
     assertEquals(1,1);
   }
 }
