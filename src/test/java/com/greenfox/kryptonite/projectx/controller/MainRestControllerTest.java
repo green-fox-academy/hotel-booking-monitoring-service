@@ -32,7 +32,6 @@ import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ProjectxApplication.class)
 @WebAppConfiguration
@@ -108,25 +107,5 @@ public class MainRestControllerTest {
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")))
             .andExpect(jsonPath("$.database", is("error")));
-  }
-
-  @Test
-  public void testInfoLogging() {
-    assertEquals(logging.info("message"), 400);
-  }
-
-  @Test
-  public void testDebugLogging() {
-    assertEquals(logging.debug("message"), 500);
-  }
-
-  @Test
-  public void testWarnLogging() {
-    assertEquals(logging.warn("message"), 300);
-  }
-
-  @Test
-  public void testErrorLogging() {
-    assertEquals(logging.error("message"), 200);
   }
 }
