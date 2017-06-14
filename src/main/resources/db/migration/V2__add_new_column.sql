@@ -1,1 +1,1 @@
-ALTER TABLE heartbeat ADD COLUMN id INT;
+ALTER TABLE heartbeat ADD COLUMN id INT(50);
