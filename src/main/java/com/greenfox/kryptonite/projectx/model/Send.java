@@ -30,6 +30,8 @@ public class Send {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
+    factory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
+    factory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
     factory.setHost(rabbitMqUrl.getHost());
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
