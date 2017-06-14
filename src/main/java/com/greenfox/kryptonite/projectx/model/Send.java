@@ -1,8 +1,9 @@
 package com.greenfox.kryptonite.projectx.model;
 
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
+
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
