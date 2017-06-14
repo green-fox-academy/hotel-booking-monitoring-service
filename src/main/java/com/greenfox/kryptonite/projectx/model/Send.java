@@ -3,7 +3,9 @@ package com.greenfox.kryptonite.projectx.model;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class Send {
   private final static String QUEUE_NAME = "kryptonite";
 

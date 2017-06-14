@@ -1,5 +1,6 @@
 package com.greenfox.kryptonite.projectx.controller;
 
+import com.greenfox.kryptonite.projectx.model.Send;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.ProjectXService;
@@ -18,7 +19,9 @@ public class MainRestController {
   private ProjectXService projectXService;
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
-  public Status heartbeat() {
+  public Status heartbeat() throws Exception {
+    Send send = new Send();
+    send.send();
     return projectXService.databaseCheck(heartbeatRepository);
   }
 }
