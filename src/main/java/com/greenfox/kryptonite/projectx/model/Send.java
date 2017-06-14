@@ -1,20 +1,33 @@
 package com.greenfox.kryptonite.projectx.model;
 
-
-
-import com.rabbitmq.client.*;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import lombok.NoArgsConstructor;
 
-import java.io.IOException;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @NoArgsConstructor
 public class Send {
-  private final static String RABBITMQ_BIGWIG_URL = "localhost:8080";
+
+  private URI rabbitMqUrl;
   private final static String QUEUE_NAME = "kryptonite";
 
   public void send() throws Exception {
+
+    try {
+      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_TX_URL"));
+    } catch(URISyntaxException e) {
+      e.getStackTrace();
+    }
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost(RABBITMQ_BIGWIG_URL);
+    factory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
+    factory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
+    factory.setHost(rabbitMqUrl.getHost());
+    factory.setPort(rabbitMqUrl.getPort());
+    factory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
