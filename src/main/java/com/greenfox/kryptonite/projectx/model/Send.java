@@ -33,6 +33,8 @@ public class Send {
     factory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
     factory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
     factory.setHost(rabbitMqUrl.getHost());
+    factory.setPort(rabbitMqUrl.getPort());
+    factory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
