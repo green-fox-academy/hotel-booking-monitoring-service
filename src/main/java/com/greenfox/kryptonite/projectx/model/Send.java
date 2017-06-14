@@ -2,14 +2,14 @@ package com.greenfox.kryptonite.projectx.model;
 
 
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.*;
 import lombok.NoArgsConstructor;
+
+import java.io.IOException;
 
 @NoArgsConstructor
 public class Send {
-  private final static String RABBITMQ_BIGWIG_URL = "amqp://A2QgDdOK:CBmV0Zq2u_LMTICJqZ6s6_aNB1Nf4vP7@hiding-pimpernel-1.bigwig.lshift.net:10172/hDF3M3K6psPl";
+  private final static String RABBITMQ_BIGWIG_URL = "localhost:8080";
   private final static String QUEUE_NAME = "kryptonite";
 
   public void send() throws Exception {
@@ -27,4 +27,23 @@ public class Send {
     connection.close();
   }
 
+  public void consume() throws Exception {
+    ConnectionFactory factory = new ConnectionFactory();
+    factory.setHost(RABBITMQ_BIGWIG_URL);
+    Connection connection = factory.newConnection();
+    Channel channel = connection.createChannel();
+
+    channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+
+    Consumer consumer = new DefaultConsumer(channel) {
+      @Override
+      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+              throws IOException {
+        String message = new String(body, "UTF-8");
+        System.out.println(" [x] Received '" + message + "'");
+      }
+    };
+    channel.basicConsume(QUEUE_NAME, true, consumer);
+  }
 }

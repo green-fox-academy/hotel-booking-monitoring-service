@@ -3,6 +3,7 @@ package com.greenfox.kryptonite.projectx.controller;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.greenfox.kryptonite.projectx.model.Send;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
 import java.nio.charset.Charset;
@@ -48,6 +49,7 @@ public class MainRestControllerTest {
   private ProjectXService service;
   private HeartbeatRepository nullRepo;
   private LogService logging;
+  private Send send;
   @MockBean
   HeartbeatRepository heartbeatRepository;
 
@@ -62,6 +64,7 @@ public class MainRestControllerTest {
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new ProjectXService();
     this.logging = new LogService();
+    this.send = new Send();
   }
 
   @Test
@@ -107,5 +110,12 @@ public class MainRestControllerTest {
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")))
             .andExpect(jsonPath("$.database", is("error")));
+  }
+
+  @Test
+  public void testRabbitMQ() throws Exception{
+    send.consume();
+    send.send();
+    assertEquals(1,1);
   }
 }
