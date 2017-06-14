@@ -13,7 +13,7 @@ public class Send {
 
   public void send() throws Exception {
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost("https://greenfox-kryptonite.herokuapp.com/");
+    factory.setHost("https://greenfox-kryptonite.herokuapp.com");
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
