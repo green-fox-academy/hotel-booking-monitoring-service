@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public class Send {
+  private final static String RABBITMQ_BIGWIG_URL = "amqp://A2QgDdOK:CBmV0Zq2u_LMTICJqZ6s6_aNB1Nf4vP7@hiding-pimpernel-1.bigwig.lshift.net:10172/hDF3M3K6psPl";
   private final static String QUEUE_NAME = "kryptonite";
 
   public void send() throws Exception {
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setHost("https://greenfox-kryptonite.herokuapp.com");
+    factory.setHost(RABBITMQ_BIGWIG_URL);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
