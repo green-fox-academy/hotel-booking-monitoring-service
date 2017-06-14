@@ -12,7 +12,7 @@ public class LogServiceTest {
   public void setup() throws Exception {
 //    this.logging = new LogService();
   }
-  
+
 
 //  @Test
 //  public void testInfoLogging() {

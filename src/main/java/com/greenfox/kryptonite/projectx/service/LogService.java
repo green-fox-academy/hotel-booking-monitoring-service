@@ -1,9 +1,22 @@
 package com.greenfox.kryptonite.projectx.service;
 
+import com.greenfox.kryptonite.projectx.model.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogService {
+
+  public void log(String type, String message) {
+    if (type.equals("DEBUG")){
+      System.out.println(new Log(type,message,500));
+    } else if (type.equals("INFO")) {
+      System.out.println(new Log(type,message,400));
+    } else if (type.equals("WARN")) {
+      System.out.println(new Log(type,message,300));
+    } else if (type.equals("ERROR")) {
+      System.out.println(new Log(type,message,200));
+    }
+  }
 
 
 //  public int debug(String message) {
