@@ -25,6 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import javax.validation.constraints.Null;
+
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -44,6 +46,7 @@ public class MainRestControllerTest {
   private MockMvc mockMvc;
   private HeartbeatRepository heartbeatRepositoryMock;
   private ProjectXService service;
+  private HeartbeatRepository nullRepo;
   @MockBean
   HeartbeatRepository heartbeatRepository;
 
@@ -65,6 +68,11 @@ public class MainRestControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status", is("ok")));
+  }
+
+  @Test
+  public void testResponseWhenDatabaseIsNull() throws Exception {
+    assertEquals((service.databaseCheck(nullRepo)).getStatus(), "ok");
   }
 
   @Test

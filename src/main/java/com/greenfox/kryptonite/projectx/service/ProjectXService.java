@@ -3,14 +3,14 @@ package com.greenfox.kryptonite.projectx.service;
 import com.greenfox.kryptonite.projectx.model.Response;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @Service
 public class ProjectXService {
-  private final Logger logger = LogManager.getLogger(ProjectXService.class);
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) {
     if (heartbeatRepository == null) {
@@ -26,14 +26,15 @@ public class ProjectXService {
   }
 
   public void logMessages(HeartbeatRepository heartbeatRepository) {
+    String date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
     if (heartbeatRepository == null) {
-      System.err.println("ERROR greenfox-kryptonite.herokuapp.com " + "Database not presented.");
-      System.out.println("DEBUG greenfox-kryptonite.herokuapp.com " + "Database may not exist. Check database connection or existence.");
+      System.err.println("ERROR " + date + " greenfox-kryptonite.herokuapp.com " + "Database not presented.");
+      System.out.println("DEBUG " + date + " greenfox-kryptonite.herokuapp.com " + "Database may not exist. Check database connection or existence.");
     } else if(heartbeatRepository.count() > 0) {
-      System.out.println("INFO greenfox-kryptonite.herokuapp.com " + "Database connection is ok and contains " + heartbeatRepository.count() +  " element(s).");
+      System.out.println("INFO " + date + " greenfox-kryptonite.herokuapp.com " + "Database connection is ok and contains " + heartbeatRepository.count() +  " element(s).");
     } else {
-      System.out.println("INFO greenfox-kryptonite.herokuapp.com " + "Database connection is ok.");
-      System.out.println("WARN greenfox-kryptonite.herokuapp.com " + "Database is empty.");
+      System.out.println("INFO " + date + " greenfox-kryptonite.herokuapp.com " + "Database connection is ok.");
+      System.out.println("WARN " + date + " greenfox-kryptonite.herokuapp.com " + "Database is empty.");
     }
   }
 }
