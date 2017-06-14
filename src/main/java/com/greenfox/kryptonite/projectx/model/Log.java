@@ -3,10 +3,12 @@ package com.greenfox.kryptonite.projectx.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class Log {
   private String type;
   private String date;

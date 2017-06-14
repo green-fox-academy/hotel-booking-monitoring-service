@@ -6,16 +6,22 @@ import java.util.Date;
 
 public class LogService {
 
-  public void log(String type, String message) {
+  public int log(String type, String message) {
+    Log log;
+
     if (type.equals("DEBUG")){
-      System.out.println(new Log(type,message,500));
+      log = new Log(type,message,500);
     } else if (type.equals("INFO")) {
-      System.out.println(new Log(type,message,400));
+      log = new Log(type,message,400);
     } else if (type.equals("WARN")) {
-      System.out.println(new Log(type,message,300));
+      log = new Log(type,message,300);
     } else if (type.equals("ERROR")) {
-      System.out.println(new Log(type,message,200));
+      log = new Log(type,message,200);
+    } else {
+      log = new Log();
     }
+    System.out.println(log);
+    return log.getReturnValue();
   }
 
 
