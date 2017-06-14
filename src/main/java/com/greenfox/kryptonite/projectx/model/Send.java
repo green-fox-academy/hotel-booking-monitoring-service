@@ -21,7 +21,7 @@ public class Send {
   public void send() throws Exception {
 
     try {
-      rabbitMqUrl = new URI(System.getenv("amqp://A2QgDdOK:CBmV0Zq2u_LMTICJqZ6s6_aNB1Nf4vP7@hiding-pimpernel-1.bigwig.lshift.net:10172/hDF3M3K6psPl"));
+      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_TX_URL"));
     } catch(URISyntaxException e) {
       e.getStackTrace();
     }
@@ -45,7 +45,7 @@ public class Send {
 
   public void consume() throws Exception {
     try {
-      rabbitMqUrl = new URI(System.getenv("amqp://A2QgDdOK:CBmV0Zq2u_LMTICJqZ6s6_aNB1Nf4vP7@hiding-pimpernel-1.bigwig.lshift.net:10172/hDF3M3K6psPl"));
+      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_TX_URL"));
     } catch(URISyntaxException e) {
       e.getStackTrace();
     }
