@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainRestController {
 
+  Send send = new Send();
+
   @Autowired
   private HeartbeatRepository heartbeatRepository;
 
@@ -20,7 +22,6 @@ public class MainRestController {
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public Status heartbeat() throws Exception {
-    Send send = new Send();
     send.send();
     return projectXService.databaseCheck(heartbeatRepository);
   }
