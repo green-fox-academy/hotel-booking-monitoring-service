@@ -1,0 +1,1 @@
+ALTER TABLE heartbeat ADD COLUMN id INT;
