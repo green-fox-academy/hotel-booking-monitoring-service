@@ -30,5 +30,6 @@ dependencies {
 	runtime('org.springframework.boot:spring-boot-devtools')
 	runtime('org.postgresql:postgresql')
 	compileOnly('org.projectlombok:lombok')
+	compile group: 'com.rabbitmq', name: 'amqp-client', version: '4.1.1'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
