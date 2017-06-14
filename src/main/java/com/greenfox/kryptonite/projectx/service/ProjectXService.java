@@ -11,7 +11,7 @@ public class ProjectXService {
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) {
     if (heartbeatRepository == null) {
-      System.out.println(new Log("ERROR","Database not present.", 200));
+      System.err.println(new Log("ERROR","Database not present.", 200));
       System.out.println(new Log("DEBUG", "Database may not exist. Check database connection or existence.", 500));
       return new Status ("ok");
     } else if(heartbeatRepository.count() > 0) {
@@ -19,7 +19,7 @@ public class ProjectXService {
       return new Response("ok", "ok");
     } else {
       System.out.println(new Log("INFO","Database connection is ok.", 400));
-      System.out.println(new Log("WARN","Database is empty.", 500));
+      System.err.println(new Log("WARN","Database is empty.", 500));
       return new Response("ok", "error");
     }
   }
