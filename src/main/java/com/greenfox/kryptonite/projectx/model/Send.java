@@ -19,7 +19,6 @@ public class Send {
   private final static String QUEUE_NAME = "kryptonite";
 
   public void send() throws Exception {
-
     try {
       rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_TX_URL"));
     } catch(URISyntaxException e) {
