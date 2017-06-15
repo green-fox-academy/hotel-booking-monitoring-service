@@ -10,6 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Log {
+
   private String type;
   private String date;
   private final String appName = "greenfox-kryptonite.herokuapp.com";

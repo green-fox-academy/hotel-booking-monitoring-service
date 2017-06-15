@@ -1,6 +1,7 @@
 package com.greenfox.kryptonite.projectx.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import com.greenfox.kryptonite.projectx.model.Send;
@@ -41,9 +42,10 @@ public class MainRestControllerTest {
 
 
   private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-          MediaType.APPLICATION_JSON.getSubtype(),
-          Charset.forName("utf8"));
+      MediaType.APPLICATION_JSON.getSubtype(),
+      Charset.forName("utf8"));
 
+  private boolean isItWorking = true;
   private MockMvc mockMvc;
   private HeartbeatRepository heartbeatRepositoryMock;
   private ProjectXService service;
@@ -70,9 +72,9 @@ public class MainRestControllerTest {
   @Test
   public void testGetEndpoint() throws Exception {
     mockMvc.perform(get("/heartbeat"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.status", is("ok")));
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.status", is("ok")));
   }
 
   @Test
@@ -83,7 +85,8 @@ public class MainRestControllerTest {
   @Test
   public void testResponseWhenNoElementInDatabase() throws Exception {
     Mockito.when(heartbeatRepositoryMock.count()).thenReturn(0L);
-    assertEquals(((Response) service.databaseCheck(heartbeatRepositoryMock)).getDatabase(), "error");
+    assertEquals(((Response) service.databaseCheck(heartbeatRepositoryMock)).getDatabase(),
+        "error");
   }
 
   @Test
@@ -96,26 +99,26 @@ public class MainRestControllerTest {
   public void testGetEndpointWithFilledDatabase() throws Exception {
     BDDMockito.given(heartbeatRepository.count()).willReturn(1L);
     mockMvc.perform(get("/heartbeat"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.status", is("ok")))
-            .andExpect(jsonPath("$.database", is("ok")));
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.status", is("ok")))
+        .andExpect(jsonPath("$.database", is("ok")));
   }
 
   @Test
   public void testGetEndpointWithEmptyDatabase() throws Exception {
     BDDMockito.given(heartbeatRepository.count()).willReturn(0L);
     mockMvc.perform(get("/heartbeat"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.status", is("ok")))
-            .andExpect(jsonPath("$.database", is("error")));
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.status", is("ok")))
+        .andExpect(jsonPath("$.database", is("error")));
   }
 
   @Test
-  public void testRabbitMQ() throws Exception{
+  public void testRabbitMQ() throws Exception {
     send.send();
     send.consume();
-    assertEquals(1,1);
+    assertTrue(isItWorking);
   }
 }

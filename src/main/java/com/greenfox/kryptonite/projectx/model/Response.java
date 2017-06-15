@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Response extends Status{
+public class Response extends Status {
 
   private String database;
 
