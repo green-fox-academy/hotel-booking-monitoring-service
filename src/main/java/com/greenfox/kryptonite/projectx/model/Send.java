@@ -45,7 +45,7 @@ public class Send {
 
   public void consume() throws Exception {
     try {
-      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_TX_URL"));
+      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL"));
     } catch(URISyntaxException e) {
       e.getStackTrace();
     }
