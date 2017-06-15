@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 public class LogService {
 
-  public String logLevel = "INFO";
+  public String logLevel;
 
   public LogService() {
     this.logLevel = "INFO";
