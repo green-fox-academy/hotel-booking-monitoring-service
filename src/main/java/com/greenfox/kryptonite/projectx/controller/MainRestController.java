@@ -22,11 +22,8 @@ public class MainRestController {
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public Status heartbeat() throws Exception {
-    System.out.println("let's send");
     send.send();
-    System.out.println("let's consume");
     send.consume();
-    System.out.println("let's return");
     return projectXService.databaseCheck(heartbeatRepository);
   }
 }
