@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HeartbeatRepository extends CrudRepository<Heartbeat,Boolean> {
+public interface HeartbeatRepository extends CrudRepository<Heartbeat, Boolean> {
 
 }
