@@ -8,18 +8,19 @@ import lombok.NoArgsConstructor;
 
 public class LogService {
 
+
   public String logLevel;
 
   public LogService() {
     this.logLevel = "INFO";
   }
 
-  public int log(String type, String message) {
+  public Log log(String type, String message) {
     Log log = createLog(type,message);
     if (checkLogLevel(log)) {
       selectPrintln(log);
     }
-    return log.getReturnValue();
+    return log;
   }
 
   private Log createLog(String type, String message) {
