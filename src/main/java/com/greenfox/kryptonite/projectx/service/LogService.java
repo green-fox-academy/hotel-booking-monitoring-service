@@ -1,15 +1,22 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Log;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class LogService {
 
-  public int log(String type, String message) {
-    Log log = createLog(type, message);
-    selectPrintln(log);
-    return log.getReturnValue();
+  private String logLevel;
+
+  public LogService() {
+    this.logLevel = "INFO";
+  }
+
+  public Log log(String type, String message) {
+    Log log = createLog(type,message);
+    checkLogLevel();
+    if (isLogLevelOk(log)) {
+      selectPrintln(log);
+    }
+    return log;
   }
 
   private Log createLog(String type, String message) {
@@ -34,4 +41,23 @@ public class LogService {
     }
   }
 
+  private void checkLogLevel() {
+    logLevel = System.getenv("LOGLEVEL");
+    if (logLevel == null) {
+      System.err.println("Log level is not set. Logging on default level: INFO");
+      logLevel = "INFO";
+    }
+  }
+
+  private boolean isLogLevelOk(Log log) {
+    if (logLevel.equals("DEBUG")) {
+      return true;
+    } else if (logLevel.equals("WARN")) {
+      return (log.getReturnValue() <= 300);
+    } else if (logLevel.equals("ERROR")) {
+      return (log.getReturnValue() == 200);
+    } else {
+      return (log.getReturnValue() <= 400);
+    }
+  }
 }

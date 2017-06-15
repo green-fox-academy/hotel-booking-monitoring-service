@@ -17,22 +17,22 @@ public class LogServiceTest {
 
   @Test
   public void testDebugLogging() {
-    assertEquals(logging.log("DEBUG", "message"), 500);
+    assertEquals(logging.log("DEBUG","message").getReturnValue(), 500);
   }
 
   @Test
   public void testInfoLogging() {
-    assertEquals(logging.log("INFO", "message"), 400);
+    assertEquals(logging.log("INFO","message").getReturnValue(), 400);
   }
 
   @Test
   public void testWarnLogging() {
-    assertEquals(logging.log("WARN", "message"), 300);
+    assertEquals(logging.log("WARN","message").getReturnValue(), 300);
   }
 
   @Test
   public void testErrorLogging() {
-    assertEquals(logging.log("ERROR", "message"), 200);
+    assertEquals(logging.log("ERROR","message").getReturnValue(), 200);
   }
 
 }
