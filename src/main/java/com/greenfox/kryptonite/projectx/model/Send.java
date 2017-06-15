@@ -63,7 +63,7 @@ public class Send {
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
     channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
 
-//    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
     Consumer consumer = new DefaultConsumer(channel) {
