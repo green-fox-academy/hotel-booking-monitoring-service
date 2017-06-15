@@ -23,4 +23,12 @@ public class ProjectXService {
       return new Response("ok", "error");
     }
   }
+
+  public void endpointLogger(String pathVariable) {
+    if (pathVariable.equals("heartbeat")) {
+      logging.log("INFO", "HTTP-REQUEST=GET at greenfox-kryptonite.herokuapp.com/" + pathVariable);
+    } else {
+      logging.log("ERROR", "HTTP-ERROR at greenfox-kryptonite.herokuapp.com/" + pathVariable);
+    }
+  }
 }
