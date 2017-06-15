@@ -1,15 +1,10 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Log;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import lombok.NoArgsConstructor;
-
 
 public class LogService {
 
-
-  public String logLevel;
+  private String logLevel;
 
   public LogService() {
     this.logLevel = "INFO";
