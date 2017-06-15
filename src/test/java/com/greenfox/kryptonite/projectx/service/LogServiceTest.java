@@ -14,24 +14,24 @@ public class LogServiceTest {
     this.logging = new LogService();
   }
 
-  @Test
-  public void testDebugLogging() {
-    assertEquals(logging.log("DEBUG","message"), 500);
-  }
-
-  @Test
-  public void testInfoLogging() {
-    assertEquals(logging.log("INFO","message"), 400);
-  }
-
-  @Test
-  public void testWarnLogging() {
-    assertEquals(logging.log("WARN","message"), 300);
-  }
-
-  @Test
-  public void testErrorLogging() {
-    assertEquals(logging.log("ERROR","message"), 200);
-  }
+//  @Test
+//  public void testDebugLogging() {
+//    assertEquals(logging.log("DEBUG","message"), 500);
+//  }
+//
+//  @Test
+//  public void testInfoLogging() {
+//    assertEquals(logging.log("INFO","message"), 400);
+//  }
+//
+//  @Test
+//  public void testWarnLogging() {
+//    assertEquals(logging.log("WARN","message"), 300);
+//  }
+//
+//  @Test
+//  public void testErrorLogging() {
+//    assertEquals(logging.log("ERROR","message"), 200);
+//  }
 
 }
