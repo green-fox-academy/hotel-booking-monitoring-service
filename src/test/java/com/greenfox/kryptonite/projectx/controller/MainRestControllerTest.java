@@ -1,6 +1,7 @@
 package com.greenfox.kryptonite.projectx.controller;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import com.greenfox.kryptonite.projectx.model.Send;
@@ -44,6 +45,7 @@ public class MainRestControllerTest {
       MediaType.APPLICATION_JSON.getSubtype(),
       Charset.forName("utf8"));
 
+  private boolean isItWorking = true;
   private MockMvc mockMvc;
   private HeartbeatRepository heartbeatRepositoryMock;
   private ProjectXService service;
@@ -117,6 +119,6 @@ public class MainRestControllerTest {
   public void testRabbitMQ() throws Exception {
     send.send();
     send.consume();
-    assertEquals(1, 1);
+    assertTrue(isItWorking);
   }
 }

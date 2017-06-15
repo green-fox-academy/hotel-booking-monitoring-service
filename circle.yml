@@ -1,5 +1,5 @@
 deployment:
   staging:
-    branch: [master, develop]
+    branch: master
     heroku:
       appname: greenfox-kryptonite
