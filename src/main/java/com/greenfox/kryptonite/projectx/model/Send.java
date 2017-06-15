@@ -34,9 +34,9 @@ public class Send {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-//    channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
+    channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
 
-//    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     String message = "Hello World!";
     channel.basicPublish(EXCHANGE_NAME, QUEUE_NAME, null, message.getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
