@@ -17,6 +17,7 @@ public class Send {
 
   private URI rabbitMqUrl;
   private final static String QUEUE_NAME = "kryptonite";
+  private static final String EXCHANGE_NAME = "log";
 
   public void send() throws Exception {
     try {
@@ -33,9 +34,11 @@ public class Send {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+//    channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
+
+//    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     String message = "Hello World!";
-    channel.basicPublish("", QUEUE_NAME, null, message.getBytes("UTF-8"));
+    channel.basicPublish(EXCHANGE_NAME, QUEUE_NAME, null, message.getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
 
     channel.close();
@@ -57,7 +60,10 @@ public class Send {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+    channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
+    channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
+
+//    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
     Consumer consumer = new DefaultConsumer(channel) {
