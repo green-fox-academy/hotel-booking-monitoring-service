@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 public class LogService {
 
-  public String logLevel ="INFO";
+  public String logLevel = "INFO";
 
   public LogService() {
     this.logLevel = "INFO";
@@ -49,8 +49,13 @@ public class LogService {
       logLevel = System.getenv("LOGLEVEL");
       System.out.println(System.getenv("LOGLEVEL"));
       System.out.println(logLevel);
+      if (logLevel.equals(null)) {
+        logLevel = "INFO";
+      }
+      System.out.println(logLevel);
     } catch (Exception ex) {
       System.err.println("Log level is not set. Logging on default level: INFO");
+      logLevel = "INFO";
     }
 
     if (logLevel.equals("DEBUG")) {
