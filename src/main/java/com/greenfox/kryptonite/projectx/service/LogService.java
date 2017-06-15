@@ -45,15 +45,8 @@ public class LogService {
   }
 
   public boolean checkLogLevel(Log log) {
-    try {
-      logLevel = System.getenv("LOGLEVEL");
-      System.out.println(System.getenv("LOGLEVEL"));
-      System.out.println(logLevel);
-      if (logLevel.equals(null)) {
-        logLevel = "INFO";
-      }
-      System.out.println(logLevel);
-    } catch (Exception ex) {
+    logLevel = System.getenv("LOGLEVEL");
+    if (logLevel == null) {
       System.err.println("Log level is not set. Logging on default level: INFO");
       logLevel = "INFO";
     }
@@ -67,6 +60,5 @@ public class LogService {
     } else {
       return (log.getReturnValue() <= 400);
     }
-
   }
 }
