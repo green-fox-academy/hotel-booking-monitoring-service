@@ -14,12 +14,13 @@ public class LogService {
     this.logLevel = "INFO";
   }
 
-  public int log(String type, String message) {
+  public Log log(String type, String message) {
     Log log = createLog(type,message);
-    if (checkLogLevel(log)) {
+    checkLogLevel();
+    if (isLogLevelOk(log)) {
       selectPrintln(log);
     }
-    return log.getReturnValue();
+    return log;
   }
 
   private Log createLog(String type, String message) {
@@ -44,13 +45,15 @@ public class LogService {
     }
   }
 
-  public boolean checkLogLevel(Log log) {
+  private void checkLogLevel() {
     logLevel = System.getenv("LOGLEVEL");
     if (logLevel == null) {
       System.err.println("Log level is not set. Logging on default level: INFO");
       logLevel = "INFO";
     }
+  }
 
+  private boolean isLogLevelOk(Log log) {
     if (logLevel.equals("DEBUG")) {
       return true;
     } else if (logLevel.equals("WARN")) {
