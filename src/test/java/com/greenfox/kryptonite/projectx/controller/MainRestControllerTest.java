@@ -118,4 +118,15 @@ public class MainRestControllerTest {
     send.consume();
     assertEquals(1,1);
   }
+
+  @Test
+  public void testEndPointLoggerINFO() throws Exception{
+    assertEquals(service.endpointLogger("heartbeat").getReturnValue(), 400);
+  }
+
+  @Test
+  public void testEndPointLoggerERROR() throws Exception{
+    assertEquals(service.endpointLogger("hearthbeat").getReturnValue(), 200);
+  }
+
 }

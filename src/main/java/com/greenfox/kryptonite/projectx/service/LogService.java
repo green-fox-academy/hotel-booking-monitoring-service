@@ -6,10 +6,10 @@ import java.util.Date;
 
 public class LogService {
 
-  public int log(String type, String message) {
+  public Log log(String type, String message) {
     Log log = createLog(type,message);
     selectPrintln(log);
-    return log.getReturnValue();
+    return log;
   }
 
   private Log createLog(String type, String message) {
