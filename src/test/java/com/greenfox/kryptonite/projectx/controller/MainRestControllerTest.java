@@ -112,10 +112,10 @@ public class MainRestControllerTest {
             .andExpect(jsonPath("$.database", is("error")));
   }
 
-//  @Test
-//  public void testRabbitMQ() throws Exception{
-//    send.send();
-//    send.consume();
-//    assertEquals(1,1);
-//  }
+  @Test
+  public void testRabbitMQ() throws Exception{
+    send.send();
+    send.consume();
+    assertEquals(1,1);
+  }
 }
