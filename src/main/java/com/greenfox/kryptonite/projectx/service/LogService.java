@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 public class LogService {
 
+
   public String logLevel;
 
   public LogService() {
