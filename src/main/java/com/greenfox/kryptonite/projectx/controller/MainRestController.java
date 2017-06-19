@@ -24,7 +24,7 @@ public class MainRestController {
 
   @ExceptionHandler(Exception.class)
   public void errorHandling (HttpServletRequest e) {
-    projectXService.endpointLogger(e.getRequestURI());
+    projectXService.endpointLogger(e.getServletPath());
   }
 
 
