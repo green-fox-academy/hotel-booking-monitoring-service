@@ -30,11 +30,6 @@ public class MainRestController {
     return projectXService.databaseCheck(heartbeatRepository);
   }
 
-  @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
-  public Status heartbeatQueue() throws Exception {
-    return projectXService.queueCheck();
-  }
-
   @RequestMapping(value = "/{endpointName}", method = RequestMethod.GET)
   public Log endPointLog(@PathVariable(name = "endpointName")String path) {
     projectXService.endpointLogger(path);

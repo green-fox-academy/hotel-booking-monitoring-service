@@ -22,7 +22,7 @@ public class MessageQueueService {
   private final static String QUEUE_NAME = "kryptonite";
   private static final String EXCHANGE_NAME = "log";
 
-  public void setUpQueu(ConnectionFactory newFactory) {
+  public void setUpQueue(ConnectionFactory newFactory) {
     newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
     newFactory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
     newFactory.setHost(rabbitMqUrl.getHost());
@@ -37,7 +37,7 @@ public class MessageQueueService {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
-    setUpQueu(factory);
+    setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
@@ -61,7 +61,7 @@ public class MessageQueueService {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
-    setUpQueu(factory);
+    setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
@@ -74,6 +74,9 @@ public class MessageQueueService {
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
               throws IOException {
         message[0] = new String(body, "UTF-8");
+        if (message[0] == null) {
+          message[0] = "";
+        }
         System.out.println(" [x] Received '" + message[0] + "'");
       }
     };
