@@ -1,6 +1,7 @@
 package com.greenfox.kryptonite.projectx.service;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class EndPointInterceptor extends HandlerInterceptorAdapter {
 
+  @Autowired
   private ProjectXService projectXService;
 
   @Override
