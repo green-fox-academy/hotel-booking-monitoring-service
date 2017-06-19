@@ -1,6 +1,7 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Log;
+import com.greenfox.kryptonite.projectx.model.QueueResponse;
 import com.greenfox.kryptonite.projectx.model.Response;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class ProjectXService {
 
   private LogService logging = new LogService();
+  private MessageQueueService messageQueueService = new MessageQueueService();
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) {
     if (heartbeatRepository == null) {
@@ -24,6 +26,17 @@ public class ProjectXService {
       logging.log("INFO", "Database connection is ok.");
       logging.log("WARN", "Database is empty.");
       return new Response("ok", "error");
+    }
+  }
+
+  public Status queueCheck() throws Exception {
+    String receivedMessage = messageQueueService.consume();
+    if (receivedMessage.equals("")) {
+      return new QueueResponse("ok", "ok", "ok");
+    } else if (!receivedMessage.equals("")) {
+      return new QueueResponse("ok", "ok", "error");
+    } else {
+      return new QueueResponse("ok", "ok", "error");
     }
   }
 

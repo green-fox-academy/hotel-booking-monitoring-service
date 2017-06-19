@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import com.greenfox.kryptonite.projectx.model.Send;
+import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
 import java.nio.charset.Charset;
@@ -28,8 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import javax.validation.constraints.Null;
-
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -51,7 +49,7 @@ public class MainRestControllerTest {
   private ProjectXService service;
   private HeartbeatRepository nullRepo;
   private LogService logging;
-  private Send send;
+  private MessageQueueService messageQueueService;
   @MockBean
   HeartbeatRepository heartbeatRepository;
 
@@ -66,7 +64,7 @@ public class MainRestControllerTest {
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new ProjectXService();
     this.logging = new LogService();
-    this.send = new Send();
+    this.messageQueueService = new MessageQueueService();
   }
 
   @Test
@@ -117,8 +115,8 @@ public class MainRestControllerTest {
 
   @Test
   public void testRabbitMQ() throws Exception {
-    send.send();
-    send.consume();
+    messageQueueService.send("Hello World");
+    messageQueueService.consume();
     assertTrue(isItWorking);
   }
 
