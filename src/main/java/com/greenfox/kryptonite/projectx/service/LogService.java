@@ -20,17 +20,7 @@ public class LogService {
   }
 
   private Log createLog(String type, String message) {
-    if (type.equals("DEBUG")) {
-      return new Log(type, message, 500);
-    } else if (type.equals("INFO")) {
-      return new Log(type, message, 400);
-    } else if (type.equals("WARN")) {
-      return new Log(type, message, 300);
-    } else if (type.equals("ERROR")) {
-      return new Log(type, message, 200);
-    } else {
-      return new Log();
-    }
+    return new Log(type, message);
   }
 
   private void selectPrintln(Log log) {
