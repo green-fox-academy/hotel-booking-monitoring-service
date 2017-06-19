@@ -1,6 +1,5 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +12,7 @@ public class EndPointInterceptor extends HandlerInterceptorAdapter {
 
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws NoHandlerFoundException {
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
       projectXService.endpointLogger(request.getRequestURI());
       return true;
   }
