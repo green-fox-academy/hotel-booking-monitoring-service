@@ -31,5 +31,7 @@ dependencies {
 	runtime('org.postgresql:postgresql')
 	compileOnly('org.projectlombok:lombok')
 	compile group: 'com.rabbitmq', name: 'amqp-client', version: '4.1.0'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.2'
+	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.2'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
