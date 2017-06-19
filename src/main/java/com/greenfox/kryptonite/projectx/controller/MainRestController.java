@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
@@ -23,7 +24,7 @@ public class MainRestController {
   @Autowired
   private ProjectXService projectXService;
 
-  @ExceptionHandler(Exception.class)
+  @ExceptionHandler(ServletException.class)
   @ResponseStatus(code = HttpStatus.I_AM_A_TEAPOT)
   public Log errorHandling (HttpServletRequest e) {
     projectXService.endpointLogger(e.getRequestURI());
