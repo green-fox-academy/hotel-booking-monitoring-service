@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class EndPointInterceptor extends HandlerInterceptorAdapter {
 
-  private ProjectXService projectXService = new ProjectXService();
+  private MonitoringService monitoringService = new MonitoringService();
 
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-      projectXService.endpointLogger(request.getRequestURI());
+      monitoringService.endpointLogger(request.getRequestURI());
       return true;
   }
 }

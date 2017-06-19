@@ -6,7 +6,7 @@ import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProjectXService {
+public class MonitoringService {
 
   private LogService logging = new LogService();
   private MessageQueueService messageQueueService = new MessageQueueService();
