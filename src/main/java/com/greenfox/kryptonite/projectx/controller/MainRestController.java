@@ -2,7 +2,7 @@ package com.greenfox.kryptonite.projectx.controller;
 
 
 import com.greenfox.kryptonite.projectx.model.Log;
-import com.greenfox.kryptonite.projectx.model.Send;
+import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.ProjectXService;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MainRestController {
 
-  Send send = new Send();
+  MessageQueueService messageQueueService = new MessageQueueService();
 
   @Autowired
   private HeartbeatRepository heartbeatRepository;
@@ -26,10 +26,13 @@ public class MainRestController {
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public Status heartbeat() throws Exception {
-    send.send();
-    send.consume();
     projectXService.endpointLogger("heartbeat");
     return projectXService.databaseCheck(heartbeatRepository);
+  }
+
+  @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+  public Status heartbeatQueue() throws Exception {
+    return projectXService.queueCheck();
   }
 
   @RequestMapping(value = "/{endpointName}", method = RequestMethod.GET)
