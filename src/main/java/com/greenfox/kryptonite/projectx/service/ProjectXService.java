@@ -28,7 +28,7 @@ public class ProjectXService {
   }
 
   public Log endpointLogger(String pathVariable) {
-    if (pathVariable.equals("heartbeat")) {
+    if (pathVariable.equals("/heartbeat")) {
       return logging.log("INFO", "HTTP-REQUEST=GET at greenfox-kryptonite.herokuapp.com/" + pathVariable);
     } else {
       return logging.log("ERROR", "HTTP-ERROR at greenfox-kryptonite.herokuapp.com/" + pathVariable);
