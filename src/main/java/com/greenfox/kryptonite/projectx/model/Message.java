@@ -2,6 +2,7 @@ package com.greenfox.kryptonite.projectx.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
@@ -27,10 +28,17 @@ public class Message {
     this.hostname = hostname;
   }
 
-  public String createJsonMessage(String text) throws JsonProcessingException, URISyntaxException {
+  public String sendJsonMessage(String text) throws JsonProcessingException, URISyntaxException {
 
-    Message sendMessage = new Message(text, new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL")).getHost());
+    Message sendMessage = new Message(text,
+        new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL")).getHost());
     ObjectMapper mapper = new ObjectMapper();
     return mapper.writeValueAsString(sendMessage);
+  }
+
+  public Message receiveJsonMessage(String jsonMessage) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+
+    return mapper.readValue(jsonMessage, Message.class);
   }
 }

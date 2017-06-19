@@ -1,7 +1,5 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.rabbitmq.client.*;
 import lombok.Getter;
@@ -21,7 +19,7 @@ public class MessageQueueService {
   private URI rabbitMqUrl;
   private final static String QUEUE_NAME = "kryptonite";
   private static final String EXCHANGE_NAME = "log";
-  Message sengMessage = new Message();
+  Message jsonMessage = new Message();
 
   public void setUpQueue(ConnectionFactory newFactory) {
     newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
@@ -45,7 +43,7 @@ public class MessageQueueService {
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
 
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
-    channel.basicPublish(EXCHANGE_NAME, "", null, sengMessage.createJsonMessage(message).getBytes("UTF-8"));
+    channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
 
     channel.close();
@@ -54,6 +52,7 @@ public class MessageQueueService {
 
   public String consume() throws Exception {
     final String[] message = {""};
+
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
     try {
@@ -78,14 +77,12 @@ public class MessageQueueService {
         if (message[0] == null) {
           message[0] = "";
         }
-        ObjectMapper mapper = new ObjectMapper();
-        Message receivedMessage = mapper.readValue(message[0], Message.class);
 
-        System.out.println(" [x] Received '" + receivedMessage.getMessage() + "'");
+        System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message[0]).getMessage() + "'");
       }
     };
 
     channel.basicConsume(QUEUE_NAME, true, consumer);
-    return message[0];
+    return jsonMessage.receiveJsonMessage(message[0]).getMessage();
   }
 }
