@@ -7,11 +7,15 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class Log {
+
+  @Autowired
+  Timestamp time;
 
   private String type;
   private String date;
@@ -27,7 +31,7 @@ public class Log {
   }};
 
   public Log(String type, String message) {
-    this.date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
+    this.date = time.getDate();
     this.type = type;
     this.message = message;
     this.returnValue = levels.get(type);
