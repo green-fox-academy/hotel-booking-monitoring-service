@@ -21,6 +21,7 @@ public class MessageQueueService {
   private URI rabbitMqUrl;
   private final static String QUEUE_NAME = "kryptonite";
   private static final String EXCHANGE_NAME = "log";
+  Message sengMessage = new Message();
 
   public void setUpQueue(ConnectionFactory newFactory) {
     newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
@@ -45,7 +46,7 @@ public class MessageQueueService {
 
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes("UTF-8"));
-    System.out.println(" [x] Sent '" + createMessage(message) + "'");
+    System.out.println(" [x] Sent '" + sengMessage.createJsonMessage(message) + "'");
 
     channel.close();
     connection.close();
@@ -83,17 +84,5 @@ public class MessageQueueService {
 
     channel.basicConsume(QUEUE_NAME, true, consumer);
     return message[0];
-  }
-
-  public String createMessage(String text) throws JsonProcessingException {
-    try {
-      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL"));
-    } catch(URISyntaxException e) {
-      e.getStackTrace();
-    }
-
-    Message sendMessage = new Message(text, rabbitMqUrl.getHost());
-    ObjectMapper mapper = new ObjectMapper();
-    return mapper.writeValueAsString(sendMessage);
   }
 }
