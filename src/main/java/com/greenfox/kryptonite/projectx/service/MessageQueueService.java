@@ -1,4 +1,4 @@
-package com.greenfox.kryptonite.projectx.model;
+package com.greenfox.kryptonite.projectx.service;
 
 import com.rabbitmq.client.*;
 import lombok.Getter;
@@ -13,31 +13,34 @@ import java.net.URISyntaxException;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Send {
+public class MessageQueueService {
 
   private URI rabbitMqUrl;
   private final static String QUEUE_NAME = "kryptonite";
   private static final String EXCHANGE_NAME = "log";
 
-  public void send() throws Exception {
+  public void setUpQueu(ConnectionFactory newFactory) {
+    newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
+    newFactory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
+    newFactory.setHost(rabbitMqUrl.getHost());
+    newFactory.setPort(rabbitMqUrl.getPort());
+    newFactory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
+  }
+
+  public void send(String message) throws Exception {
     try {
       rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_TX_URL"));
     } catch(URISyntaxException e) {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
-    factory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
-    factory.setHost(rabbitMqUrl.getHost());
-    factory.setPort(rabbitMqUrl.getPort());
-    factory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
+    setUpQueu(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
 
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
-    String message = "Hello World!";
     channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
 
@@ -45,7 +48,8 @@ public class Send {
     connection.close();
   }
 
-  public void consume() throws Exception {
+  public String consume() throws Exception {
+    final String[] message = {""};
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
     try {
@@ -54,11 +58,7 @@ public class Send {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
-    factory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
-    factory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
-    factory.setHost(rabbitMqUrl.getHost());
-    factory.setPort(rabbitMqUrl.getPort());
-    factory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
+    setUpQueu(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
@@ -70,10 +70,12 @@ public class Send {
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
               throws IOException {
-        String message = new String(body, "UTF-8");
-        System.out.println(" [x] Received '" + message + "'");
+        message[0] = new String(body, "UTF-8");
+        System.out.println(" [x] Received '" + message[0] + "'");
       }
     };
+
     channel.basicConsume(QUEUE_NAME, true, consumer);
+    return message[0];
   }
 }
