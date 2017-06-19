@@ -15,7 +15,7 @@ public class EndPointInterceptor extends HandlerInterceptorAdapter {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    projectXService.endpointLogger(request.getPathInfo());
+    projectXService.endpointLogger(request.getRequestURI());
     return true;
   }
 }
