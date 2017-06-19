@@ -92,6 +92,7 @@ public class MainRestControllerTest {
     assertEquals(((service.databaseCheck(heartbeatRepositoryMock)).getDatabase()), "ok");
   }
 
+
   @Test
   public void testGetEndpointWithFilledDatabase() throws Exception {
     BDDMockito.given(heartbeatRepository.count()).willReturn(1L);
@@ -123,6 +124,7 @@ public class MainRestControllerTest {
   public void testEndPointLoggerINFO() throws Exception{
     assertEquals(service.endpointLogger("heartbeat").getReturnValue(), 400);
   }
+
 
   @Test
   public void testEndPointLoggerERROR() throws Exception{
