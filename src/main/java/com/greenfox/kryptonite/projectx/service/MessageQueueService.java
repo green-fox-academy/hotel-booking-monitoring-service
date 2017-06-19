@@ -1,5 +1,8 @@
 package com.greenfox.kryptonite.projectx.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfox.kryptonite.projectx.model.Message;
 import com.rabbitmq.client.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,7 +45,7 @@ public class MessageQueueService {
 
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes("UTF-8"));
-    System.out.println(" [x] Sent '" + message + "'");
+    System.out.println(" [x] Sent '" + createMessage(message) + "'");
 
     channel.close();
     connection.close();
@@ -77,5 +80,17 @@ public class MessageQueueService {
 
     channel.basicConsume(QUEUE_NAME, true, consumer);
     return message[0];
+  }
+
+  public String createMessage(String text) throws JsonProcessingException {
+    try {
+      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL"));
+    } catch(URISyntaxException e) {
+      e.getStackTrace();
+    }
+
+    Message sendMessage = new Message(text, rabbitMqUrl.getHost());
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.writeValueAsString(sendMessage);
   }
 }
