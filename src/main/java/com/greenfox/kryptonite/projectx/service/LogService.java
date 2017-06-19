@@ -48,15 +48,5 @@ public class LogService {
       }
     }
     return isOk;
-
-//    if (logLevel.equals("DEBUG")) {
-//      return true;
-//    } else if (logLevel.equals("WARN")) {
-//      return (log.getReturnValue() <= 300);
-//    } else if (logLevel.equals("ERROR")) {
-//      return (log.getReturnValue() == 200);
-//    } else {
-//      return (log.getReturnValue() <= 400);
-//    }
   }
 }
