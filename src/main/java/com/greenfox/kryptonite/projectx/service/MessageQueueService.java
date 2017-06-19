@@ -45,8 +45,8 @@ public class MessageQueueService {
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
 
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
-    channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes("UTF-8"));
-    System.out.println(" [x] Sent '" + sengMessage.createJsonMessage(message) + "'");
+    channel.basicPublish(EXCHANGE_NAME, "", null, sengMessage.createJsonMessage(message).getBytes("UTF-8"));
+    System.out.println(" [x] Sent '" + message + "'");
 
     channel.close();
     connection.close();
@@ -78,7 +78,10 @@ public class MessageQueueService {
         if (message[0] == null) {
           message[0] = "";
         }
-        System.out.println(" [x] Received '" + message[0] + "'");
+        ObjectMapper mapper = new ObjectMapper();
+        Message receivedMessage = mapper.readValue(message[0], Message.class);
+
+        System.out.println(" [x] Received '" + receivedMessage.getMessage() + "'");
       }
     };
 
