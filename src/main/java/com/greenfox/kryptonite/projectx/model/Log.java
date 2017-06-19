@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Log {
 
-  @Autowired
-  Timestamp time;
+  Timestamp time = new Timestamp();
 
   private String type;
   private String date;
@@ -35,6 +36,13 @@ public class Log {
     this.type = type;
     this.message = message;
     this.returnValue = levels.get(type);
+  }
+
+  public Log(String type, String date, String message, int returnValue) {
+    this.type = type;
+    this.date = date;
+    this.message = message;
+    this.returnValue = returnValue;
   }
 
   @Override

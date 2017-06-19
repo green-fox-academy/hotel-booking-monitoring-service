@@ -1,8 +1,10 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Log;
+import com.greenfox.kryptonite.projectx.model.Timestamp;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,6 +15,7 @@ public class LogServiceTest {
   @Before
   public void setup() throws Exception {
     this.logging = new LogService();
+
   }
 
   @Test
@@ -34,5 +37,4 @@ public class LogServiceTest {
   public void testErrorLogging() {
     assertEquals(logging.log("ERROR","message").getReturnValue(), 200);
   }
-
 }
