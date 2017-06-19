@@ -23,8 +23,8 @@ public class MainRestController {
   private ProjectXService projectXService;
 
   @ExceptionHandler(Exception.class)
-  public void errorHandling (HttpServletRequest e) {
-    projectXService.endpointLogger(e.getServletPath());
+  public Log errorHandling (HttpServletRequest e) {
+    return projectXService.endpointLogger(e.getServletPath());
   }
 
 
