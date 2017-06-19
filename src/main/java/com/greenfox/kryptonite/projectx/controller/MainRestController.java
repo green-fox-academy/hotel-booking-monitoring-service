@@ -7,10 +7,9 @@ import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.ProjectXService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class MainRestController {
@@ -22,6 +21,11 @@ public class MainRestController {
 
   @Autowired
   private ProjectXService projectXService;
+
+  @ExceptionHandler(Exception.class)
+  public void errorHandling (HttpServletRequest e) {
+    projectXService.endpointLogger(e.getRequestURI());
+  }
 
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
