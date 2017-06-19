@@ -6,6 +6,7 @@ import com.greenfox.kryptonite.projectx.model.Send;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.ProjectXService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +25,13 @@ public class MainRestController {
   @Autowired
   private ProjectXService projectXService;
 
-  @ExceptionHandler(ServletException.class)
+  @ExceptionHandler(NotFoundException.class)
   @ResponseStatus(code = HttpStatus.I_AM_A_TEAPOT)
-  public Log errorHandling (HttpServletRequest e) {
-    projectXService.endpointLogger(e.getRequestURI());
-    return projectXService.endpointLogger(e.getRequestURI());
+  public Log errorHandling (NotFoundException e) {
+    System.out.println(e.getLocalizedMessage());
+    System.out.println(e.getMessage());
+    projectXService.endpointLogger(e.getMessage());
+    return projectXService.endpointLogger(e.getMessage());
   }
 
 
