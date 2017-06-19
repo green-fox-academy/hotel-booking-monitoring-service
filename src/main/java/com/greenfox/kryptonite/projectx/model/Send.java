@@ -64,7 +64,7 @@ public class Send {
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
     channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
-    
+
     Consumer consumer = new DefaultConsumer(channel) {
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)

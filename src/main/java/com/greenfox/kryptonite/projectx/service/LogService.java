@@ -4,6 +4,7 @@ import com.greenfox.kryptonite.projectx.model.Log;
 
 public class LogService {
 
+<<<<<<< HEAD
   private String logLevel;
 
   public LogService() {
@@ -58,6 +59,44 @@ public class LogService {
       return (log.getReturnValue() == 200);
     } else {
       return (log.getReturnValue() <= 400);
+    }
+=======
+  public int debug(String message) {
+    String date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
+    printStars();
+    System.out.println("DEBUG " + date + " greenfox-kryptonite.herokuapp.com " + message);
+    printStars();
+    return 500;
+  }
+
+  public int info(String message) {
+    String date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
+    printStars();
+    System.out.println("INFO " + date + " greenfox-kryptonite.herokuapp.com " + message);
+    printStars();
+    return 400;
+  }
+
+  public int warn(String message) {
+    String date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
+    printStars();
+    System.err.println("WARN " + date + " greenfox-kryptonite.herokuapp.com " + message);
+    printStars();
+    return 300;
+  }
+
+  public int error(String message) {
+    String date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
+    printStars();
+    System.err.println("ERROR " + date + " greenfox-kryptonite.herokuapp.com " + message);
+    printStars();
+    return 200;
+>>>>>>> f685d4e0ad2e7f3b70eac1bd3b614dfebaf3288f
+  }
+
+  public void printStars() {
+    for (int i = 0; i < 2; ++i) {
+      System.out.println("*");
     }
   }
 }
