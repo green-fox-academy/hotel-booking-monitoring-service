@@ -26,7 +26,6 @@ public class Log {
     put("ERROR", 200);
   }};
 
-
   public Log(String type, String message) {
     this.date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
     this.type = type;
