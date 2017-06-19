@@ -1,6 +1,7 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Log;
+import java.util.Map;
 
 public class LogService {
 
@@ -20,17 +21,7 @@ public class LogService {
   }
 
   private Log createLog(String type, String message) {
-    if (type.equals("DEBUG")) {
-      return new Log(type, message, 500);
-    } else if (type.equals("INFO")) {
-      return new Log(type, message, 400);
-    } else if (type.equals("WARN")) {
-      return new Log(type, message, 300);
-    } else if (type.equals("ERROR")) {
-      return new Log(type, message, 200);
-    } else {
-      return new Log();
-    }
+    return new Log(type, message);
   }
 
   private void selectPrintln(Log log) {
@@ -50,14 +41,12 @@ public class LogService {
   }
 
   private boolean isLogLevelOk(Log log) {
-    if (logLevel.equals("DEBUG")) {
-      return true;
-    } else if (logLevel.equals("WARN")) {
-      return (log.getReturnValue() <= 300);
-    } else if (logLevel.equals("ERROR")) {
-      return (log.getReturnValue() == 200);
-    } else {
-      return (log.getReturnValue() <= 400);
+    boolean isOk = (log.getReturnValue() <= log.getLevels().get("INFO"));
+    for (Map.Entry<String,Integer> level : log.getLevels().entrySet()) {
+      if (logLevel.equals(level.getKey())) {
+        isOk = (log.getReturnValue() <= level.getValue());
+      }
     }
+    return isOk;
   }
 }
