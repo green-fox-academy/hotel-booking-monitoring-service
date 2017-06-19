@@ -1,7 +1,5 @@
 package com.greenfox.kryptonite.projectx.service;
 
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +13,11 @@ public class EndPointInterceptor extends HandlerInterceptorAdapter {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    projectXService.endpointLogger(request.getRequestURI());
-    return true;
+    if (request.getRequestURI().equals("/error")) {
+      return false;
+    } else {
+      projectXService.endpointLogger(request.getRequestURI());
+      return true;
+    }
   }
 }
