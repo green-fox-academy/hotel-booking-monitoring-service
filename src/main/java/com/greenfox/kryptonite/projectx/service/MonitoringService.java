@@ -1,6 +1,7 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Log;
+import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.springframework.stereotype.Service;
@@ -31,11 +32,15 @@ public class MonitoringService {
     String sentMesage = "Test";
     messageQueueService.send(sentMesage);
     String receivedMessage = messageQueueService.consume();
+    System.out.println(receivedMessage);
     if (receivedMessage.equals(sentMesage)) {
+      System.out.println("equals");
       return "ok";
     } else if (!receivedMessage.equals(sentMesage)) {
+      System.out.println("not-equals");
       return "error";
     } else {
+      System.out.println("else");
       return "error";
     }
   }

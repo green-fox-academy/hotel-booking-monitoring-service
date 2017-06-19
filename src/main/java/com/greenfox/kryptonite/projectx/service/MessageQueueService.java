@@ -20,6 +20,7 @@ public class MessageQueueService {
   private final static String QUEUE_NAME = "kryptonite";
   private static final String EXCHANGE_NAME = "log";
   Message jsonMessage = new Message();
+  private String temporaryMessage = "Shit";
 
   public void setUpQueue(ConnectionFactory newFactory) {
     newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
@@ -41,8 +42,6 @@ public class MessageQueueService {
     Channel channel = connection.createChannel();
 
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-
-    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
 
@@ -51,7 +50,7 @@ public class MessageQueueService {
   }
 
   public String consume() throws Exception {
-    final String[] message = {""};
+    String[] message = {""};
 
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
@@ -64,25 +63,18 @@ public class MessageQueueService {
     setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
-    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
     String queueName = channel.queueDeclare().getQueue();
-    channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
-
+    channel.queueBind(queueName, EXCHANGE_NAME, "");
     Consumer consumer = new DefaultConsumer(channel) {
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
               throws IOException {
         message[0] = new String(body, "UTF-8");
-        if (message[0] == null) {
-          message[0] = "";
-        }
-
         System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message[0]).getMessage() + "'");
       }
     };
-
-    channel.basicConsume(QUEUE_NAME, true, consumer);
+    channel.basicConsume(queueName, true, consumer);
     return message[0];
   }
 }
