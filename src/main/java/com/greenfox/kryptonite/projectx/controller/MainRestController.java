@@ -22,11 +22,6 @@ public class MainRestController {
   @Autowired
   private ProjectXService projectXService;
 
-  @ExceptionHandler(Exception.class)
-  public Log errorHandling (HttpServletRequest e) {
-    return projectXService.endpointLogger(e.getServletPath());
-  }
-
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public Status heartbeat() throws Exception {

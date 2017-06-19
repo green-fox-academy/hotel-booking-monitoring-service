@@ -8,16 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class EndPointInterceptor extends HandlerInterceptorAdapter {
 
-
   private ProjectXService projectXService = new ProjectXService();
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    if (request.getRequestURI().equals("/error")) {
-      return false;
-    } else {
       projectXService.endpointLogger(request.getRequestURI());
       return true;
-    }
   }
 }
