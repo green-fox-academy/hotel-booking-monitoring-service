@@ -83,6 +83,6 @@ public class MessageQueueService {
     };
 
     channel.basicConsume(QUEUE_NAME, true, consumer);
-    return jsonMessage.receiveJsonMessage(message[0]).getMessage();
+    return message[0];
   }
 }
