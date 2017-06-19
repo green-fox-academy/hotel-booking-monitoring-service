@@ -10,12 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class EndPointInterceptor extends HandlerInterceptorAdapter {
 
-  @Autowired
-  private ProjectXService projectXService;
+
+  private ProjectXService projectXService = new ProjectXService();
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    projectXService.endpointLogger(request.getRequestURI());
+    projectXService.endpointLogger(request.getPathInfo());
     return true;
   }
 }
