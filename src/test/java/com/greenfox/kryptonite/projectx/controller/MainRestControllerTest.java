@@ -10,7 +10,6 @@ import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
-import com.greenfox.kryptonite.projectx.model.Response;
 import com.greenfox.kryptonite.projectx.service.LogService;
 import com.greenfox.kryptonite.projectx.service.ProjectXService;
 import org.junit.Before;
@@ -83,14 +82,14 @@ public class MainRestControllerTest {
   @Test
   public void testResponseWhenNoElementInDatabase() throws Exception {
     Mockito.when(heartbeatRepositoryMock.count()).thenReturn(0L);
-    assertEquals(((Response) service.databaseCheck(heartbeatRepositoryMock)).getDatabase(),
+    assertEquals((service.databaseCheck(heartbeatRepositoryMock)).getDatabase(),
         "error");
   }
 
   @Test
   public void testResponseWhenElementInDatabase() throws Exception {
     Mockito.when(heartbeatRepositoryMock.count()).thenReturn(3L);
-    assertEquals(((Response) service.databaseCheck(heartbeatRepositoryMock)).getDatabase(), "ok");
+    assertEquals(((service.databaseCheck(heartbeatRepositoryMock)).getDatabase()), "ok");
   }
 
   @Test
