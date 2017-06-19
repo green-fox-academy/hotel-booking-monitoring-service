@@ -28,14 +28,8 @@ public class MainRestController {
   public Status heartbeat() throws Exception {
     send.send();
     send.consume();
-    projectXService.endpointLogger("heartbeat");
     return projectXService.databaseCheck(heartbeatRepository);
   }
 
-  @RequestMapping(value = "/{endpointName}", method = RequestMethod.GET)
-  public Log endPointLog(@PathVariable(name = "endpointName")String path) {
-    projectXService.endpointLogger(path);
-    return projectXService.endpointLogger(path);
-  }
 
 }
