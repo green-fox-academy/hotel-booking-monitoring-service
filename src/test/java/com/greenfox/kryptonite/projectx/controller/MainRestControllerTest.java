@@ -126,14 +126,6 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testRabbitMQReceive() throws Exception {
-    messageQueueService.send("rabbit fuckin Q");
-    messageQueueService.consume();
-    MessageQueueService test = new MessageQueueService();
-    assertEquals("rabbit fuckin Q", test.extractMessage());
-  }
-
-  @Test
   public void testEndPointLoggerINFO() throws Exception{
     assertEquals(service.endpointLogger("/heartbeat").getReturnValue(), 400);
   }
