@@ -119,7 +119,7 @@ public class MainRestControllerTest {
 
   @Test
   public void testIsItWorking() throws Exception {
-    messageQueueService.send("Hello World");
+//    messageQueueService.send("Hello World");
     messageQueueService.consume();
     assertTrue(isItWorking);
   }
@@ -129,7 +129,6 @@ public class MainRestControllerTest {
     messageQueueService.send("Hello World");
     messageQueueService.consume();
     MessageQueueService test = new MessageQueueService();
-
     assertEquals("Hello World", test.extractMessage());
   }
 

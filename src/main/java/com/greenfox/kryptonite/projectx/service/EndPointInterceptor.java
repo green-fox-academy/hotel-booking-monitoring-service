@@ -16,4 +16,5 @@ public class EndPointInterceptor extends HandlerInterceptorAdapter {
       monitoringService.endpointLogger(request.getRequestURI());
       return true;
   }
+
 }

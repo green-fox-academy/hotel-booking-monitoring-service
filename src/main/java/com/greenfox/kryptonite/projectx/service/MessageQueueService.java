@@ -82,7 +82,7 @@ public class MessageQueueService {
         System.out.println(
             " [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
           extractJsonMessage = jsonMessage.receiveJsonMessage(message).getMessage();
-        
+
       }
     };
 
