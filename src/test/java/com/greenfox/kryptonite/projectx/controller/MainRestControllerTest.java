@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import com.greenfox.kryptonite.projectx.model.Log;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -118,10 +117,19 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testRabbitMQ() throws Exception {
+  public void testIsItWorking() throws Exception {
     messageQueueService.send("Hello World");
     messageQueueService.consume();
     assertTrue(isItWorking);
+  }
+
+  @Test
+  public void testRabbitMQ() throws Exception {
+    messageQueueService.send("Hello World");
+    messageQueueService.consume();
+    MessageQueueService test = new MessageQueueService();
+
+    assertEquals("Hello World", test.extractMessage());
   }
 
   @Test
@@ -140,6 +148,6 @@ public class MainRestControllerTest {
     Timestamp time = new Timestamp();
     String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
 
-    assertEquals(time.getDate(), date);
+    assertEquals(date, time.getDate());
   }
 }
