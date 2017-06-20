@@ -43,9 +43,8 @@ public class MessageQueueService {
     setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
-
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
+    channel.basicPublish(EXCHANGE_NAME, QUEUE_NAME, null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
 
     channel.close();
@@ -53,9 +52,6 @@ public class MessageQueueService {
   }
 
   public String consume() throws Exception {
-    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-    System.out.println(temporaryMessage);
-
     try {
       rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL"));
     } catch(URISyntaxException e) {
@@ -68,6 +64,9 @@ public class MessageQueueService {
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
     String queueName = channel.queueDeclare().getQueue();
     channel.queueBind(queueName, EXCHANGE_NAME, "");
+
+    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+
     Consumer consumer = new DefaultConsumer(channel) {
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
@@ -81,11 +80,9 @@ public class MessageQueueService {
         };
         threadPool.submit(runnable);
         System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
-        System.out.println(2 + temporaryMessage);
       }
     };
     channel.basicConsume(queueName, true, consumer);
-    System.out.println(3 + temporaryMessage);
     return temporaryMessage;
   }
 

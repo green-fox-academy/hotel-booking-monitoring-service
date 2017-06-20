@@ -16,7 +16,7 @@ public class MonitoringService {
     if (heartbeatRepository == null) {
       logging.log("ERROR", "Database not presented.");
       logging.log("DEBUG", "Database may not exist. Check database connection or existence.");
-      return new Status("ok", "error",queueCheck());
+      return new Status("ok", "error", queueCheck());
     } else if (heartbeatRepository.count() > 0) {
       logging.log("INFO",
           "Database connection is ok and contains " + heartbeatRepository.count() + " element(s).");
@@ -24,19 +24,18 @@ public class MonitoringService {
     } else {
       logging.log("INFO", "Database connection is ok.");
       logging.log("WARN", "Database is empty.");
-      return new Status("ok", "error",queueCheck());
+      return new Status("ok", "error", queueCheck());
     }
   }
 
   public String queueCheck() throws Exception {
-    String sentMesage = "Test";
-    messageQueueService.send(sentMesage);
+    String sentMessage = "Test";
     String receivedMessage = messageQueueService.consume();
     System.out.println(receivedMessage);
-    if (receivedMessage.equals(sentMesage)) {
+    if (receivedMessage.equals(sentMessage)) {
       System.out.println("equals");
       return "ok";
-    } else if (!receivedMessage.equals(sentMesage)) {
+    } else if (!receivedMessage.equals(sentMessage)) {
       System.out.println("not-equals");
       return "error";
     } else {
