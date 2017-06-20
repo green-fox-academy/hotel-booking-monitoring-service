@@ -3,17 +3,11 @@ package com.greenfox.kryptonite.projectx.service;
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.rabbitmq.client.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.jms.JmsProperties;
 import org.springframework.stereotype.Service;
 
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
 @Getter
@@ -45,27 +39,27 @@ public class MessageQueueService {
     factory.setUri(RABBIT_MQ_URL);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
-//    GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
-//    setTemporaryMessage(new String(getResponse.getBody()));
-
-    channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel){
-      @Override
-      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-              throws IOException {
-        try {
-          System.out.println("Received From Exchange : " + envelope.getExchange() + " With routing key " + envelope.getRoutingKey() + " Message: " + new String(body));
-          channel.basicAck(envelope.getDeliveryTag(), true);
-        } catch (Exception e) {
-          e.printStackTrace();
-          channel.basicReject(envelope.getDeliveryTag(), true);
-        }
-      }
-    });
-
-    System.out.println("Ready to receive messages!");
-
+    GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
+    setTemporaryMessage(new String(getResponse.getBody()));
+    
     channel.close();
     connection.close();
+
+//    channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel){
+//      @Override
+//      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+//              throws IOException {
+//        try {
+//          System.out.println("Received From Exchange : " + envelope.getExchange() + " With routing key " + envelope.getRoutingKey() + " Message: " + new String(body));
+//          channel.basicAck(envelope.getDeliveryTag(), true);
+//        } catch (Exception e) {
+//          e.printStackTrace();
+//          channel.basicReject(envelope.getDeliveryTag(), true);
+//        }
+//      }
+//    });
+//
+    System.out.println("Ready to receive messages!");
   }
 
   public void setTemporaryMessage(String temporaryMessage) {
