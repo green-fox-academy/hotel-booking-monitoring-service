@@ -44,7 +44,6 @@ public class MessageQueueService {
 
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
 
-    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     channel.basicPublish(EXCHANGE_NAME, "", null,
         jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
@@ -54,6 +53,7 @@ public class MessageQueueService {
   }
 
   public String consume() throws Exception {
+
     String message = "";
 
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
@@ -77,14 +77,16 @@ public class MessageQueueService {
           AMQP.BasicProperties properties, byte[] body)
           throws IOException {
         String message = new String(body, "UTF-8");
-
+        extractJsonMessage = jsonMessage.receiveJsonMessage(message).getMessage();
         System.out.println(
-            " [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
-          extractJsonMessage = jsonMessage.receiveJsonMessage(message).getMessage();
+            " [x] Received '" + extractJsonMessage + "'");
+
+
       }
     };
 
     channel.basicConsume(QUEUE_NAME, true, consumer);
+    System.out.println(message);
     return message;
   }
 

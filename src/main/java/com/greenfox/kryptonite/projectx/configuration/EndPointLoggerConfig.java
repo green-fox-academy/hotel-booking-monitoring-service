@@ -14,10 +14,10 @@ public class EndPointLoggerConfig extends WebMvcConfigurerAdapter {
   public EndPointLoggerConfig() {
     this.endPointInterceptor = new EndPointInterceptor();
   }
-
+/*
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(endPointInterceptor)
             .addPathPatterns("/*");
-  }
+  }*/
 }

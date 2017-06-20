@@ -126,11 +126,12 @@ public class MainRestControllerTest {
 
   @Test
   public void testRabbitMQ() throws Exception {
-    messageQueueService.send("Hello World");
-    messageQueueService.consume();
-    MessageQueueService test = new MessageQueueService();
+    messageQueueService.send("test string");
 
-    assertEquals("Hello World", test.extractMessage());
+    MessageQueueService service = new MessageQueueService();
+    messageQueueService.consume();
+
+    assertEquals("test string", service.extractMessage());
   }
 
   public void testEndPointLoggerINFO() throws Exception{
