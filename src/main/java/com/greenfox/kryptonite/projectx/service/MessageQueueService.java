@@ -5,6 +5,7 @@ import com.rabbitmq.client.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.boot.autoconfigure.jms.JmsProperties;
 
 
 import java.io.IOException;
@@ -44,30 +45,35 @@ public class MessageQueueService {
     factory.setUri(RABBIT_MQ_URL);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
-    channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    String queueName = channel.queueDeclare().getQueue();
-    channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
-
-    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-
-    Consumer consumer = new DefaultConsumer(channel) {
-      @Override
-      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-              throws IOException {
-        final String message = new String(body, "UTF-8");
-        System.out.println(message);
-        Runnable runnable = new Runnable() {
-          @Override
-          public void run() {
-            setTemporaryMessage(message);
-          }
-        };
-        threadPool.submit(runnable);
-        System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
-      }
-    };
-    channel.basicConsume(QUEUE_NAME, true, consumer);
-    return temporaryMessage;
+    GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
+    channel.close();
+    connection.close();
+    System.out.println(new String(getResponse.getBody()));
+    return new String(getResponse.getBody());
+//    channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
+//    String queueName = channel.queueDeclare().getQueue();
+//    channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
+//
+//    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+//
+//    Consumer consumer = new DefaultConsumer(channel) {
+//      @Override
+//      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+//              throws IOException {
+//        final String message = new String(body, "UTF-8");
+//        System.out.println(message);
+//        Runnable runnable = new Runnable() {
+//          @Override
+//          public void run() {
+//            setTemporaryMessage(message);
+//          }
+//        };
+//        threadPool.submit(runnable);
+//        System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
+//      }
+//    };
+//    channel.basicConsume(QUEUE_NAME, true, consumer);
+//    return temporaryMessage;
   }
 
   public void setTemporaryMessage(String temporaryMessage) {
