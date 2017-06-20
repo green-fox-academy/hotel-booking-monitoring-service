@@ -6,13 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
-
-import java.io.IOException;
-<<<<<<< HEAD
-=======
-
->>>>>>> 2561e3db65664fbc11042969ae5749182edf0a5f
-
 @Service
 @Getter
 @Setter
