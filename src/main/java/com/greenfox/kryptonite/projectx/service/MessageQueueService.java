@@ -4,11 +4,11 @@ import com.greenfox.kryptonite.projectx.model.Message;
 import com.rabbitmq.client.*;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.springframework.stereotype.Service;
 
 
 import java.io.IOException;
-
 
 @Service
 @Getter
@@ -27,7 +27,8 @@ public class MessageQueueService {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    channel.basicPublish("", QUEUE_NAME, null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
+    channel
+        .basicPublish("", QUEUE_NAME, null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
 
     System.out.println(" [x] Sent '" + message + "'");
 
@@ -43,12 +44,15 @@ public class MessageQueueService {
 //    GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
 //    setTemporaryMessage(new String(getResponse.getBody()));
 
-    channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel){
+    channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel) {
       @Override
-      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-          throws IOException {
+      public void handleDelivery(String consumerTag, Envelope envelope,
+          AMQP.BasicProperties properties, byte[] body) throws IOException {
+
         try {
-          System.out.println("Received From Exchange : " + envelope.getExchange() + " With routing key " + envelope.getRoutingKey() + " Message: " + new String(body));
+          System.out.println(
+              "Received From Exchange : " + envelope.getExchange() + " With routing key " + envelope
+                  .getRoutingKey() + " Message: " + new String(body));
           channel.basicAck(envelope.getDeliveryTag(), true);
         } catch (Exception e) {
           e.printStackTrace();
@@ -71,3 +75,4 @@ public class MessageQueueService {
     return temporaryMessage;
   }
 }
+
