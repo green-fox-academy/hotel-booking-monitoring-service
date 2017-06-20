@@ -24,7 +24,7 @@ public class MessageQueueService {
   private final static String QUEUE_NAME = "kryptonite2";
   private static final String EXCHANGE_NAME = "log";
   Message jsonMessage = new Message();
-  private String temporaryMessage = "Shit";
+  private String temporaryMessage = "IT ISN'T WORKING";
   static final ExecutorService threadPool = Executors.newCachedThreadPool();
 
   public void send(String message) throws Exception {
@@ -48,35 +48,16 @@ public class MessageQueueService {
     GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
     channel.close();
     connection.close();
-    System.out.println(new String(getResponse.getBody()));
+    String temp = new String(getResponse.getBody());
+    setTemporaryMessage(jsonMessage.receiveJsonMessage(temp).getMessage());
     return new String(getResponse.getBody());
-//    channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-//    String queueName = channel.queueDeclare().getQueue();
-//    channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
-//
-//    System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
-//
-//    Consumer consumer = new DefaultConsumer(channel) {
-//      @Override
-//      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-//              throws IOException {
-//        final String message = new String(body, "UTF-8");
-//        System.out.println(message);
-//        Runnable runnable = new Runnable() {
-//          @Override
-//          public void run() {
-//            setTemporaryMessage(message);
-//          }
-//        };
-//        threadPool.submit(runnable);
-//        System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
-//      }
-//    };
-//    channel.basicConsume(QUEUE_NAME, true, consumer);
-//    return temporaryMessage;
   }
 
   public void setTemporaryMessage(String temporaryMessage) {
     this.temporaryMessage = temporaryMessage;
+  }
+
+  public String extractMessage(){
+    return temporaryMessage;
   }
 }
