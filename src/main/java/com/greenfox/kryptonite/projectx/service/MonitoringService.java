@@ -6,7 +6,7 @@ import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ProjectXService {
+public class MonitoringService {
 
   private LogService logging = new LogService();
   private MessageQueueService messageQueueService = new MessageQueueService();
@@ -41,10 +41,10 @@ public class ProjectXService {
   }
 
   public Log endpointLogger(String pathVariable) {
-    if (pathVariable.equals("heartbeat")) {
-      return logging.log("INFO", "HTTP-REQUEST=GET at greenfox-kryptonite.herokuapp.com/" + pathVariable);
+    if (pathVariable.equals("/heartbeat")) {
+      return logging.log("INFO", "HTTP-REQUEST=GET at " + pathVariable);
     } else {
-      return logging.log("ERROR", "HTTP-ERROR at greenfox-kryptonite.herokuapp.com/" + pathVariable);
+      return logging.log("ERROR", "HTTP-ERROR at " + pathVariable);
     }
   }
 }
