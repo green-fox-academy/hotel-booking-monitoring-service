@@ -2,6 +2,9 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.rabbitmq.client.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +23,7 @@ public class MessageQueueService {
   private final static String QUEUE_NAME = "kryptonite";
   private static final String EXCHANGE_NAME = "log";
   Message jsonMessage = new Message();
-  String extractJsonMessage = "WTF";
+  String extractJsonMessage = "IT ISN'T WORKING";
   ConnectionFactory factory = new ConnectionFactory();
 
   public void setUpQueue(ConnectionFactory newFactory) {
@@ -77,18 +80,24 @@ public class MessageQueueService {
           AMQP.BasicProperties properties, byte[] body)
           throws IOException {
         String message = new String(body, "UTF-8");
-        extractJsonMessage = jsonMessage.receiveJsonMessage(message).getMessage();
         System.out.println(
-            " [x] Received '" + extractJsonMessage + "'");
-
-
+            " [x] Received '" + message + "'");
+        System.out.println("LETS SEE " + message);
+        extractJsonMessage = jsonMessage.receiveJsonMessage(message).getMessage();
       }
     };
 
     channel.basicConsume(QUEUE_NAME, true, consumer);
-    System.out.println(message);
+    try {
+      Thread.sleep(30000);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+    }
+    System.out.println("this is the message" + message);
     return message;
   }
+
+
 
   public String extractMessage() {
     return extractJsonMessage;
