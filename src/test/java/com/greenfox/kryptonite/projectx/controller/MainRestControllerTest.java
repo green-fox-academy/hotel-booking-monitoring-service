@@ -4,14 +4,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.greenfox.kryptonite.projectx.model.Timestamp;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
+import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import com.greenfox.kryptonite.projectx.service.LogService;
-import com.greenfox.kryptonite.projectx.service.MonitoringService;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +52,7 @@ public class MainRestControllerTest {
   private HeartbeatRepository nullRepo;
   private LogService logging;
   private MessageQueueService messageQueueService;
+
   @MockBean
   HeartbeatRepository heartbeatRepository;
 
@@ -114,21 +118,37 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testRabbitMQ() throws Exception {
+  public void testIsItWorking() throws Exception {
     messageQueueService.send("Hello World");
     messageQueueService.consume();
     assertTrue(isItWorking);
   }
 
   @Test
+  public void testRabbitMQ() throws Exception {
+    messageQueueService.send("Hello World");
+    messageQueueService.consume();
+    MessageQueueService test = new MessageQueueService();
+
+    assertEquals("Hello World", test.extractMessage());
+  }
+
   public void testEndPointLoggerINFO() throws Exception{
     assertEquals(service.endpointLogger("/heartbeat").getReturnValue(), 400);
   }
 
 
   @Test
-  public void testEndPointLoggerERROR() throws Exception{
+  public void testEndPointLoggerERROR() throws Exception {
     assertEquals(service.endpointLogger("hearthbeat").getReturnValue(), 200);
   }
 
+  @Test
+  public void testLogWithMockTime() {
+
+    Timestamp time = new Timestamp();
+    String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
+
+    assertEquals(date, time.getDate());
+  }
 }

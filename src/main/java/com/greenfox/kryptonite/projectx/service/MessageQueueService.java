@@ -20,6 +20,7 @@ public class MessageQueueService {
   private final static String QUEUE_NAME = "kryptonite";
   private static final String EXCHANGE_NAME = "log";
   Message jsonMessage = new Message();
+  String extractJsonMessage = "Hello World";
 
   public void setUpQueue(ConnectionFactory newFactory) {
     newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
@@ -32,7 +33,7 @@ public class MessageQueueService {
   public void send(String message) throws Exception {
     try {
       rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_TX_URL"));
-    } catch(URISyntaxException e) {
+    } catch (URISyntaxException e) {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
@@ -43,7 +44,8 @@ public class MessageQueueService {
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
 
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
-    channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
+    channel.basicPublish(EXCHANGE_NAME, "", null,
+        jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
 
     channel.close();
@@ -51,13 +53,13 @@ public class MessageQueueService {
   }
 
   public String consume() throws Exception {
-    final String[] message = {""};
+    String message = "";
 
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
     try {
       rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL"));
-    } catch(URISyntaxException e) {
+    } catch (URISyntaxException e) {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
@@ -70,16 +72,25 @@ public class MessageQueueService {
     channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
 
     Consumer consumer = new DefaultConsumer(channel) {
-      @Override
-      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-              throws IOException {
-        message[0] = new String(body, "UTF-8");
 
-        System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message[0]).getMessage() + "'");
+      @Override
+      public void handleDelivery(String consumerTag, Envelope envelope,
+          AMQP.BasicProperties properties, byte[] body)
+          throws IOException {
+        String message = new String(body, "UTF-8");
+
+        System.out.println(
+            " [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
+          extractJsonMessage = jsonMessage.receiveJsonMessage(message).getMessage();
+        
       }
     };
 
     channel.basicConsume(QUEUE_NAME, true, consumer);
-    return message[0];
+    return message;
+  }
+
+  public String extractMessage() {
+    return extractJsonMessage;
   }
 }

@@ -4,14 +4,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Log {
+
+  Timestamp time = new Timestamp();
 
   private String type;
   private String date;
@@ -27,10 +32,17 @@ public class Log {
   }};
 
   public Log(String type, String message) {
-    this.date = new SimpleDateFormat("yyyy-MM-dd'T'KK:mm:ss'Z'").format(new Date());
+    this.date = time.getDate();
     this.type = type;
     this.message = message;
     this.returnValue = levels.get(type);
+  }
+
+  public Log(String type, String date, String message, int returnValue) {
+    this.type = type;
+    this.date = date;
+    this.message = message;
+    this.returnValue = returnValue;
   }
 
   @Override
