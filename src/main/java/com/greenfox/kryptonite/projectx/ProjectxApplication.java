@@ -1,5 +1,6 @@
 package com.greenfox.kryptonite.projectx;
 
+import org.apache.logging.log4j.core.lookup.MainMapLookup;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
