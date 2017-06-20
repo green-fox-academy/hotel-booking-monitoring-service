@@ -10,6 +10,8 @@ import lombok.Setter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Getter
 @Setter
@@ -21,6 +23,7 @@ public class MessageQueueService {
   private static final String EXCHANGE_NAME = "log";
   Message jsonMessage = new Message();
   private String temporaryMessage = "Shit";
+  static final ExecutorService threadPool = Executors.newCachedThreadPool();
 
   public void setUpQueue(ConnectionFactory newFactory) {
     newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
@@ -50,9 +53,8 @@ public class MessageQueueService {
   }
 
   public String consume() throws Exception {
-    String[] message = {""};
-
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+    System.out.println(temporaryMessage);
 
     try {
       rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL"));
@@ -70,11 +72,24 @@ public class MessageQueueService {
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
               throws IOException {
-        message[0] = new String(body, "UTF-8");
-        System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message[0]).getMessage() + "'");
+        final String message = new String(body, "UTF-8");
+        Runnable runnable = new Runnable() {
+          @Override
+          public void run() {
+            setTemporaryMessage(message);
+          }
+        };
+        threadPool.submit(runnable);
+        System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
+        System.out.println(2 + temporaryMessage);
       }
     };
     channel.basicConsume(queueName, true, consumer);
-    return message[0];
+    System.out.println(3 + temporaryMessage);
+    return temporaryMessage;
+  }
+
+  public void setTemporaryMessage(String temporaryMessage) {
+    this.temporaryMessage = temporaryMessage;
   }
 }
