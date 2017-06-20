@@ -5,10 +5,13 @@ import com.rabbitmq.client.*;
 import lombok.Getter;
 import lombok.Setter;
 
+
 import org.springframework.stereotype.Service;
 
 
 import java.io.IOException;
+
+
 
 @Service
 @Getter
@@ -41,8 +44,13 @@ public class MessageQueueService {
     factory.setUri(RABBIT_MQ_URL);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
-//    GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
-//    setTemporaryMessage(new String(getResponse.getBody()));
+    try {
+      GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
+      setTemporaryMessage(new String(getResponse.getBody()));
+    } catch (NullPointerException e) {
+      e.getStackTrace();
+      System.out.println("The queue is empty");
+    }
 
     channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel) {
       @Override
@@ -61,10 +69,12 @@ public class MessageQueueService {
       }
     });
 
+
     System.out.println("Ready to receive messages!");
 
     channel.close();
     connection.close();
+
   }
 
   public void setTemporaryMessage(String temporaryMessage) {
