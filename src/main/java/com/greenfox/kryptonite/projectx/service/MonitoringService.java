@@ -11,6 +11,7 @@ public class MonitoringService {
 
   private LogService logging = new LogService();
   private MessageQueueService messageQueueService = new MessageQueueService();
+  private Message message = new Message();
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
@@ -29,7 +30,8 @@ public class MonitoringService {
   }
 
   public String queueCheck() throws Exception {
-    String sentMessage = "Test";
+    String sentMessage = message.sendJsonMessage("Test");
+    messageQueueService.send("Test");
     String receivedMessage = messageQueueService.consume();
     System.out.println(receivedMessage);
     if (receivedMessage.equals(sentMessage)) {

@@ -18,8 +18,9 @@ import java.util.concurrent.Executors;
 @NoArgsConstructor
 public class MessageQueueService {
 
+  private final String RABBIT_MQ_URL = "amqp://rboFQPqa:y29Ecd4mAgXgqWY2D7RyqQ_yFrsAr6Ls@trapped-speedwell-1.bigwig.lshift.net:10172/NtK3wWTY2sDe";
   private URI rabbitMqUrl;
-  private final static String QUEUE_NAME = "kryptonite";
+  private final static String QUEUE_NAME = "kryptonite2";
   private static final String EXCHANGE_NAME = "log";
   Message jsonMessage = new Message();
   private String temporaryMessage = "Shit";
@@ -40,11 +41,12 @@ public class MessageQueueService {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
-    setUpQueue(factory);
+    factory.setUri(RABBIT_MQ_URL);
+//    setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    channel.basicPublish(EXCHANGE_NAME, QUEUE_NAME, null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
+    channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
 
     channel.close();
@@ -58,12 +60,13 @@ public class MessageQueueService {
       e.getStackTrace();
     }
     ConnectionFactory factory = new ConnectionFactory();
-    setUpQueue(factory);
+    factory.setUri(RABBIT_MQ_URL);
+//    setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
     String queueName = channel.queueDeclare().getQueue();
-    channel.queueBind(queueName, EXCHANGE_NAME, "");
+    channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
 
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
@@ -72,6 +75,7 @@ public class MessageQueueService {
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
               throws IOException {
         final String message = new String(body, "UTF-8");
+        System.out.println(message);
         Runnable runnable = new Runnable() {
           @Override
           public void run() {
@@ -82,7 +86,7 @@ public class MessageQueueService {
         System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
       }
     };
-    channel.basicConsume(queueName, true, consumer);
+    channel.basicConsume(QUEUE_NAME, true, consumer);
     return temporaryMessage;
   }
 

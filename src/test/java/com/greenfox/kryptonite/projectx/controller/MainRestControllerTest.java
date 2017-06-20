@@ -115,7 +115,6 @@ public class MainRestControllerTest {
 
   @Test
   public void testRabbitMQ() throws Exception {
-    messageQueueService.send("Hello World");
     messageQueueService.consume();
     assertTrue(isItWorking);
   }
