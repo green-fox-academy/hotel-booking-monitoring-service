@@ -32,7 +32,8 @@ public class MonitoringService {
   public String queueCheck() throws Exception {
     String sentMessage = message.sendJsonMessage("Test");
     messageQueueService.send("Test");
-    String receivedMessage = messageQueueService.consume();
+    messageQueueService.consume();
+    String receivedMessage = messageQueueService.getTemporaryMessage();
     System.out.println(receivedMessage);
     if (receivedMessage.equals(sentMessage)) {
       System.out.println("equals");
