@@ -114,8 +114,14 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testRabbitMQ() throws Exception {
+  public void testRabbitMQConsume() throws Exception {
     messageQueueService.consume();
+    assertTrue(isItWorking);
+  }
+
+  @Test
+  public void testRabbitMQSend() throws Exception {
+    messageQueueService.send("Mukodj!");
     assertTrue(isItWorking);
   }
 

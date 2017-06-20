@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 @NoArgsConstructor
 public class MessageQueueService {
 
-  private final String RABBIT_MQ_URL = "amqp://rboFQPqa:y29Ecd4mAgXgqWY2D7RyqQ_yFrsAr6Ls@trapped-speedwell-1.bigwig.lshift.net:10172/NtK3wWTY2sDe";
+  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private URI rabbitMqUrl;
   private final static String QUEUE_NAME = "kryptonite2";
   private static final String EXCHANGE_NAME = "log";
@@ -26,27 +26,13 @@ public class MessageQueueService {
   private String temporaryMessage = "Shit";
   static final ExecutorService threadPool = Executors.newCachedThreadPool();
 
-  public void setUpQueue(ConnectionFactory newFactory) {
-    newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
-    newFactory.setPassword(rabbitMqUrl.getUserInfo().split(":")[1]);
-    newFactory.setHost(rabbitMqUrl.getHost());
-    newFactory.setPort(rabbitMqUrl.getPort());
-    newFactory.setVirtualHost(rabbitMqUrl.getPath().substring(1));
-  }
-
   public void send(String message) throws Exception {
-    try {
-      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_TX_URL"));
-    } catch(URISyntaxException e) {
-      e.getStackTrace();
-    }
     ConnectionFactory factory = new ConnectionFactory();
     factory.setUri(RABBIT_MQ_URL);
-//    setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
+    channel.basicPublish("", QUEUE_NAME, null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
 
     channel.close();
@@ -54,14 +40,8 @@ public class MessageQueueService {
   }
 
   public String consume() throws Exception {
-    try {
-      rabbitMqUrl = new URI(System.getenv("RABBITMQ_BIGWIG_RX_URL"));
-    } catch(URISyntaxException e) {
-      e.getStackTrace();
-    }
     ConnectionFactory factory = new ConnectionFactory();
     factory.setUri(RABBIT_MQ_URL);
-//    setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
