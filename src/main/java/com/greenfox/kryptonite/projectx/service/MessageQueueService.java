@@ -47,23 +47,23 @@ public class MessageQueueService {
     Channel channel = connection.createChannel();
     GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
     setTemporaryMessage(new String(getResponse.getBody()));
-    System.out.println(new String(getResponse.getBody()));
-    channel.close();
-    connection.close();
-//    channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel){
-//      @Override
-//      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-//              throws IOException {
-//        try {
-//          channel.basicAck(envelope.getDeliveryTag(), true);
-//        } catch (Exception e) {
-//          e.printStackTrace();
-//          channel.basicReject(envelope.getDeliveryTag(), true);
-//        }
-//      }
-//    });
-//    System.out.println();
-//    return new String(getResponse.getBody());
+//    channel.close();
+//    connection.close();
+    channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel){
+      @Override
+      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
+              throws IOException {
+        try {
+          System.out.println("Received From Exchange : " + envelope.getExchange() + " With routing key " + envelope.getRoutingKey() + " Message: " + new String(body));
+          channel.basicAck(envelope.getDeliveryTag(), true);
+        } catch (Exception e) {
+          e.printStackTrace();
+          channel.basicReject(envelope.getDeliveryTag(), true);
+        }
+      }
+    });
+    System.out.println("Ready to receive messages!");
+    while(true){}
 
 
 //    channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
