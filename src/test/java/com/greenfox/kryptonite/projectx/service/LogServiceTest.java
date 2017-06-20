@@ -1,16 +1,17 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import com.greenfox.kryptonite.projectx.model.Log;
-import com.greenfox.kryptonite.projectx.model.Timestamp;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.Assert.assertEquals;
 
 public class LogServiceTest {
 
   private LogService logging;
+  private Logger logger = LogManager.getLogger(this.getClass());
+
 
   @Before
   public void setup() throws Exception {
@@ -34,7 +35,10 @@ public class LogServiceTest {
   }
 
   @Test
-  public void testErrorLogging() {
-    assertEquals(logging.log("ERROR","message").getReturnValue(), 200);
+  public void testAllLogs() {
+    logger.debug("This is a debug message");
+    logger.info("This is an info message");
+    logger.warn("This is a warn message");
+    logger.error("This is an error message");
   }
 }
