@@ -74,9 +74,6 @@ public class MessageQueueService {
       public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
               throws IOException {
         message[0] = new String(body, "UTF-8");
-        if (message[0] == null) {
-          message[0] = "";
-        }
 
         System.out.println(" [x] Received '" + jsonMessage.receiveJsonMessage(message[0]).getMessage() + "'");
       }
