@@ -41,7 +41,7 @@ public class MessageQueueService {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     try {
-      GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
+      GetResponse getResponse = channel.basicGet(QUEUE_NAME, true);
       setTemporaryMessage(new String(getResponse.getBody()));
     } catch (NullPointerException e) {
       e.getStackTrace();
@@ -55,6 +55,8 @@ public class MessageQueueService {
         try {
           System.out.println("Received From Exchange : " + envelope.getExchange() + " With routing key " + envelope.getRoutingKey() + " Message: " + new String(body));
           channel.basicAck(envelope.getDeliveryTag(), true);
+          setTemporaryMessage("setted  " + jsonMessage.receiveJsonMessage(new String(body)).getMessage());
+          System.out.println(jsonMessage.receiveJsonMessage(new String(body)).getMessage());
         } catch (Exception e) {
           e.printStackTrace();
           channel.basicReject(envelope.getDeliveryTag(), true);
@@ -65,8 +67,6 @@ public class MessageQueueService {
 
     System.out.println("Ready to receive messages!");
 
-    channel.close();
-    connection.close();
 
   }
 
