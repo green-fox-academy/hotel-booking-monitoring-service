@@ -2,7 +2,6 @@ package com.greenfox.kryptonite.projectx.controller;
 
 
 
-import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
@@ -20,10 +19,16 @@ public class MainRestController {
   private MonitoringService monitoringService;
 
   
-  @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
-  public Status heartbeat() throws Exception {
+  @RequestMapping(value = "/{heartbeat}", method = RequestMethod.GET)
+  public Status heartbeat(@PathVariable(name = "heartbeat") String pathVariable) throws Exception {
+    monitoringService.endpointLogger(pathVariable);
     return monitoringService.databaseCheck(heartbeatRepository);
   }
 
+  @RequestMapping(value = "/{pathVariable}", method = RequestMethod.GET)
+  public Status endpointLogger(@PathVariable(name = "pathVariable") String pathVariable) throws Exception {
+    monitoringService.endpointLogger(pathVariable);
+    return monitoringService.databaseCheck(heartbeatRepository);
+  }
 
 }
