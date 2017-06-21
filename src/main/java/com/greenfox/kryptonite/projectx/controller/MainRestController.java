@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class MainRestController {
 
-  MessageQueueService messageQueueService = new MessageQueueService();
-
   @Autowired
   private HeartbeatRepository heartbeatRepository;
 

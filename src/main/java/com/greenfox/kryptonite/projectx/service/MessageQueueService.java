@@ -2,6 +2,9 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.rabbitmq.client.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,7 +23,8 @@ public class MessageQueueService {
   private final static String QUEUE_NAME = "kryptonite";
   private static final String EXCHANGE_NAME = "log";
   Message jsonMessage = new Message();
-  String extractJsonMessage = "Hello World";
+  String extractJsonMessage = "IT ISN'T WORKING";
+  ConnectionFactory factory = new ConnectionFactory();
 
   public void setUpQueue(ConnectionFactory newFactory) {
     newFactory.setUsername(rabbitMqUrl.getUserInfo().split(":")[0]);
@@ -36,14 +40,13 @@ public class MessageQueueService {
     } catch (URISyntaxException e) {
       e.getStackTrace();
     }
-    ConnectionFactory factory = new ConnectionFactory();
+
     setUpQueue(factory);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
 
-    channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     channel.basicPublish(EXCHANGE_NAME, "", null,
         jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
     System.out.println(" [x] Sent '" + message + "'");
@@ -53,6 +56,7 @@ public class MessageQueueService {
   }
 
   public String consume() throws Exception {
+
     String message = "";
 
     System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
@@ -62,33 +66,38 @@ public class MessageQueueService {
     } catch (URISyntaxException e) {
       e.getStackTrace();
     }
-    ConnectionFactory factory = new ConnectionFactory();
     setUpQueue(factory);
+
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.queueDeclare(QUEUE_NAME, true, false, false, null);
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    String queueName = channel.queueDeclare().getQueue();
     channel.queueBind(QUEUE_NAME, EXCHANGE_NAME, "");
 
     Consumer consumer = new DefaultConsumer(channel) {
-
       @Override
       public void handleDelivery(String consumerTag, Envelope envelope,
           AMQP.BasicProperties properties, byte[] body)
           throws IOException {
         String message = new String(body, "UTF-8");
-
         System.out.println(
-            " [x] Received '" + jsonMessage.receiveJsonMessage(message).getMessage() + "'");
-          extractJsonMessage = jsonMessage.receiveJsonMessage(message).getMessage();
-
+            " [x] Received '" + message + "'");
+        System.out.println("LETS SEE " + message);
+        extractJsonMessage = jsonMessage.receiveJsonMessage(message).getMessage();
       }
     };
 
     channel.basicConsume(QUEUE_NAME, true, consumer);
+    try {
+      Thread.sleep(30000);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
+    }
+    System.out.println("this is the message" + message);
     return message;
   }
+
+
 
   public String extractMessage() {
     return extractJsonMessage;
