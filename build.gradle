@@ -37,6 +37,5 @@ dependencies {
 	compile group: 'com.rabbitmq', name: 'amqp-client', version: '4.1.0'
 	compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.8.2'
 	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.8.2'
-//	runtime 'org.springframework.boot:spring-boot-starter-log4j2'
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
