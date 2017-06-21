@@ -28,20 +28,19 @@ public class MonitoringService {
   }
 
   public String queueCheck() throws Exception {
-    String sentMesage = "Test";
-    messageQueueService.send(sentMesage);
-    String receivedMessage = messageQueueService.consume();
-    if (receivedMessage.equals(sentMesage)) {
+    if (messageQueueService.getCount("kryptonite2") == 0) {
       return "ok";
-    } else if (!receivedMessage.equals(sentMesage)) {
+    } else if (messageQueueService.getCount("kryptonite2") != 0) {
       return "error";
     } else {
-      return "error";
+      return "connection error";
     }
   }
 
   public void endpointLogger(String pathVariable) {
     if (pathVariable.equals("heartbeat")) {
+      logger.info("HTTP-REQUEST=GET at " + pathVariable);
+    } else if (pathVariable.equals("monitor")) {
       logger.info("HTTP-REQUEST=GET at " + pathVariable);
     } else {
       logger.error( "HTTP-ERROR at " + pathVariable);
