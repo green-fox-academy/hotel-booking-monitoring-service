@@ -136,4 +136,14 @@ public class MainRestControllerTest {
     assertEquals(service.endpointLogger("hearthbeat").getReturnValue(), 200);
   }
 
+  @Test
+  public void testRabbitMqConsumeParadox() throws Exception {
+    MonitoringService monitor = new MonitoringService();
+
+    messageQueueService.send("WORKING");
+    messageQueueService.consume();
+    System.out.println(monitor.extractReceivedMessage());
+    assertTrue(monitor.extractReceivedMessage().toString().equals("This isn't working!"));
+  }
+
 }
