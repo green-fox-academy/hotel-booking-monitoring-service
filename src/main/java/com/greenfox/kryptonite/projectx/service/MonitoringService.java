@@ -43,7 +43,7 @@ public class MonitoringService {
     } else if (pathVariable.equals("monitor")) {
       logger.info("HTTP-REQUEST=GET at " + pathVariable);
     } else {
-      logger.error( "HTTP-ERROR at " + pathVariable);
+      logger.error("HTTP-ERROR at " + pathVariable);
     }
   }
 }
