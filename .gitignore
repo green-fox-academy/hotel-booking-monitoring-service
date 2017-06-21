@@ -12,3 +12,4 @@ application.properties
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
+!log4j2.xml
