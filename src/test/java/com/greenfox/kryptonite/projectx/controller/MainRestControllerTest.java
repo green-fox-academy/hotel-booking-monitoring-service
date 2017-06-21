@@ -12,7 +12,6 @@ import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
-import com.greenfox.kryptonite.projectx.service.LogService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.junit.Before;
@@ -50,7 +49,6 @@ public class MainRestControllerTest {
   private HeartbeatRepository heartbeatRepositoryMock;
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
-  private LogService logging;
   private MessageQueueService messageQueueService;
 
   @MockBean
@@ -66,7 +64,6 @@ public class MainRestControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
-    this.logging = new LogService();
     this.messageQueueService = new MessageQueueService();
   }
 
@@ -122,26 +119,6 @@ public class MainRestControllerTest {
     messageQueueService.send("Hello World");
     messageQueueService.consume();
     assertTrue(isItWorking);
-  }
-
-  @Test
-  public void testRabbitMQ() throws Exception {
-    messageQueueService.send("test string");
-
-    MessageQueueService service = new MessageQueueService();
-    messageQueueService.consume();
-
-    assertEquals("test string", service.extractMessage());
-  }
-
-  public void testEndPointLoggerINFO() throws Exception{
-    assertEquals(service.endpointLogger("/heartbeat").getReturnValue(), 400);
-  }
-
-
-  @Test
-  public void testEndPointLoggerERROR() throws Exception {
-    assertEquals(service.endpointLogger("hearthbeat").getReturnValue(), 200);
   }
 
   @Test
