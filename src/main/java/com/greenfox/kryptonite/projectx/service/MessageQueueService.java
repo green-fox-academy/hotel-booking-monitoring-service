@@ -25,7 +25,16 @@ public class MessageQueueService {
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
     channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
 
-    System.out.println(" [x] Sent '" + message + "'");
+    channel.close();
+    connection.close();
+  }
+
+  public void sendToEvents(String message) throws Exception {
+    ConnectionFactory factory = new ConnectionFactory();
+    factory.setUri(RABBIT_MQ_URL);
+    Connection connection = factory.newConnection();
+    Channel channel = connection.createChannel();
+    channel.basicPublish("", "events", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
 
     channel.close();
     connection.close();
