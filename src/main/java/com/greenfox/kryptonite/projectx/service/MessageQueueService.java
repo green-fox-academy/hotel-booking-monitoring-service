@@ -36,7 +36,7 @@ public class MessageQueueService {
     factory.setUri(RABBIT_MQ_URL);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
-    GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
+    GetResponse getResponse = channel.basicGet(QUEUE_NAME, true);
     setTemporaryMessage(new String(getResponse.getBody()));
     
     channel.close();
