@@ -18,8 +18,8 @@ public class MainRestController {
   @Autowired
   private MonitoringService monitoringService;
 
-
-  @RequestMapping(value = "/{heartbeat}", method = RequestMethod.GET)
+  
+  @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public Status heartbeat() throws Exception {
     monitoringService.endpointLogger("heartbeat");
     return monitoringService.databaseCheck(heartbeatRepository);

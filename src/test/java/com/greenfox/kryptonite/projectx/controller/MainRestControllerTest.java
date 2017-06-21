@@ -130,10 +130,8 @@ public class MainRestControllerTest {
 
   @Test
   public void testLogWithMockTime() {
-
     Timestamp time = new Timestamp();
     String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
-
     assertEquals(date, time.getDate());
   }
 
