@@ -1,8 +1,13 @@
 package com.greenfox.kryptonite.projectx.service;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Message;
+import com.greenfox.kryptonite.projectx.model.Service;
+import com.greenfox.kryptonite.projectx.model.Services;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,26 +19,30 @@ public class JsonService {
   private static final String DATAPATH = "monitoring-services.json";
   private static final String ERROR = "SYNTAX ERROR: ";
 
-  static List<Message> readFiles() {
+  static Services readFiles() throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
     List<String> rawLines = new ArrayList<>();
     Path myPath = Paths.get(DATAPATH);
+
     try {
       rawLines = Files.readAllLines(myPath);
     } catch (IOException ex) {
       System.out.println(ERROR + "READ");
     }
-    List<Message> services = new ArrayList<>();
+
+    StringBuilder fileContentConvertedToJson = new StringBuilder();
     for (String rawLine : rawLines) {
-      String[] tempElements = rawLine.split(";");
-      Message message = new Message();
-      todos.add(message);
+      fileContentConvertedToJson.append(rawLine);
     }
-    return todos;
+    return mapper.readValue(fileContentConvertedToJson.toString(), Services.class);
   }
 
-  static void writeToFile(List<Message> data) {
+  static void writeToFile(Services servicesJson) throws JsonProcessingException {
     Path myPath = Paths.get(DATAPATH);
     List<String> dataString = new ArrayList<>();
+    ObjectMapper mapper = new ObjectMapper();
+    dataString.add(mapper.writeValueAsString(servicesJson));
+    
     try {
       Files.write(myPath, dataString);
     } catch (IOException ex) {
