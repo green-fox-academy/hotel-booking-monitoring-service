@@ -4,16 +4,25 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfox.kryptonite.projectx.model.Service;
+import com.greenfox.kryptonite.projectx.model.Services;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
+import com.greenfox.kryptonite.projectx.service.JsonService;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -140,7 +149,6 @@ public class MainRestControllerTest {
     messageQueueService.send("WORKING");
     messageQueueService.consume();
     String requestedMessage = messageQueueService.getTemporaryMessage();
-    System.out.println(requestedMessage);
     assertTrue(!requestedMessage.equals("This isn't working!"));
   }
 
@@ -157,4 +165,24 @@ public class MainRestControllerTest {
             .andExpect(jsonPath("$.status", is("ok")));
   }
 
+
+  public void testWriteFile() throws JsonProcessingException {
+    Service service1 = new Service("host1", "berta@greenfox.com");
+    Service service2 = new Service("host2", "tojasmamusza@greenfox.com");
+    List<Service> serviceList = new ArrayList<>(Arrays.asList(service1, service2));
+    Services services = new Services(serviceList);
+    JsonService jsonService = new JsonService();
+    assertTrue(jsonService.writeToFile(services));
+  }
+
+  @Test
+  public void testReadFile() throws IOException {
+    JsonService jsonService = new JsonService();
+
+    ObjectMapper mapper = new ObjectMapper();
+    String readJson = mapper.writeValueAsString(jsonService.readFiles());
+    String expected = "{\"services\":[{\"host\":\"host1\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"host2\",\"contact\":\"tojasmamusza@greenfox.com\"}]}";
+
+    assertEquals(expected, readJson);
+  }
 }
