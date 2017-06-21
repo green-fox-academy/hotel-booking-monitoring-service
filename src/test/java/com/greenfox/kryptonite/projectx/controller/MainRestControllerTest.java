@@ -48,7 +48,10 @@ public class MainRestControllerTest {
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
   private LogService logging;
+
+  @Autowired
   private MessageQueueService messageQueueService;
+
   @MockBean
   HeartbeatRepository heartbeatRepository;
 
@@ -134,6 +137,17 @@ public class MainRestControllerTest {
   @Test
   public void testEndPointLoggerERROR() throws Exception{
     assertEquals(service.endpointLogger("hearthbeat").getReturnValue(), 200);
+  }
+
+  @Test
+  public void testRabbitMqConsumeParadox() throws Exception {
+    MonitoringService monitor = new MonitoringService();
+
+    messageQueueService.send("WORKING");
+    messageQueueService.consume();
+    String requestedMessage = messageQueueService.getTemporaryMessage();
+    System.out.println(requestedMessage);
+    assertTrue(!requestedMessage.equals("This isn't working!"));
   }
 
 }

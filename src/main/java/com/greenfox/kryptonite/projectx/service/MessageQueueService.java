@@ -39,7 +39,7 @@ public class MessageQueueService {
 
     GetResponse getResponse = channel.basicGet(QUEUE_NAME, true);
     setTemporaryMessage(new String(getResponse.getBody()));
-    
+
     channel.close();
     connection.close();
 

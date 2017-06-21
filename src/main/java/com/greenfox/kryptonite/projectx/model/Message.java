@@ -43,4 +43,13 @@ public class Message {
 
     return mapper.readValue(jsonMessage, Message.class);
   }
+
+  @Override
+  public String toString() {
+    return "Message{" +
+        "message='" + message + '\'' +
+        ", hostname='" + hostname + '\'' +
+        ", date='" + date + '\'' +
+        '}';
+  }
 }

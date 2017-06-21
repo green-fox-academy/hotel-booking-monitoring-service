@@ -4,6 +4,7 @@ import com.greenfox.kryptonite.projectx.model.Log;
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
+import java.io.IOException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +13,8 @@ public class MonitoringService {
   private LogService logging = new LogService();
   private MessageQueueService messageQueueService = new MessageQueueService();
   private Message message = new Message();
+
+  String receivedMessage = "This isn't working!";
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
@@ -33,8 +36,11 @@ public class MonitoringService {
     String sentMessage = message.sendJsonMessage("Test");
     messageQueueService.send("Test");
     messageQueueService.consume();
-    String receivedMessage = messageQueueService.getTemporaryMessage();
+    receivedMessage = messageQueueService.getTemporaryMessage();
     System.out.println(receivedMessage);
+
+
+
     if (receivedMessage.equals(sentMessage)) {
       System.out.println("equals");
       return "ok";
@@ -45,6 +51,10 @@ public class MonitoringService {
       System.out.println("else");
       return "error";
     }
+  }
+
+  public Message extractReceivedMessage() throws IOException {
+    return message.receiveJsonMessage(receivedMessage);
   }
 
   public Log endpointLogger(String pathVariable) {
