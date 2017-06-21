@@ -142,7 +142,6 @@ public class MainRestControllerTest {
     messageQueueService.send("WORKING");
     messageQueueService.consume();
     String requestedMessage = messageQueueService.getTemporaryMessage();
-    System.out.println(requestedMessage);
     assertTrue(!requestedMessage.equals("This isn't working!"));
   }
 

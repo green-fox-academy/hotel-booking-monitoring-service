@@ -19,9 +19,10 @@ public class MainRestController {
   private MonitoringService monitoringService;
 
   
-  @RequestMapping(value = "/{heartbeat}", method = RequestMethod.GET)
-  public Status heartbeat(@PathVariable(name = "heartbeat") String pathVariable) throws Exception {
-    monitoringService.endpointLogger(pathVariable);
+  @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+  public Status heartbeat() throws Exception {
+    monitoringService.endpointLogger("heartbeat");
+
     return monitoringService.databaseCheck(heartbeatRepository);
   }
 }
