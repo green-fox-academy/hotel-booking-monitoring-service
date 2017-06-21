@@ -12,10 +12,4 @@ public class MonitoringServiceTest {
   public void setMonitoringService() {
     monitoring = new MonitoringService();
   }
-
-  @Test
-  public void testQueueChecker() throws Exception {
-    assertEquals(monitoring.queueCheck(), "ok");
-  }
-
 }
