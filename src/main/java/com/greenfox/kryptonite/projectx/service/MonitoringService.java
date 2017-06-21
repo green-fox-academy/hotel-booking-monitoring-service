@@ -1,6 +1,5 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import com.greenfox.kryptonite.projectx.model.Log;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.springframework.stereotype.Service;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class MonitoringService {
 
-  private LogService logging = new LogService();
   private MessageQueueService messageQueueService = new MessageQueueService();
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
@@ -40,11 +38,11 @@ public class MonitoringService {
     }
   }
 
-  public Log endpointLogger(String pathVariable) {
-    if (pathVariable.equals("/heartbeat")) {
-      return logging.log("INFO", "HTTP-REQUEST=GET at " + pathVariable);
+  public void endpointLogger(String pathVariable) {
+    if (pathVariable.equals("heartbeat")) {
+      logger.info("HTTP-REQUEST=GET at " + pathVariable);
     } else {
-      return logging.log("ERROR", "HTTP-ERROR at " + pathVariable);
+      logger.error( "HTTP-ERROR at " + pathVariable);
     }
   }
 }
