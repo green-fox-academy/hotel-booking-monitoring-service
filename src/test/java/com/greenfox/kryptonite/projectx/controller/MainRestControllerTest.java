@@ -165,7 +165,7 @@ public class MainRestControllerTest {
             .andExpect(jsonPath("$.status", is("ok")));
   }
 
-
+  @Test
   public void testWriteFile() throws JsonProcessingException {
     Service service1 = new Service("host1", "berta@greenfox.com");
     Service service2 = new Service("host2", "tojasmamusza@greenfox.com");
