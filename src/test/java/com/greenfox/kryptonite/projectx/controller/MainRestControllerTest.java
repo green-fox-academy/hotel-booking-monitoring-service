@@ -148,4 +148,13 @@ public class MainRestControllerTest {
   public void testQueuedMessageCount() throws Exception {
     assertTrue(messageQueueService.getCount("kryptonite") == 0);
   }
+
+  @Test
+  public void testMonitorEndPoint() throws Exception {
+    mockMvc.perform(get("/monitor"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.status", is("ok")));
+  }
+
 }

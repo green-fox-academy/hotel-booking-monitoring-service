@@ -1,10 +1,13 @@
 package com.greenfox.kryptonite.projectx.service;
 
+import com.greenfox.kryptonite.projectx.model.ServiceStatus;
+import com.greenfox.kryptonite.projectx.model.ServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MonitoringService {
@@ -46,4 +49,16 @@ public class MonitoringService {
       logger.error("HTTP-ERROR at " + pathVariable);
     }
   }
+
+  public ServiceStatus monitorOtherServices(String host){
+    Status currentStatus = new RestTemplate().getForObject(host + "/heartbeat", Status.class);
+    if (currentStatus.getStatus().equals("ok")) {
+      return new ServiceStatus(host, "ok");
+    } else {
+      return new ServiceStatus(host, "error");
+    }
+  }
+
+
+
 }

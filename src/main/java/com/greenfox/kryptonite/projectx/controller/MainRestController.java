@@ -2,6 +2,8 @@ package com.greenfox.kryptonite.projectx.controller;
 
 
 
+import com.greenfox.kryptonite.projectx.model.ServiceStatus;
+import com.greenfox.kryptonite.projectx.model.ServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
@@ -23,6 +25,11 @@ public class MainRestController {
   public Status heartbeat() throws Exception {
     monitoringService.endpointLogger("heartbeat");
     return monitoringService.databaseCheck(heartbeatRepository);
+  }
+
+  @RequestMapping(value = "/monitor", method = RequestMethod.GET)
+  public ServiceStatus monitor() {
+  return monitoringService.monitorOtherServices("https://hotel-booking-user-service.herokuapp.com");
   }
 
   @RequestMapping(value = "/{pathVariable}")
