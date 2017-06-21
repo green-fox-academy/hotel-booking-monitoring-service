@@ -24,11 +24,4 @@ public class MainRestController {
     monitoringService.endpointLogger(pathVariable);
     return monitoringService.databaseCheck(heartbeatRepository);
   }
-
-  @RequestMapping(value = "/{pathVariable}", method = RequestMethod.GET)
-  public Status endpointLogger(@PathVariable(name = "pathVariable") String pathVariable) throws Exception {
-    monitoringService.endpointLogger(pathVariable);
-    return monitoringService.databaseCheck(heartbeatRepository);
-  }
-
 }

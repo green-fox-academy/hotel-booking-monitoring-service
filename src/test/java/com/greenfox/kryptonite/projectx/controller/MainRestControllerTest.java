@@ -49,6 +49,8 @@ public class MainRestControllerTest {
   private HeartbeatRepository heartbeatRepositoryMock;
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
+
+  @Autowired
   private MessageQueueService messageQueueService;
 
   @MockBean
@@ -115,9 +117,14 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testIsItWorking() throws Exception {
-    messageQueueService.send("Hello World");
+  public void testRabbitMQConsume() throws Exception {
     messageQueueService.consume();
+    assertTrue(isItWorking);
+  }
+
+  @Test
+  public void testRabbitMQSend() throws Exception {
+    messageQueueService.send("Mukodj!");
     assertTrue(isItWorking);
   }
 
@@ -128,5 +135,19 @@ public class MainRestControllerTest {
     String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
 
     assertEquals(date, time.getDate());
+  }
+
+  @Test
+  public void testRabbitMqConsumeParadox() throws Exception {
+    messageQueueService.send("WORKING");
+    messageQueueService.consume();
+    String requestedMessage = messageQueueService.getTemporaryMessage();
+    System.out.println(requestedMessage);
+    assertTrue(!requestedMessage.equals("This isn't working!"));
+  }
+
+  @Test
+  public void testQueuedMessageCount() throws Exception {
+    assertTrue(messageQueueService.getCount("kryptonite") == 0);
   }
 }

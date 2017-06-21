@@ -28,15 +28,12 @@ public class MonitoringService {
   }
 
   public String queueCheck() throws Exception {
-    String sentMesage = "Test";
-    messageQueueService.send(sentMesage);
-    String receivedMessage = messageQueueService.consume();
-    if (receivedMessage.equals(sentMesage)) {
+    if (messageQueueService.getCount("kryptonite2") == 0) {
       return "ok";
-    } else if (!receivedMessage.equals(sentMesage)) {
+    } else if (messageQueueService.getCount("kryptonite2") != 0) {
       return "error";
     } else {
-      return "error";
+      return "connection error";
     }
   }
 
