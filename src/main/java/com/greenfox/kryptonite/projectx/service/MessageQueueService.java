@@ -23,7 +23,7 @@ public class MessageQueueService {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
+    channel.basicPublish(EXCHANGE_NAME,"", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
 
     channel.close();
     connection.close();
