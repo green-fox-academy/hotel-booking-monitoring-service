@@ -12,9 +12,6 @@ public class MonitoringService {
 
   private LogService logging = new LogService();
   private MessageQueueService messageQueueService = new MessageQueueService();
-  private Message message = new Message();
-
-  String receivedMessage = "This isn't working!";
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
@@ -33,28 +30,13 @@ public class MonitoringService {
   }
 
   public String queueCheck() throws Exception {
-    String sentMessage = message.sendJsonMessage("Test");
-    messageQueueService.send("Test");
-    messageQueueService.consume();
-    receivedMessage = messageQueueService.getTemporaryMessage();
-    System.out.println(receivedMessage);
-
-
-
-    if (receivedMessage.equals(sentMessage)) {
-      System.out.println("equals");
+    if (messageQueueService.getCount("kryptonite2") == 0) {
       return "ok";
-    } else if (!receivedMessage.equals(sentMessage)) {
-      System.out.println("not-equals");
+    } else if (messageQueueService.getCount("kryptonite2") != 0) {
       return "error";
     } else {
-      System.out.println("else");
-      return "error";
+      return "connection error";
     }
-  }
-
-  public Message extractReceivedMessage() throws IOException {
-    return message.receiveJsonMessage(receivedMessage);
   }
 
   public Log endpointLogger(String pathVariable) {

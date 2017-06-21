@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 public class MessageQueueService {
 
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
-  private final static String QUEUE_NAME = "kryptonite2";
-  private static final String EXCHANGE_NAME = "log";
+  private final String QUEUE_NAME = "kryptonite2";
+  private final String EXCHANGE_NAME = "log";
   private Message jsonMessage = new Message();
   private String temporaryMessage = "Shit";
 
@@ -23,7 +23,7 @@ public class MessageQueueService {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    channel.basicPublish("", QUEUE_NAME, null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
+    channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
 
     System.out.println(" [x] Sent '" + message + "'");
 
@@ -36,37 +36,22 @@ public class MessageQueueService {
     factory.setUri(RABBIT_MQ_URL);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
-
+    channel.queueBind(QUEUE_NAME,EXCHANGE_NAME,"");
     GetResponse getResponse = channel.basicGet(QUEUE_NAME, true);
-
     setTemporaryMessage(new String(getResponse.getBody()));
 
     channel.close();
     connection.close();
 
-
-//    channel.basicConsume(QUEUE_NAME, false, new DefaultConsumer(channel){
-//      @Override
-//      public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body)
-//              throws IOException {
-//        try {
-//          System.out.println("Received From Exchange : " + envelope.getExchange() + " With routing key " + envelope.getRoutingKey() + " Message: " + new String(body));
-//          channel.basicAck(envelope.getDeliveryTag(), true);
-//        } catch (Exception e) {
-//          e.printStackTrace();
-//          channel.basicReject(envelope.getDeliveryTag(), true);
-//        }
-//      }
-//    });
-//
-    System.out.println("Ready to receive messages!");
+    System.out.println("Consume method run without problem!");
   }
 
-  public void setTemporaryMessage(String temporaryMessage) {
-    this.temporaryMessage = temporaryMessage;
-  }
-
-  public String getTemporaryMessage() {
-    return temporaryMessage;
+  public Integer getCount(String queueName) throws Exception {
+    ConnectionFactory factory = new ConnectionFactory();
+    factory.setUri(RABBIT_MQ_URL);
+    Connection connection = factory.newConnection();
+    Channel channel = connection.createChannel();
+    AMQP.Queue.DeclareOk declare = channel.queueDeclarePassive(queueName);
+    return declare.getMessageCount();
   }
 }

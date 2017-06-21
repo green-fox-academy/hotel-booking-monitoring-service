@@ -7,7 +7,12 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.TimeoutException;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import com.greenfox.kryptonite.projectx.service.LogService;
@@ -118,7 +123,10 @@ public class MainRestControllerTest {
 
   @Test
   public void testRabbitMQConsume() throws Exception {
-    messageQueueService.consume();
+//    for (int i = 0; i < messageQueueService.getCount("kryptonite2"); i++) {
+//      System.out.println(messageQueueService.getCount("kryptonite2"));
+      messageQueueService.consume();
+//    }
     assertTrue(isItWorking);
   }
 
@@ -148,6 +156,11 @@ public class MainRestControllerTest {
     String requestedMessage = messageQueueService.getTemporaryMessage();
     System.out.println(requestedMessage);
     assertTrue(!requestedMessage.equals("This isn't working!"));
+  }
+
+  @Test
+  public void testQueuedMessageCount() throws Exception {
+    assertTrue(messageQueueService.getCount("kryptonite") == 0);
   }
 
 }
