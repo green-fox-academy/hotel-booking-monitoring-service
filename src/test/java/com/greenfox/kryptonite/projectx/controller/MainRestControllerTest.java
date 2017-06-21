@@ -7,12 +7,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.concurrent.TimeoutException;
 
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import com.greenfox.kryptonite.projectx.service.LogService;
