@@ -37,7 +37,7 @@ public class MessageQueueService {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
 
-    GetResponse getResponse = channel.basicGet(QUEUE_NAME, false);
+    GetResponse getResponse = channel.basicGet(QUEUE_NAME, true);
     setTemporaryMessage(new String(getResponse.getBody()));
     
     channel.close();
