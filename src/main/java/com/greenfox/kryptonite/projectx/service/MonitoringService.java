@@ -1,7 +1,6 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.ServiceStatus;
-import com.greenfox.kryptonite.projectx.model.ServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.apache.logging.log4j.LogManager;
@@ -42,11 +41,11 @@ public class MonitoringService {
 
   public void endpointLogger(String pathVariable) {
     if (pathVariable.equals("heartbeat")) {
-      logger.info("HTTP-REQUEST=GET at " + pathVariable);
+      logger.info("HTTP-REQUEST=GET at /" + pathVariable);
     } else if (pathVariable.equals("monitor")) {
-      logger.info("HTTP-REQUEST=GET at " + pathVariable);
+      logger.info("HTTP-REQUEST=GET at /" + pathVariable);
     } else {
-      logger.error("HTTP-ERROR at " + pathVariable);
+      logger.error("HTTP-ERROR at /" + pathVariable);
     }
   }
 
@@ -58,7 +57,4 @@ public class MonitoringService {
       return new ServiceStatus(host, "error");
     }
   }
-
-
-
 }
