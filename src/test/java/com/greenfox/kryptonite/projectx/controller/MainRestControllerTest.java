@@ -48,7 +48,10 @@ public class MainRestControllerTest {
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
   private LogService logging;
+
+  @Autowired
   private MessageQueueService messageQueueService;
+
   @MockBean
   HeartbeatRepository heartbeatRepository;
 
@@ -142,8 +145,9 @@ public class MainRestControllerTest {
 
     messageQueueService.send("WORKING");
     messageQueueService.consume();
-    System.out.println(monitor.extractReceivedMessage());
-    assertTrue(monitor.extractReceivedMessage().toString().equals("This isn't working!"));
+    String requestedMessage = messageQueueService.getTemporaryMessage();
+    System.out.println(requestedMessage);
+    assertTrue(!requestedMessage.equals("This isn't working!"));
   }
 
 }
