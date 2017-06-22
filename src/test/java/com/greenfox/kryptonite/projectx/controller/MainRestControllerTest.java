@@ -177,7 +177,7 @@ public class MainRestControllerTest {
 
     ObjectMapper mapper = new ObjectMapper();
     String readJson = mapper.writeValueAsString(jsonService.readFiles(DATAPATH));
-    String expected = "{\"services\":[{\"host\":\"host1\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"host2\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"host3\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"host4\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"host6\",\"contact\":\"tojasmamusza@greenfox.com\"}]}";
+    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"kakiemoticon@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"kakiemoticon@greenfox.com\"},{\"host\":\"host6\",\"contact\":\"mrpoopybutthole@greenfox.com\"}]}";
 
     assertEquals(expected, readJson);
   }
