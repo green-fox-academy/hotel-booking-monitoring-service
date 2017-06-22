@@ -48,7 +48,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @EnableWebMvc
 public class MainRestControllerTest {
 
-
   private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
       MediaType.APPLICATION_JSON.getSubtype(),
       Charset.forName("utf8"));
@@ -154,7 +153,7 @@ public class MainRestControllerTest {
 
   @Test
   public void testQueuedMessageCount() throws Exception {
-    assertTrue(messageQueueService.getCount("kryptonite") == 0);
+    assertTrue(messageQueueService.getCount("testqueue") == 0);
   }
 
   @Test

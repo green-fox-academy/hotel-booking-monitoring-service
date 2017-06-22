@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class MessageQueueService {
 
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
-  private final String QUEUE_NAME = "kryptonite2";
+  private final String QUEUE_NAME = "heartbeat";
   private final String EXCHANGE_NAME = "log";
   private Message jsonMessage = new Message();
   private String temporaryMessage = "Shit";
@@ -23,9 +23,18 @@ public class MessageQueueService {
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
     channel.exchangeDeclare(EXCHANGE_NAME, BuiltinExchangeType.FANOUT);
-    channel.basicPublish(EXCHANGE_NAME, "", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
+    channel.basicPublish(EXCHANGE_NAME,"", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
 
-    System.out.println(" [x] Sent '" + message + "'");
+    channel.close();
+    connection.close();
+  }
+
+  public void sendToEvents(String message) throws Exception {
+    ConnectionFactory factory = new ConnectionFactory();
+    factory.setUri(RABBIT_MQ_URL);
+    Connection connection = factory.newConnection();
+    Channel channel = connection.createChannel();
+    channel.basicPublish("", "events", null, jsonMessage.sendJsonMessage(message).getBytes("UTF-8"));
 
     channel.close();
     connection.close();
