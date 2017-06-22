@@ -16,13 +16,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class JsonService {
 
-  private static final String DATAPATH = "monitoring-services.json";
   private static final String ERROR = "SYNTAX ERROR: ";
 
-  public Services readFiles() throws IOException {
+  public Services readFiles(String datapath) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     List<String> rawLines = new ArrayList<>();
-    Path myPath = Paths.get(DATAPATH);
+    Path myPath = Paths.get(datapath);
 
     try {
       rawLines = Files.readAllLines(myPath);
@@ -37,10 +36,10 @@ public class JsonService {
     return mapper.readValue(fileContentConvertedToJson.toString(), Services.class);
   }
 
-  public boolean writeToFile(Services servicesJson) throws JsonProcessingException {
+  public boolean writeToFile(Services servicesJson, String datapath) throws JsonProcessingException {
     boolean runTimeChecker = true;
 
-    Path myPath = Paths.get(DATAPATH);
+    Path myPath = Paths.get(datapath);
     List<String> dataString = new ArrayList<>();
     ObjectMapper mapper = new ObjectMapper();
     dataString.add(mapper.writeValueAsString(servicesJson));

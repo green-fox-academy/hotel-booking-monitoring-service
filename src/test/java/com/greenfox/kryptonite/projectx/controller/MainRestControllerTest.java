@@ -57,6 +57,7 @@ public class MainRestControllerTest {
   private HeartbeatRepository heartbeatRepositoryMock;
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
+  private static final String DATAPATH = "test-monitoring-services.json";
 
   @Autowired
   private MessageQueueService messageQueueService;
@@ -171,7 +172,7 @@ public class MainRestControllerTest {
     List<Service> serviceList = new ArrayList<>(Arrays.asList(service1, service2));
     Services services = new Services(serviceList);
     JsonService jsonService = new JsonService();
-    assertTrue(jsonService.writeToFile(services));
+    assertTrue(jsonService.writeToFile(services, DATAPATH));
   }
 
   @Test
@@ -179,7 +180,7 @@ public class MainRestControllerTest {
     JsonService jsonService = new JsonService();
 
     ObjectMapper mapper = new ObjectMapper();
-    String readJson = mapper.writeValueAsString(jsonService.readFiles());
+    String readJson = mapper.writeValueAsString(jsonService.readFiles(DATAPATH));
     String expected = "{\"services\":[{\"host\":\"host1\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"host2\",\"contact\":\"tojasmamusza@greenfox.com\"}]}";
 
     assertEquals(expected, readJson);
