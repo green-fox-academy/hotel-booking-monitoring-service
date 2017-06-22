@@ -61,7 +61,6 @@ public class MonitoringService {
 
   public ServiceStatus monitorOtherServices(String host) {
     ServiceStatus serviceStatus;
-
     try {
       Status currentStatus = new RestTemplate().getForObject(host + "/heartbeat", Status.class);
       serviceStatus = new ServiceStatus(host, "ok");
