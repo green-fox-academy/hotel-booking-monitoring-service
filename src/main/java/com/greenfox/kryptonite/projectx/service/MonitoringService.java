@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -29,14 +30,15 @@ public class MonitoringService {
     if (heartbeatRepository == null) {
       logger.error("Database not presented.");
       logger.debug("Database may not exist. Check database connection or existence.");
-      return new Status("ok", "error",queueCheck());
+      return new Status("ok", "error", queueCheck());
     } else if (heartbeatRepository.count() > 0) {
-      logger.info("Database connection is ok and contains " + heartbeatRepository.count() + " element(s).");
+      logger.info(
+          "Database connection is ok and contains " + heartbeatRepository.count() + " element(s).");
       return new Status("ok", "ok", queueCheck());
     } else {
       logger.info("Database connection is ok.");
       logger.warn("Database is empty.");
-      return new Status("ok", "error",queueCheck());
+      return new Status("ok", "error", queueCheck());
     }
   }
 
@@ -60,13 +62,16 @@ public class MonitoringService {
     }
   }
 
-  public ServiceStatus monitorOtherServices(String host){
-    Status currentStatus = restTemplate.getRestTemplate().getForObject(host + "/heartbeat", Status.class);
-    if (currentStatus.getStatus().equals("ok")) {
-      return new ServiceStatus(host, "ok");
-    } else {
-      return new ServiceStatus(host, "error");
+  public ServiceStatus monitorOtherServices(String host) {
+    ServiceStatus serviceStatus;
+
+    try {
+      Status currentStatus = new RestTemplate().getForObject(host + "/heartbeat", Status.class);
+      serviceStatus = new ServiceStatus(host, "ok");
+    } catch (HttpServerErrorException ex) {
+      serviceStatus = new ServiceStatus(host, "error");
     }
+    return serviceStatus;
   }
 
   public ServiceStatusList monitoring() throws IOException {
