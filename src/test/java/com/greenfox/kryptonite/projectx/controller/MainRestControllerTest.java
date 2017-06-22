@@ -19,7 +19,6 @@ import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,11 +30,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-import javax.validation.constraints.AssertTrue;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -59,6 +57,7 @@ public class MainRestControllerTest {
   private static final String DATAPATH = "test-monitoring-services.json";
   private static final String DATA_PATH = "monitoring-services.json";
   private MessageQueueService messageQueueService;
+  private MockRestServiceServer mockServer;
 
   @MockBean
   HeartbeatRepository heartbeatRepository;
@@ -67,6 +66,8 @@ public class MainRestControllerTest {
   @Autowired
   private WebApplicationContext webApplicationContext;
 
+  @Autowired
+  private  MonitoringService monitoringService;
 
   @Before
   public void setup() throws Exception {
@@ -74,6 +75,10 @@ public class MainRestControllerTest {
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
     this.messageQueueService = new MessageQueueService();
+  }
+
+  @Test
+  public void mockServiceOkResponse() {
   }
 
   @Test
