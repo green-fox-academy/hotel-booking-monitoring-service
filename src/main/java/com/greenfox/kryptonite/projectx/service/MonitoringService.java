@@ -8,6 +8,7 @@ import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -59,11 +60,14 @@ public class MonitoringService {
 
   public ServiceStatus monitorOtherServices(String host){
     Status currentStatus = new RestTemplate().getForObject(host + "/heartbeat", Status.class);
-    if (currentStatus.getStatus().equals("ok")) {
-      return new ServiceStatus(host, "ok");
-    } else {
-      return new ServiceStatus(host, "error");
+    ServiceStatus serviceStatus;
+
+    try{
+      serviceStatus = new ServiceStatus(host, "ok");
+    } catch(HttpServerErrorException ex) {
+      serviceStatus = new ServiceStatus(host, "error");
     }
+    return serviceStatus;
   }
 
   public ServiceStatusList monitoring() throws IOException {
