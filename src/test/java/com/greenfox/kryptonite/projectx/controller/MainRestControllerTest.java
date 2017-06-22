@@ -165,10 +165,14 @@ public class MainRestControllerTest {
   public void testMonitorEndPoint() throws Exception {
     JsonService jsonService = new JsonService();
     jsonService.readFiles(DATA_PATH);
-    mockMvc.perform(get("/monitor"))
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInput = mapper.writeValueAsString(jsonService.readFiles(DATA_PATH));
+    mockMvc.perform(get("/monitor")
+            .contentType(contentType)
+            .content(jsonInput))
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType));
-//        .andExpect(jsonPath("$.statuses.status", is("ok")));
+    System.out.println(jsonInput);
   }
 
   @Test

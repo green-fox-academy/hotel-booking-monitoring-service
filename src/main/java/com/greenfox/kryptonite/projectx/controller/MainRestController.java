@@ -2,7 +2,6 @@ package com.greenfox.kryptonite.projectx.controller;
 
 
 
-import com.greenfox.kryptonite.projectx.model.ServiceStatus;
 import com.greenfox.kryptonite.projectx.model.ServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
