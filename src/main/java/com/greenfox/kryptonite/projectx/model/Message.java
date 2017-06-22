@@ -11,11 +11,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Message {
 
   String message;
@@ -42,14 +44,5 @@ public class Message {
     ObjectMapper mapper = new ObjectMapper();
 
     return mapper.readValue(jsonMessage, Message.class);
-  }
-
-  @Override
-  public String toString() {
-    return "Message{" +
-        "message='" + message + '\'' +
-        ", hostname='" + hostname + '\'' +
-        ", date='" + date + '\'' +
-        '}';
   }
 }
