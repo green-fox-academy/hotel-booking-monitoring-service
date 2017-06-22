@@ -18,6 +18,8 @@ import java.nio.charset.Charset;
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.greenfox.kryptonite.projectx.service.RestTemplateService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +28,16 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.client.ExpectedCount;
+import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.RequestMatcher;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -55,6 +63,7 @@ public class MainRestControllerTest {
   private static final String DATAPATH = "test-monitoring-services.json";
   private static final String DATA_PATH = "monitoring-services.json";
   private MessageQueueService messageQueueService;
+  private MockRestServiceServer mockServer;
 
   @MockBean
   HeartbeatRepository heartbeatRepository;
@@ -63,6 +72,12 @@ public class MainRestControllerTest {
   @Autowired
   private WebApplicationContext webApplicationContext;
 
+  @Autowired
+  private  MonitoringService monitoringService;
+
+  @Autowired
+  private RestTemplateService restTemplate;
+
 
   @Before
   public void setup() throws Exception {
@@ -70,6 +85,11 @@ public class MainRestControllerTest {
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
     this.messageQueueService = new MessageQueueService();
+    this.mockServer = MockRestServiceServer.createServer(restTemplate.getRestTemplate());
+  }
+
+  @Test
+  public void mockServiceOkResponse() {
   }
 
   @Test

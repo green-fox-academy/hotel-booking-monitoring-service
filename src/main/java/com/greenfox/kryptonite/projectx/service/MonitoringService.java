@@ -7,6 +7,7 @@ import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,6 +22,8 @@ public class MonitoringService {
   private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
   private JsonService jsonService = new JsonService();
+  @Autowired
+  private RestTemplateService restTemplate;
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
@@ -58,7 +61,7 @@ public class MonitoringService {
   }
 
   public ServiceStatus monitorOtherServices(String host){
-    Status currentStatus = new RestTemplate().getForObject(host + "/heartbeat", Status.class);
+    Status currentStatus = restTemplate.getRestTemplate().getForObject(host + "/heartbeat", Status.class);
     if (currentStatus.getStatus().equals("ok")) {
       return new ServiceStatus(host, "ok");
     } else {
