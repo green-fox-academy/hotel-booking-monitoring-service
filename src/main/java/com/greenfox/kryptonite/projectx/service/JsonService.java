@@ -58,12 +58,13 @@ public class JsonService {
   }
 
   public static Services addContactsToWrite() {
-    Service service1 = new Service("https://hotel-booking-resize-service.herokuapp.com", "berta@greenfox.com");
-    Service service2 = new Service("https://booking-notification-service.herokuapp.com", "tojasmamusza@greenfox.com");
-    Service service3 = new Service("https://hotel-booking-user-service.herokuapp.com", "imi@greenfox.com");
-    Service service4 = new Service("https://hotel-booking-payment.herokuapp.com", "yesyo@greenfox.com");
+    Service resize = new Service("https://hotel-booking-resize-service.herokuapp.com", "berta@greenfox.com");
+    Service notification = new Service("https://booking-notification-service.herokuapp.com", "tojasmamusza@greenfox.com");
+    Service userSerice = new Service("https://hotel-booking-user-service.herokuapp.com", "imi@greenfox.com");
+    Service payment = new Service("https://hotel-booking-payment.herokuapp.com", "yesyo@greenfox.com");
+    Service resource = new Service("https://booking-resource.herokuapp.com", "MrPoopyButthole@podi.com");
     List<Service> serviceList = new ArrayList<>(
-        Arrays.asList(service1, service2, service3, service4));
+        Arrays.asList(resize, notification, userSerice, payment, resource));
     return new Services(serviceList);
   }
 }
