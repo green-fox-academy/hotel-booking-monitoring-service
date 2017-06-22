@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class MessageQueueService {
 
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
-  private final String QUEUE_NAME = "kryptonite2";
+  private final String QUEUE_NAME = "heartbeat";
   private final String EXCHANGE_NAME = "log";
   private Message jsonMessage = new Message();
   private String temporaryMessage = "Shit";

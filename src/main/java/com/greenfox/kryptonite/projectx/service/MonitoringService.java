@@ -28,9 +28,9 @@ public class MonitoringService {
   }
 
   public String queueCheck() throws Exception {
-    if (messageQueueService.getCount("kryptonite2") == 0) {
+    if (messageQueueService.getCount("heartbeat") == 0) {
       return "ok";
-    } else if (messageQueueService.getCount("kryptonite2") != 0) {
+    } else if (messageQueueService.getCount("heartbeat") != 0) {
       return "error";
     } else {
       return "connection error";

@@ -147,6 +147,6 @@ public class MainRestControllerTest {
 
   @Test
   public void testQueuedMessageCount() throws Exception {
-    assertTrue(messageQueueService.getCount("kryptonite") == 0);
+    assertTrue(messageQueueService.getCount("testqueue") == 0);
   }
 }
