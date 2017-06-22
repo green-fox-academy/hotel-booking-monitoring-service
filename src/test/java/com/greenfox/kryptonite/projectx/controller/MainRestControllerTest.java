@@ -19,8 +19,6 @@ import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.greenfox.kryptonite.projectx.service.RestTemplateService;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,20 +27,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.RequestMatcher;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-import javax.validation.constraints.AssertTrue;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -78,17 +69,12 @@ public class MainRestControllerTest {
   @Autowired
   private  MonitoringService monitoringService;
 
-  @Autowired
-  private RestTemplateService restTemplate;
-
-
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
     this.messageQueueService = new MessageQueueService();
-    this.mockServer = MockRestServiceServer.createServer(restTemplate.getRestTemplate());
   }
 
   @Test

@@ -23,8 +23,6 @@ public class MonitoringService {
   private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
   private JsonService jsonService = new JsonService();
-  @Autowired
-  private RestTemplateService restTemplate;
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
