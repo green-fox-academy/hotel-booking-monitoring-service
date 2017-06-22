@@ -156,10 +156,6 @@ public class MainRestControllerTest {
     assertTrue(messageQueueService.getCount("testqueue") == 0);
   }
 
-  @Test
-  public void  testMonitorOtherServices() throws Exception {
-
-  }
 
   @Test
   public void testMonitorEndPoint() throws Exception {
@@ -170,9 +166,25 @@ public class MainRestControllerTest {
     mockMvc.perform(get("/monitor")
             .contentType(contentType)
             .content(jsonInput))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(contentType));
-    System.out.println(jsonInput);
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType));
+  }
+
+  @Test
+  public void testMonitorEndPointReturnValue() throws Exception {
+    JsonService jsonService = new JsonService();
+    jsonService.readFiles(DATA_PATH);
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInput = mapper.writeValueAsString(jsonService.readFiles(DATA_PATH));
+    mockMvc.perform(get("/monitor")
+            .contentType(contentType)
+            .content(jsonInput))
+            .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.statuses[0].status", is("ok")))
+        .andExpect(jsonPath("$.statuses[1].status", is("ok")))
+        .andExpect(jsonPath("$.statuses[2].status", is("ok")))
+        .andExpect(jsonPath("$.statuses[3].status", is("ok")));
   }
 
   @Test
