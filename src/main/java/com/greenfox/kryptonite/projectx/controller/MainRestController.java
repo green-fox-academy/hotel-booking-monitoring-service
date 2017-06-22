@@ -10,6 +10,8 @@ import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 
 @RestController
 public class MainRestController {
@@ -28,8 +30,8 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
-  public ServiceStatus monitor() {
-  return monitoringService.monitorOtherServices("https://hotel-booking-user-service.herokuapp.com");
+  public ServiceStatusList monitor() throws IOException{
+  return monitoringService.monitoring();
   }
 
   @RequestMapping(value = "/{pathVariable}")

@@ -58,8 +58,6 @@ public class MainRestControllerTest {
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
   private static final String DATAPATH = "test-monitoring-services.json";
-
-  @Autowired
   private MessageQueueService messageQueueService;
 
   @MockBean

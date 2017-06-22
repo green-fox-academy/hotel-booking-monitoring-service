@@ -1,6 +1,8 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.ServiceStatus;
+import com.greenfox.kryptonite.projectx.model.ServiceStatusList;
+import com.greenfox.kryptonite.projectx.model.Services;
 import com.greenfox.kryptonite.projectx.model.Status;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.apache.logging.log4j.LogManager;
@@ -8,11 +10,15 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+
 @Service
 public class MonitoringService {
 
+  private static final String DATA_PATH = "static/monitoring-services.json";
   private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
+  private JsonService jsonService = new JsonService();
 
   public Status databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
@@ -57,4 +63,15 @@ public class MonitoringService {
       return new ServiceStatus(host, "error");
     }
   }
+
+  public ServiceStatusList monitoring() throws IOException {
+    ServiceStatusList serviceStatusList = new ServiceStatusList();
+    Services services = jsonService.readFiles(DATA_PATH);
+    int listSize = services.getServices().size();
+    for (int i = 0; i < listSize; i++) {
+      serviceStatusList.getServiceStatusList().add(monitorOtherServices(services.getServices().get(i).getHost()));
+    }
+    return serviceStatusList;
+  }
+
 }
