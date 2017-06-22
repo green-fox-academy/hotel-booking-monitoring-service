@@ -59,10 +59,10 @@ public class MonitoringService {
   }
 
   public ServiceStatus monitorOtherServices(String host){
-    Status currentStatus = new RestTemplate().getForObject(host + "/heartbeat", Status.class);
     ServiceStatus serviceStatus;
-
+    
     try{
+    Status currentStatus = new RestTemplate().getForObject(host + "/heartbeat", Status.class);
       serviceStatus = new ServiceStatus(host, "ok");
     } catch(HttpServerErrorException ex) {
       serviceStatus = new ServiceStatus(host, "error");
