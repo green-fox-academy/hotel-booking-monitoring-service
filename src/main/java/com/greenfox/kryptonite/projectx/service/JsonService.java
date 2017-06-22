@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.NoArgsConstructor;
 
-
 @NoArgsConstructor
 public class JsonService {
 
@@ -63,10 +62,8 @@ public class JsonService {
     Service service2 = new Service("https://booking-notification-service.herokuapp.com", "tojasmamusza@greenfox.com");
     Service service3 = new Service("https://hotel-booking-user-service.herokuapp.com", "imi@greenfox.com");
     Service service4 = new Service("https://hotel-booking-payment.herokuapp.com", "yesyo@greenfox.com");
-    Service service5 = new Service("host5", "kakiemoticon@greenfox.com");
-    Service service6 = new Service("host6", "mrpoopybutthole@greenfox.com");
     List<Service> serviceList = new ArrayList<>(
-        Arrays.asList(service1, service2, service3, service4, service5, service5, service6));
+        Arrays.asList(service1, service2, service3, service4));
     return new Services(serviceList);
   }
 }

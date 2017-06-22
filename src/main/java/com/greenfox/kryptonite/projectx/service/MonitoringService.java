@@ -15,7 +15,7 @@ import java.io.IOException;
 @Service
 public class MonitoringService {
 
-  private static final String DATA_PATH = "static/monitoring-services.json";
+  private static final String DATA_PATH = "monitoring-services.json";
   private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
   private JsonService jsonService = new JsonService();
@@ -66,10 +66,11 @@ public class MonitoringService {
 
   public ServiceStatusList monitoring() throws IOException {
     ServiceStatusList serviceStatusList = new ServiceStatusList();
+    jsonService.writeToFile(DATA_PATH);
     Services services = jsonService.readFiles(DATA_PATH);
     int listSize = services.getServices().size();
     for (int i = 0; i < listSize; i++) {
-      serviceStatusList.getServiceStatusList().add(monitorOtherServices(services.getServices().get(i).getHost()));
+      serviceStatusList.getStatuses().add(monitorOtherServices(services.getServices().get(i).getHost()));
     }
     return serviceStatusList;
   }

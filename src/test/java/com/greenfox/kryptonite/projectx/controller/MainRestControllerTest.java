@@ -58,6 +58,7 @@ public class MainRestControllerTest {
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
   private static final String DATAPATH = "test-monitoring-services.json";
+  private static final String DATA_PATH = "monitoring-services.json";
   private MessageQueueService messageQueueService;
 
   @MockBean
@@ -156,11 +157,18 @@ public class MainRestControllerTest {
   }
 
   @Test
+  public void  testMonitorOtherServices() throws Exception {
+
+  }
+
+  @Test
   public void testMonitorEndPoint() throws Exception {
+    JsonService jsonService = new JsonService();
+    jsonService.readFiles(DATA_PATH);
     mockMvc.perform(get("/monitor"))
         .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
-        .andExpect(jsonPath("$.status", is("ok")));
+        .andExpect(jsonPath("$.statuses.status", is("ok")));
   }
 
   @Test
@@ -175,7 +183,7 @@ public class MainRestControllerTest {
 
     ObjectMapper mapper = new ObjectMapper();
     String readJson = mapper.writeValueAsString(jsonService.readFiles(DATAPATH));
-    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"kakiemoticon@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"kakiemoticon@greenfox.com\"},{\"host\":\"host6\",\"contact\":\"mrpoopybutthole@greenfox.com\"}]}";
+    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"}]}";
 
     assertEquals(expected, readJson);
   }
