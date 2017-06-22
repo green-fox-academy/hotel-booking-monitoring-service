@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class MonitoringService {
@@ -65,14 +67,13 @@ public class MonitoringService {
   }
 
   public ServiceStatusList monitoring() throws IOException {
-    ServiceStatusList serviceStatusList = new ServiceStatusList();
-    jsonService.writeToFile(DATA_PATH);
+    List<ServiceStatus> statuses = new ArrayList<>();
     Services services = jsonService.readFiles(DATA_PATH);
     int listSize = services.getServices().size();
     for (int i = 0; i < listSize; i++) {
-      serviceStatusList.getStatuses().add(monitorOtherServices(services.getServices().get(i).getHost()));
+      statuses.add(monitorOtherServices(services.getServices().get(i).getHost()));
     }
-    return serviceStatusList;
+    return new ServiceStatusList(statuses);
   }
 
 }
