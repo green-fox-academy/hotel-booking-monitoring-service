@@ -18,6 +18,8 @@ import java.nio.charset.Charset;
 import com.greenfox.kryptonite.projectx.ProjectxApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +34,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+
+import javax.validation.constraints.AssertTrue;
 
 import static org.hamcrest.core.Is.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -179,6 +183,12 @@ public class MainRestControllerTest {
         .andExpect(jsonPath("$.statuses[1].status", is("ok")))
         .andExpect(jsonPath("$.statuses[2].status", is("ok")))
         .andExpect(jsonPath("$.statuses[3].status", is("ok")));
+  }
+
+  @Test
+  public void testMonitorOtherServices() throws Exception {
+    MonitoringService monitoringService = new MonitoringService();
+    assertEquals(monitoringService.monitorOtherServices("https://greenfox-kryptonite.herokuapp.com").getStatus(), "ok");
   }
 
   @Test
