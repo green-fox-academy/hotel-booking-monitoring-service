@@ -158,19 +158,15 @@ public class MainRestControllerTest {
   @Test
   public void testMonitorEndPoint() throws Exception {
     mockMvc.perform(get("/monitor"))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(contentType))
-            .andExpect(jsonPath("$.status", is("ok")));
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.status", is("ok")));
   }
 
   @Test
   public void testWriteFile() throws JsonProcessingException {
-    Service service1 = new Service("host1", "berta@greenfox.com");
-    Service service2 = new Service("host2", "tojasmamusza@greenfox.com");
-    List<Service> serviceList = new ArrayList<>(Arrays.asList(service1, service2));
-    Services services = new Services(serviceList);
     JsonService jsonService = new JsonService();
-    assertTrue(jsonService.writeToFile(services, DATAPATH));
+    assertTrue(jsonService.writeToFile(DATAPATH));
   }
 
   @Test
@@ -179,7 +175,7 @@ public class MainRestControllerTest {
 
     ObjectMapper mapper = new ObjectMapper();
     String readJson = mapper.writeValueAsString(jsonService.readFiles(DATAPATH));
-    String expected = "{\"services\":[{\"host\":\"host1\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"host2\",\"contact\":\"tojasmamusza@greenfox.com\"}]}";
+    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"kakiemoticon@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"kakiemoticon@greenfox.com\"},{\"host\":\"host6\",\"contact\":\"mrpoopybutthole@greenfox.com\"}]}";
 
     assertEquals(expected, readJson);
   }
