@@ -4,15 +4,17 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class Services {
+@ToString
+public class HotelServices {
 
-  List<Service> services;
+  List<HotelService> services;
 
-  public Services(List<Service> services) {
+  public HotelServices(List<HotelService> services) {
     this.services = services;
   }
 }

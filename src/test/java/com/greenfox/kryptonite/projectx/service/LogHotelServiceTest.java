@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
-public class LogServiceTest {
+public class LogHotelServiceTest {
   private Logger logger = LogManager.getLogger(this.getClass());
 
   @Test

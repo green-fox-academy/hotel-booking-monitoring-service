@@ -5,17 +5,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Message {
 
   String message;
@@ -23,9 +26,9 @@ public class Message {
   String date;
 
   public Message(String message, String hostname) {
+    Timestamp timestamp = new Timestamp();
 
-    Date newDate = new Date();
-    this.date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(newDate);
+    this.date = timestamp.getDate();
     this.message = message;
     this.hostname = hostname;
   }
@@ -42,14 +45,5 @@ public class Message {
     ObjectMapper mapper = new ObjectMapper();
 
     return mapper.readValue(jsonMessage, Message.class);
-  }
-
-  @Override
-  public String toString() {
-    return "Message{" +
-        "message='" + message + '\'' +
-        ", hostname='" + hostname + '\'' +
-        ", date='" + date + '\'' +
-        '}';
   }
 }

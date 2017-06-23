@@ -6,10 +6,8 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfox.kryptonite.projectx.model.Service;
-import com.greenfox.kryptonite.projectx.model.Services;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
-import com.greenfox.kryptonite.projectx.service.JsonService;
+import com.greenfox.kryptonite.projectx.service.IOService;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
@@ -17,12 +15,10 @@ import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import com.greenfox.kryptonite.projectx.ProjectxApplication;
+import com.greenfox.kryptonite.projectx.HotelMonitoringApplication;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +30,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -43,7 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ProjectxApplication.class)
+@SpringBootTest(classes = HotelMonitoringApplication.class)
 @WebAppConfiguration
 @EnableWebMvc
 public class MainRestControllerTest {
@@ -57,9 +54,7 @@ public class MainRestControllerTest {
   private HeartbeatRepository heartbeatRepositoryMock;
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
-  private static final String DATAPATH = "test-monitoring-services.json";
-
-  @Autowired
+  private static final String DATAPATH = "./src/test/resources/test-monitoring-services.json";
   private MessageQueueService messageQueueService;
 
   @MockBean
@@ -68,7 +63,6 @@ public class MainRestControllerTest {
 
   @Autowired
   private WebApplicationContext webApplicationContext;
-
 
   @Before
   public void setup() throws Exception {
@@ -159,25 +153,48 @@ public class MainRestControllerTest {
 
   @Test
   public void testMonitorEndPoint() throws Exception {
-    mockMvc.perform(get("/monitor"))
-        .andExpect(status().isOk())
+    IOService IOService = new IOService();
+    IOService.readFiles(DATAPATH);
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInput = mapper.writeValueAsString(IOService.readFiles(DATAPATH));
+    mockMvc.perform(get("/monitor")
+            .contentType(contentType)
+            .content(jsonInput))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType));
+  }
+
+  @Test
+  public void testMonitorEndPointReturnValue() throws Exception {
+    mockMvc.perform(get("/monitor")
+            .contentType(contentType))
+            .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
-        .andExpect(jsonPath("$.status", is("ok")));
+        .andExpect(jsonPath("$.statuses[0].status", is("ok")))
+        .andExpect(jsonPath("$.statuses[1].status", is("ok")))
+        .andExpect(jsonPath("$.statuses[2].status", is("ok")))
+        .andExpect(jsonPath("$.statuses[3].status", is("ok")));
+  }
+
+  @Test
+  public void testMonitorOtherServices() throws Exception {
+    MonitoringService monitoringService = new MonitoringService();
+    assertEquals(monitoringService.monitorOtherServices("https://greenfox-kryptonite.herokuapp.com").getStatus(), "ok");
   }
 
   @Test
   public void testWriteFile() throws JsonProcessingException {
-    JsonService jsonService = new JsonService();
-    assertTrue(jsonService.writeToFile(DATAPATH));
+    IOService IOService = new IOService();
+    assertTrue(IOService.writeToFile(DATAPATH));
   }
 
   @Test
   public void testReadFile() throws IOException {
-    JsonService jsonService = new JsonService();
+    IOService IOService = new IOService();
 
     ObjectMapper mapper = new ObjectMapper();
-    String readJson = mapper.writeValueAsString(jsonService.readFiles(DATAPATH));
-    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"kakiemoticon@greenfox.com\"},{\"host\":\"host5\",\"contact\":\"kakiemoticon@greenfox.com\"},{\"host\":\"host6\",\"contact\":\"mrpoopybutthole@greenfox.com\"}]}";
+    String readJson = mapper.writeValueAsString(IOService.readFiles(DATAPATH));
+    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"https://booking-resource.herokuapp.com\",\"contact\":\"MrPoopyButthole@podi.com\"}]}";
 
     assertEquals(expected, readJson);
   }
