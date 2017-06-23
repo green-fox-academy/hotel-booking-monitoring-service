@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class MonitoringService {
 
-  private static final String DATA_PATH = "monitoring-services.json";
+  private static final String DATA_PATH = "./src/main/resources/monitoring-services.json";
   private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
   private IOService IOService = new IOService();

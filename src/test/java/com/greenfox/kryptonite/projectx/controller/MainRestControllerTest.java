@@ -54,10 +54,8 @@ public class MainRestControllerTest {
   private HeartbeatRepository heartbeatRepositoryMock;
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
-  private static final String DATAPATH = "test-monitoring-services.json";
-  private static final String DATA_PATH = "monitoring-services.json";
+  private static final String DATAPATH = "./src/test/resources/test-monitoring-services.json";
   private MessageQueueService messageQueueService;
-  private MockRestServiceServer mockServer;
 
   @MockBean
   HeartbeatRepository heartbeatRepository;
@@ -66,19 +64,12 @@ public class MainRestControllerTest {
   @Autowired
   private WebApplicationContext webApplicationContext;
 
-  @Autowired
-  private  MonitoringService monitoringService;
-
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
     this.messageQueueService = new MessageQueueService();
-  }
-
-  @Test
-  public void mockServiceOkResponse() {
   }
 
   @Test
@@ -163,9 +154,9 @@ public class MainRestControllerTest {
   @Test
   public void testMonitorEndPoint() throws Exception {
     IOService IOService = new IOService();
-    IOService.readFiles(DATA_PATH);
+    IOService.readFiles(DATAPATH);
     ObjectMapper mapper = new ObjectMapper();
-    String jsonInput = mapper.writeValueAsString(IOService.readFiles(DATA_PATH));
+    String jsonInput = mapper.writeValueAsString(IOService.readFiles(DATAPATH));
     mockMvc.perform(get("/monitor")
             .contentType(contentType)
             .content(jsonInput))
@@ -175,13 +166,8 @@ public class MainRestControllerTest {
 
   @Test
   public void testMonitorEndPointReturnValue() throws Exception {
-    IOService IOService = new IOService();
-    IOService.readFiles(DATA_PATH);
-    ObjectMapper mapper = new ObjectMapper();
-    String jsonInput = mapper.writeValueAsString(IOService.readFiles(DATA_PATH));
     mockMvc.perform(get("/monitor")
-            .contentType(contentType)
-            .content(jsonInput))
+            .contentType(contentType))
             .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
         .andExpect(jsonPath("$.statuses[0].status", is("ok")))
