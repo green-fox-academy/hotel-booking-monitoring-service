@@ -3,11 +3,10 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfox.kryptonite.projectx.model.Service;
-import com.greenfox.kryptonite.projectx.model.Services;
+import com.greenfox.kryptonite.projectx.model.HotelService;
+import com.greenfox.kryptonite.projectx.model.HotelServices;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,11 +15,11 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class JsonService {
+public class IOService {
 
   private static final String ERROR = "SYNTAX ERROR: ";
 
-  public Services readFiles(String datapath) throws IOException {
+  public HotelServices readFiles(String datapath) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     List<String> rawLines = new ArrayList<>();
     Path myPath = Paths.get(datapath);
@@ -36,7 +35,7 @@ public class JsonService {
     for (String rawLine : rawLines) {
       fileContentConvertedToJson.append(rawLine);
     }
-    return mapper.readValue(fileContentConvertedToJson.toString(), Services.class);
+    return mapper.readValue(fileContentConvertedToJson.toString(), HotelServices.class);
   }
 
   public boolean writeToFile(String datapath)
@@ -57,14 +56,14 @@ public class JsonService {
     return runTimeChecker;
   }
 
-  public static Services addContactsToWrite() {
-    Service resize = new Service("https://hotel-booking-resize-service.herokuapp.com", "berta@greenfox.com");
-    Service notification = new Service("https://booking-notification-service.herokuapp.com", "tojasmamusza@greenfox.com");
-    Service userSerice = new Service("https://hotel-booking-user-service.herokuapp.com", "imi@greenfox.com");
-    Service payment = new Service("https://hotel-booking-payment.herokuapp.com", "yesyo@greenfox.com");
-    Service resource = new Service("https://booking-resource.herokuapp.com", "MrPoopyButthole@podi.com");
-    List<Service> serviceList = new ArrayList<>(
+  public static HotelServices addContactsToWrite() {
+    HotelService resize = new HotelService("https://hotel-booking-resize-service.herokuapp.com", "berta@greenfox.com");
+    HotelService notification = new HotelService("https://booking-notification-service.herokuapp.com", "tojasmamusza@greenfox.com");
+    HotelService userSerice = new HotelService("https://hotel-booking-user-service.herokuapp.com", "imi@greenfox.com");
+    HotelService payment = new HotelService("https://hotel-booking-payment.herokuapp.com", "yesyo@greenfox.com");
+    HotelService resource = new HotelService("https://booking-resource.herokuapp.com", "MrPoopyButthole@podi.com");
+    List<HotelService> hotelServiceList = new ArrayList<>(
         Arrays.asList(resize, notification, userSerice, payment, resource));
-    return new Services(serviceList);
+    return new HotelServices(hotelServiceList);
   }
 }

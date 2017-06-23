@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class MonitoringServiceTest {
+public class MonitoringHotelServiceTest {
   private MonitoringService monitoring;
 
   @Before

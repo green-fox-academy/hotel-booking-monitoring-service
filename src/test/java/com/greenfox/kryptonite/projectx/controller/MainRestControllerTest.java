@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
-import com.greenfox.kryptonite.projectx.service.JsonService;
+import com.greenfox.kryptonite.projectx.service.IOService;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
@@ -54,8 +54,8 @@ public class MainRestControllerTest {
   private HeartbeatRepository heartbeatRepositoryMock;
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
-  private static final String DATAPATH = "test-monitoring-services.json";
-  private static final String DATA_PATH = "monitoring-services.json";
+  private static final String DATAPATH = "test-monitoring-hotelServices.json";
+  private static final String DATA_PATH = "monitoring-hotelServices.json";
   private MessageQueueService messageQueueService;
   private MockRestServiceServer mockServer;
 
@@ -162,10 +162,10 @@ public class MainRestControllerTest {
 
   @Test
   public void testMonitorEndPoint() throws Exception {
-    JsonService jsonService = new JsonService();
-    jsonService.readFiles(DATA_PATH);
+    IOService IOService = new IOService();
+    IOService.readFiles(DATA_PATH);
     ObjectMapper mapper = new ObjectMapper();
-    String jsonInput = mapper.writeValueAsString(jsonService.readFiles(DATA_PATH));
+    String jsonInput = mapper.writeValueAsString(IOService.readFiles(DATA_PATH));
     mockMvc.perform(get("/monitor")
             .contentType(contentType)
             .content(jsonInput))
@@ -175,10 +175,10 @@ public class MainRestControllerTest {
 
   @Test
   public void testMonitorEndPointReturnValue() throws Exception {
-    JsonService jsonService = new JsonService();
-    jsonService.readFiles(DATA_PATH);
+    IOService IOService = new IOService();
+    IOService.readFiles(DATA_PATH);
     ObjectMapper mapper = new ObjectMapper();
-    String jsonInput = mapper.writeValueAsString(jsonService.readFiles(DATA_PATH));
+    String jsonInput = mapper.writeValueAsString(IOService.readFiles(DATA_PATH));
     mockMvc.perform(get("/monitor")
             .contentType(contentType)
             .content(jsonInput))
@@ -198,17 +198,17 @@ public class MainRestControllerTest {
 
   @Test
   public void testWriteFile() throws JsonProcessingException {
-    JsonService jsonService = new JsonService();
-    assertTrue(jsonService.writeToFile(DATAPATH));
+    IOService IOService = new IOService();
+    assertTrue(IOService.writeToFile(DATAPATH));
   }
 
   @Test
   public void testReadFile() throws IOException {
-    JsonService jsonService = new JsonService();
+    IOService IOService = new IOService();
 
     ObjectMapper mapper = new ObjectMapper();
-    String readJson = mapper.writeValueAsString(jsonService.readFiles(DATAPATH));
-    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"https://booking-resource.herokuapp.com\",\"contact\":\"MrPoopyButthole@podi.com\"}]}";
+    String readJson = mapper.writeValueAsString(IOService.readFiles(DATAPATH));
+    String expected = "{\"hotelServices\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"https://booking-resource.herokuapp.com\",\"contact\":\"MrPoopyButthole@podi.com\"}]}";
 
     assertEquals(expected, readJson);
   }

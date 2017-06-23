@@ -1,21 +1,20 @@
 package com.greenfox.kryptonite.projectx.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class Service {
+public class HotelServiceStatusList {
 
-  String host;
-  String contact;
+  private List<HotelServiceStatus> statuses;
 
-  public Service(String host, String contact) {
-    this.host = host;
-    this.contact = contact;
-  }
 }

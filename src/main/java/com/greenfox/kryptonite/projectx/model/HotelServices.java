@@ -1,6 +1,6 @@
 package com.greenfox.kryptonite.projectx.model;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,11 +9,12 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
-public class ServiceStatus {
+public class HotelServices {
 
-  private String name;
-  private String status;
+  List<HotelService> hotelServices;
 
+  public HotelServices(List<HotelService> hotelServices) {
+    this.hotelServices = hotelServices;
+  }
 }

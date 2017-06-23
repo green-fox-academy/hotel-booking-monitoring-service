@@ -1,13 +1,12 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import com.greenfox.kryptonite.projectx.model.ServiceStatus;
-import com.greenfox.kryptonite.projectx.model.ServiceStatusList;
-import com.greenfox.kryptonite.projectx.model.Services;
-import com.greenfox.kryptonite.projectx.model.Status;
+import com.greenfox.kryptonite.projectx.model.HotelServiceStatus;
+import com.greenfox.kryptonite.projectx.model.HotelServiceStatusList;
+import com.greenfox.kryptonite.projectx.model.HotelServices;
+import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -19,24 +18,24 @@ import java.util.List;
 @Service
 public class MonitoringService {
 
-  private static final String DATA_PATH = "monitoring-services.json";
+  private static final String DATA_PATH = "monitoring-hotelServices.json";
   private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
-  private JsonService jsonService = new JsonService();
+  private IOService IOService = new IOService();
 
-  public Status databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
+  public BookingStatus databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
       logger.error("Database not presented.");
       logger.debug("Database may not exist. Check database connection or existence.");
-      return new Status("ok", "error", queueCheck());
+      return new BookingStatus("ok", "error", queueCheck());
     } else if (heartbeatRepository.count() > 0) {
       logger.info(
           "Database connection is ok and contains " + heartbeatRepository.count() + " element(s).");
-      return new Status("ok", "ok", queueCheck());
+      return new BookingStatus("ok", "ok", queueCheck());
     } else {
       logger.info("Database connection is ok.");
       logger.warn("Database is empty.");
-      return new Status("ok", "error", queueCheck());
+      return new BookingStatus("ok", "error", queueCheck());
     }
   }
 
@@ -60,26 +59,26 @@ public class MonitoringService {
     }
   }
 
-  public ServiceStatus monitorOtherServices(String host) {
-    ServiceStatus serviceStatus;
+  public HotelServiceStatus monitorOtherServices(String host) {
+    HotelServiceStatus hotelServiceStatus;
 
     try {
-      Status currentStatus = new RestTemplate().getForObject(host + "/heartbeat", Status.class);
-      serviceStatus = new ServiceStatus(host, "ok");
+      BookingStatus currentBookingStatus = new RestTemplate().getForObject(host + "/heartbeat", BookingStatus.class);
+      hotelServiceStatus = new HotelServiceStatus(host, "ok");
     } catch (HttpServerErrorException ex) {
-      serviceStatus = new ServiceStatus(host, "error");
+      hotelServiceStatus = new HotelServiceStatus(host, "error");
     }
-    return serviceStatus;
+    return hotelServiceStatus;
   }
 
-  public ServiceStatusList monitoring() throws IOException {
-    List<ServiceStatus> statuses = new ArrayList<>();
-    Services services = jsonService.readFiles(DATA_PATH);
-    int listSize = services.getServices().size();
+  public HotelServiceStatusList monitoring() throws IOException {
+    List<HotelServiceStatus> statuses = new ArrayList<>();
+    HotelServices hotelServices = IOService.readFiles(DATA_PATH);
+    int listSize = hotelServices.getHotelServices().size();
     for (int i = 0; i < listSize; i++) {
-      statuses.add(monitorOtherServices(services.getServices().get(i).getHost()));
+      statuses.add(monitorOtherServices(hotelServices.getHotelServices().get(i).getHost()));
     }
-    return new ServiceStatusList(statuses);
+    return new HotelServiceStatusList(statuses);
   }
 
 }
