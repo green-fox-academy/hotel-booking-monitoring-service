@@ -15,7 +15,7 @@ import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import com.greenfox.kryptonite.projectx.ProjectxApplication;
+import com.greenfox.kryptonite.projectx.HotelMonitoringApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ProjectxApplication.class)
+@SpringBootTest(classes = HotelMonitoringApplication.class)
 @WebAppConfiguration
 @EnableWebMvc
 public class MainRestControllerTest {
