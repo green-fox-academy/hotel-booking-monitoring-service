@@ -12,9 +12,9 @@ import lombok.ToString;
 @ToString
 public class HotelServices {
 
-  List<HotelService> hotelServices;
+  List<HotelService> services;
 
-  public HotelServices(List<HotelService> hotelServices) {
-    this.hotelServices = hotelServices;
+  public HotelServices(List<HotelService> services) {
+    this.services = services;
   }
 }

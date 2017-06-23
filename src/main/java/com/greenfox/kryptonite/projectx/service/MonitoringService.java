@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 public class MonitoringService {
 
-  private static final String DATA_PATH = "monitoring-hotelServices.json";
+  private static final String DATA_PATH = "monitoring-services.json";
   private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
   private IOService IOService = new IOService();
@@ -74,9 +74,9 @@ public class MonitoringService {
   public HotelServiceStatusList monitoring() throws IOException {
     List<HotelServiceStatus> statuses = new ArrayList<>();
     HotelServices hotelServices = IOService.readFiles(DATA_PATH);
-    int listSize = hotelServices.getHotelServices().size();
+    int listSize = hotelServices.getServices().size();
     for (int i = 0; i < listSize; i++) {
-      statuses.add(monitorOtherServices(hotelServices.getHotelServices().get(i).getHost()));
+      statuses.add(monitorOtherServices(hotelServices.getServices().get(i).getHost()));
     }
     return new HotelServiceStatusList(statuses);
   }
