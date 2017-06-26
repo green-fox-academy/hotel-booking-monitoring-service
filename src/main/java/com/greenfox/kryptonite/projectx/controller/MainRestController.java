@@ -36,6 +36,7 @@ public class MainRestController {
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public PageViewFormat pageview() {
     PageViewService pageViewService = new PageViewService();
+
     return pageViewService.createPageViewFormat();
   }
 

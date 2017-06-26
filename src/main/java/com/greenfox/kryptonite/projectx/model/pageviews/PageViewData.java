@@ -11,16 +11,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
 public class PageViewData {
 
-  String type;
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   long id;
-  String attributes;
+  String type;
+  HotelEventQueue attributes;
 
-  public PageViewData(String type, String attributes) {
+  public PageViewData(String type, HotelEventQueue attributes) {
     this.type = type;
     this.attributes = attributes;
   }
