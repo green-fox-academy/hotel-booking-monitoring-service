@@ -13,13 +13,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Entity
 public class DataAttributes {
 
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  long id;
   String path;
-  int count;
+  int count = 1;
 
-  public DataAttributes(String path, int count) {
+  public DataAttributes(String path) {
     this.path = path;
-    this.count = count;
   }
 }

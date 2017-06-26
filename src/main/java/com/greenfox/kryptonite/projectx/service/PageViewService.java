@@ -1,5 +1,7 @@
 package com.greenfox.kryptonite.projectx.service;
 
+import com.greenfox.kryptonite.projectx.model.pageviews.DataAttributes;
+import com.greenfox.kryptonite.projectx.model.pageviews.HotelEventQueue;
 import com.greenfox.kryptonite.projectx.model.pageviews.Links;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewData;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewDataList;
@@ -24,17 +26,11 @@ public class PageViewService {
   @Autowired
   private DataAttributesRepository dataAttributesRepository;
 
-  public PageViewFormat createPageViewFormat() {
+  public void addPageViewObjectToDatabase(HotelEventQueue eventQueue){
+    String path = eventQueue.getPath();
 
-    Links links = new Links("https://greenfox-kryptonite.herokuapp.com/pageviews");
+    DataAttributes dataAttributes = new DataAttributes(path);
 
-    List<PageViewData> pageList = new ArrayList<>();
-    for (int i = 0; i < dataAttributesRepository.count(); ++i) {
-      pageList.add(dataAttributesRepository.findOne((long) i));
-    }
-
-    PageViewDataList pageViewDataList = new PageViewDataList(pageList);
-
-    return new PageViewFormat(links, pageViewDataList);
+    dataAttributesRepository.save(dataAttributes);
   }
 }
