@@ -49,6 +49,8 @@ public class MainRestControllerTest {
       MediaType.APPLICATION_JSON.getSubtype(),
       Charset.forName("utf8"));
 
+  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
+  private final String EXCHANGE_NAME = "log";
   private boolean isItWorking = true;
   private MockMvc mockMvc;
   private HeartbeatRepository heartbeatRepositoryMock;
@@ -121,36 +123,18 @@ public class MainRestControllerTest {
 
   @Test
   public void testSend() throws Exception {
-    int initialSize = messageQueueService.getCount("heartbeat");
-    messageQueueService.send("TestMessage");
-    int currentSize = messageQueueService.getCount("heartbeat");
-    assertEquals(initialSize + 1, currentSize);
-  }
-
-  @Test
-  public void testSendToEventsQueue() throws Exception {
-    int initialSize = messageQueueService.getCount("events");
-    messageQueueService.send("TestMessage");
-    int currentSize = messageQueueService.getCount("events");
+    int initialSize = messageQueueService.getCount("testqueue");
+    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
+    int currentSize = messageQueueService.getCount("testqueue");
     assertEquals(initialSize + 1, currentSize);
   }
 
   @Test
   public void testConsume() throws Exception {
-    int initialSize = messageQueueService.getCount("heartbeat");
+    int initialSize = messageQueueService.getCount("testqueue");
     if (initialSize != 0) {
-      messageQueueService.consume();
-      int currentSize = messageQueueService.getCount("heartbeat");
-      assertEquals(initialSize - 1, currentSize);
-    }
-  }
-
-  @Test
-  public void testConsumeFromEventsQueue() throws Exception {
-    int initialSize = messageQueueService.getCount("events");
-    if (initialSize != 0) {
-      messageQueueService.consume();
-      int currentSize = messageQueueService.getCount("events");
+      messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
+      int currentSize = messageQueueService.getCount("testqueue");
       assertEquals(initialSize - 1, currentSize);
     }
   }
@@ -164,10 +148,10 @@ public class MainRestControllerTest {
 
   @Test
   public void testRabbitMqConsumeParadox() throws Exception {
-    messageQueueService.send("WORKING");
-    messageQueueService.consume();
-    String requestedMessage = messageQueueService.getTemporaryMessage();
-    assertTrue(!requestedMessage.equals("This isn't working!"));
+    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
+    messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
+    Message message = new Message();
+    assertEquals( "TestMessage", message.receiveJsonMessage(messageQueueService.getTemporaryMessage()).getMessage());
   }
 
   @Test
