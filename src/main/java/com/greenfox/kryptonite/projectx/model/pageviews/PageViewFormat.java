@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PageView {
+public class PageViewFormat {
 
   Links links;
   DataAttributes data;

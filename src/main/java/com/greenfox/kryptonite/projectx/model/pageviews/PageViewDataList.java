@@ -14,5 +14,5 @@ import lombok.ToString;
 @AllArgsConstructor
 public class PageViewDataList {
 
-  List<PageviewData> data;
+  List<PageViewData> data;
 }
