@@ -5,6 +5,7 @@ import com.greenfox.kryptonite.projectx.model.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
+import com.greenfox.kryptonite.projectx.repository.PageViewDataRepository;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,27 +22,34 @@ public class MainRestController {
   @Autowired
   private MonitoringService monitoringService;
 
+  @Autowired
+  PageViewDataRepository pageViewDataRepository;
 
-  @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
+
+  @GetMapping(value = "/heartbeat")
   public BookingStatus heartbeat() throws Exception {
     monitoringService.endpointLogger("heartbeat");
     return monitoringService.databaseCheck(heartbeatRepository);
   }
 
-  @RequestMapping(value = "/monitor", method = RequestMethod.GET)
+  @GetMapping(value = "/monitor")
   public HotelServiceStatusList monitor() throws IOException {
     return monitoringService.monitoring();
   }
 
   @GetMapping(value = "/pageviews")
   public PageViewFormat pageview() {
+
     PageViewFormat pageViewFormat = new PageViewFormat();
-    
+
+
+    pageViewDataRepository.findAll();
+
 
     return pageViewFormat;
   }
 
-  @RequestMapping(value = "/{pathVariable}")
+  @GetMapping(value = "/{pathVariable}")
   public BookingStatus endpointLogger(@PathVariable(name = "pathVariable") String pathVariable)
       throws Exception {
     monitoringService.endpointLogger(pathVariable);

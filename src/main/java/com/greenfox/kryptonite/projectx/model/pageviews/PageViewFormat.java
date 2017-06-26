@@ -12,5 +12,5 @@ import lombok.Setter;
 public class PageViewFormat {
 
   Links links;
-  DataAttributes data;
+  PageViewDataList data;
 }
