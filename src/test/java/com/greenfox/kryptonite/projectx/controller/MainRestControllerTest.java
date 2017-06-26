@@ -8,8 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
-import com.greenfox.kryptonite.projectx.repository.HotelEventQueueRepository;
-import com.greenfox.kryptonite.projectx.repository.PageViewDataRepository;
+import com.greenfox.kryptonite.projectx.repository.DataAttributesRepository;
 import com.greenfox.kryptonite.projectx.service.IOService;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -65,10 +64,7 @@ public class MainRestControllerTest {
   HeartbeatRepository heartbeatRepository;
 
   @Autowired
-  HotelEventQueueRepository hotelEventQueueRepository;
-
-  @Autowired
-  PageViewDataRepository pageViewDataRepository;
+  DataAttributesRepository dataAttributesRepository;
 
 
   @Autowired

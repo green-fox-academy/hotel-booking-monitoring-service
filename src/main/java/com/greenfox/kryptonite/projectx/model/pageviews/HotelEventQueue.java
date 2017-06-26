@@ -1,6 +1,14 @@
 package com.greenfox.kryptonite.projectx.model.pageviews;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfox.kryptonite.projectx.model.HotelServices;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,13 +24,14 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 public class HotelEventQueue {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  long id;
   String type;
   String path;
   String trackingId;
+
+  public HotelEventQueue createObjectFromJson(String jsonString) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.readValue(jsonString, HotelEventQueue.class);
+  }
 }

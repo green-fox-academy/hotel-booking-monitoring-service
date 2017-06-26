@@ -1,9 +1,11 @@
 package com.greenfox.kryptonite.projectx.model.pageviews;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,14 +13,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PageViewData {
+public class DataAttributes {
 
-  long id;
-  String type;
-  DataAttributes attributes;
+  String path;
+  int count;
 
-  public PageViewData(String type, DataAttributes attributes) {
-    this.type = type;
-    this.attributes = attributes;
+  public DataAttributes(String path, int count) {
+    this.path = path;
+    this.count = count;
   }
 }
