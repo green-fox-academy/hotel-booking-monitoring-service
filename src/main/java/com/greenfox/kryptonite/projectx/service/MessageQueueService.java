@@ -29,7 +29,7 @@ public class MessageQueueService {
     connection.close();
   }
 
-  public void sendToEvents(String message) throws Exception {
+  public void sendToEventsQueue(String message) throws Exception {
     ConnectionFactory factory = new ConnectionFactory();
     factory.setUri(RABBIT_MQ_URL);
     Connection connection = factory.newConnection();
@@ -60,8 +60,7 @@ public class MessageQueueService {
     factory.setUri(RABBIT_MQ_URL);
     Connection connection = factory.newConnection();
     Channel channel = connection.createChannel();
-//    channel.queueBind("events",EXCHANGE_NAME,"");
-    GetResponse getResponse = channel.basicGet("events", true);
+    GetResponse getResponse = channel.basicGet("events", false);
     setTemporaryMessage(new String(getResponse.getBody()));
 
     channel.close();

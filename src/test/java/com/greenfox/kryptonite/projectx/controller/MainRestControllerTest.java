@@ -120,23 +120,39 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testRabbitMQConsume() throws Exception {
-    messageQueueService.consume();
-    assertTrue(isItWorking);
+  public void testSend() throws Exception {
+    int initialSize = messageQueueService.getCount("heartbeat");
+    messageQueueService.send("TestMessage");
+    int currentSize = messageQueueService.getCount("heartbeat");
+    assertEquals(initialSize + 1, currentSize);
+  }
+
+  @Test
+  public void testSendToEventsQueue() throws Exception {
+    int initialSize = messageQueueService.getCount("events");
+    messageQueueService.send("TestMessage");
+    int currentSize = messageQueueService.getCount("events");
+    assertEquals(initialSize + 1, currentSize);
+  }
+
+  @Test
+  public void testConsume() throws Exception {
+    int initialSize = messageQueueService.getCount("heartbeat");
+    if (initialSize != 0) {
+      messageQueueService.consume();
+      int currentSize = messageQueueService.getCount("heartbeat");
+      assertEquals(initialSize - 1, currentSize);
+    }
   }
 
   @Test
   public void testConsumeFromEventsQueue() throws Exception {
-    messageQueueService.sendToEvents("TestMessage");
-    messageQueueService.consumeFromEventsQueue();
-    Message message = new Message();
-    assertEquals("TestMessage", message.receiveJsonMessage(messageQueueService.getTemporaryMessage()).getMessage());
-  }
-
-  @Test
-  public void testRabbitMQSend() throws Exception {
-    messageQueueService.send("Mukodj!");
-    assertTrue(isItWorking);
+    int initialSize = messageQueueService.getCount("events");
+    if (initialSize != 0) {
+      messageQueueService.consume();
+      int currentSize = messageQueueService.getCount("events");
+      assertEquals(initialSize - 1, currentSize);
+    }
   }
 
   @Test
