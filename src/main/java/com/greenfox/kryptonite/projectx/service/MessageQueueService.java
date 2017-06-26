@@ -15,7 +15,7 @@ public class MessageQueueService {
   private final String QUEUE_NAME = "heartbeat";
   private final String EXCHANGE_NAME = "log";
   private Message jsonMessage = new Message();
-  private String temporaryMessage = "Shit";
+  private String temporaryMessage = "This shouldn't be appeared!";
 
   public void send(String message) throws Exception {
     ConnectionFactory factory = new ConnectionFactory();
@@ -53,6 +53,19 @@ public class MessageQueueService {
     connection.close();
 
     System.out.println("Consume method run without problem!");
+  }
+
+  public void consumeFromEventsQueue() throws Exception {
+    ConnectionFactory factory = new ConnectionFactory();
+    factory.setUri(RABBIT_MQ_URL);
+    Connection connection = factory.newConnection();
+    Channel channel = connection.createChannel();
+//    channel.queueBind("events",EXCHANGE_NAME,"");
+    GetResponse getResponse = channel.basicGet("events", true);
+    setTemporaryMessage(new String(getResponse.getBody()));
+
+    channel.close();
+    connection.close();
   }
 
   public Integer getCount(String queueName) throws Exception {
