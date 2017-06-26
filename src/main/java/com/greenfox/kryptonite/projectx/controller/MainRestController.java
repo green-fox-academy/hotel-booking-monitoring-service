@@ -7,6 +7,7 @@ import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.repository.PageViewDataRepository;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
+import com.greenfox.kryptonite.projectx.service.PageViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,14 +40,8 @@ public class MainRestController {
 
   @GetMapping(value = "/pageviews")
   public PageViewFormat pageview() {
-
-    PageViewFormat pageViewFormat = new PageViewFormat();
-
-
-    pageViewDataRepository.findAll();
-
-
-    return pageViewFormat;
+    PageViewService pageViewService = new PageViewService();
+    return pageViewService.createPageViewFormat();
   }
 
   @GetMapping(value = "/{pathVariable}")
