@@ -33,11 +33,6 @@ public class MainRestController {
     return monitoringService.monitoring();
   }
 
-  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageview() {
-    return new PageViewFormat();
-  }
-
   @RequestMapping(value = "/{pathVariable}")
   public BookingStatus endpointLogger(@PathVariable(name = "pathVariable") String pathVariable)
       throws Exception {
