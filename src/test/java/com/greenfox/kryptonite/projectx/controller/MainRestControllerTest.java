@@ -7,6 +7,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
+import com.greenfox.kryptonite.projectx.model.pageviews.DataAttributes;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewData;
+import com.greenfox.kryptonite.projectx.repository.PageViewAttributes;
+import com.greenfox.kryptonite.projectx.repository.PageViewDataRepository;
 import com.greenfox.kryptonite.projectx.service.IOService;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -19,6 +23,7 @@ import com.greenfox.kryptonite.projectx.HotelMonitoringApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.xml.crypto.Data;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +64,12 @@ public class MainRestControllerTest {
 
   @MockBean
   HeartbeatRepository heartbeatRepository;
+
+  @Autowired
+  PageViewAttributes pageViewAttributes;
+
+  @Autowired
+  PageViewDataRepository pageViewDataRepository;
 
 
   @Autowired
@@ -197,5 +208,19 @@ public class MainRestControllerTest {
     String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"https://booking-resource.herokuapp.com\",\"contact\":\"MrPoopyButthole@podi.com\"}]}";
 
     assertEquals(expected, readJson);
+  }
+
+  @Test
+  public void testPageViewsEndpoint() throws Exception {
+    try {
+      pageViewAttributes.save(new DataAttributes("this a test path", 665));
+
+      ObjectMapper mapper = new ObjectMapper();
+      String attribute = mapper.writeValueAsString(pageViewAttributes.findOne((long) 1));
+      pageViewDataRepository.save(new PageViewData("test", attribute));
+    } catch (Exception ex) {
+      isItWorking = false;
+    }
+    assertTrue(isItWorking);
   }
 }

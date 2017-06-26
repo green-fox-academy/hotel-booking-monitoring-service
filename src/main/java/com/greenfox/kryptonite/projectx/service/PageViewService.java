@@ -22,13 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PageViewService {
 
   @Autowired
-  private
-  PageViewDataRepository pageViewDataRepository;
+  private PageViewDataRepository pageViewDataRepository;
 
   public PageViewFormat createPageViewFormat() {
 
     Links links = new Links("https://greenfox-kryptonite.herokuapp.com/pageviews");
-
 
     List<PageViewData> pageList = new ArrayList<>();
     for (int i = 0; i < pageViewDataRepository.count(); ++i) {
