@@ -8,6 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
+import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
+import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.service.IOService;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -20,6 +22,7 @@ import com.greenfox.kryptonite.projectx.HotelMonitoringApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.greenfox.kryptonite.projectx.service.PageViewService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,6 +67,9 @@ public class MainRestControllerTest {
 
   @Autowired
   private WebApplicationContext webApplicationContext;
+
+  @Autowired
+  private EventToDatabaseRepository eventToDatabaseRepository;
 
   @Before
   public void setup() throws Exception {
@@ -207,10 +213,9 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testConsumeEvent() throws Exception {
-    mockMvc.perform(get("/pageviews"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(contentType))
-        .andExpect(jsonPath("$.status", is("ok")));
+  public void testNorbisBeastMethod() throws Exception {
+    PageViewService pageView = new PageViewService();
+    pageView.addAttributeToDatabase(eventToDatabaseRepository);
+    assertTrue(isItWorking);
   }
 }

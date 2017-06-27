@@ -27,26 +27,39 @@ public class PageViewService {
     return mapper.readValue(jsonString, HotelEventQueue.class);
   }
 
-  public void addAttributeToDatabase(
-      EventToDatabaseRepository eventToDatabaseRepository) throws Exception {
+  public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository) throws Exception {
     MessageQueueService messageQueueService = new MessageQueueService();
-    for (int i = 0; i < messageQueueService.getCount("events"); ++i) {
+    int times = messageQueueService.getCount("events");
+    for (int i = 0; i < times; ++i) {
       messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
 
       String temp = messageQueueService.getTemporaryMessage();
+      System.out.println(temp);
       HotelEventQueue hotelEventQueue = createObjectFromJson(temp);
+      System.out.println(hotelEventQueue.toString());
 
       ArrayList<EventToDatabase> eventList = (ArrayList<EventToDatabase>) eventToDatabaseRepository
-          .findAll();
+              .findAll();
 
-      for (EventToDatabase anEventList : eventList) {
-        if (anEventList.getPath().equals(hotelEventQueue.getPath())) {
-          int count = eventToDatabaseRepository.findOne(anEventList.getId()).getCount();
-          eventToDatabaseRepository.findOne(anEventList.getId()).setCount(count + 1);
-        } else {
-          EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
-              hotelEventQueue.getType());
-          eventToDatabaseRepository.save(eventToDatabase);
+      if (eventList.size() == 0) {
+        EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
+                hotelEventQueue.getType());
+        System.out.println(eventToDatabase.toString());
+        eventToDatabaseRepository.save(eventToDatabase);
+      } else {
+        for (EventToDatabase anEventList : eventList) {
+          if (anEventList.getPath().equals(hotelEventQueue.getPath())) {
+            int count = eventToDatabaseRepository.findOne(anEventList.getId()).getCount();
+            EventToDatabase newEvent = eventToDatabaseRepository.findOne(anEventList.getId());
+            newEvent.setCount(count + 1);
+            System.out.println(newEvent.toString());
+            eventToDatabaseRepository.save(newEvent);
+          } else {
+            EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
+                    hotelEventQueue.getType());
+            System.out.println(eventToDatabase.toString());
+            eventToDatabaseRepository.save(eventToDatabase);
+          }
         }
       }
     }
