@@ -3,7 +3,7 @@
     <Appenders>
         <Console name="ConsoleAppender" target="SYSTEM_OUT">
             <PatternLayout
-                    pattern="%-5level %d{yyyy-MM-dd'T'KK:mm:ss'Z'} greenfox-kryptonite.herokuapp.com %msg%n%throwable"/>
+                    pattern="%highlight{%-5level %d{yyyy-MM-dd'T'KK:mm:ss'Z'} greenfox-kryptonite.herokuapp.com %msg%n%throwable}"/>
         </Console>
     </Appenders>
     <Loggers>

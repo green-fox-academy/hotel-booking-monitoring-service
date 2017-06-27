@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
 import com.greenfox.kryptonite.projectx.service.IOService;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
@@ -30,7 +31,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -49,6 +49,8 @@ public class MainRestControllerTest {
       MediaType.APPLICATION_JSON.getSubtype(),
       Charset.forName("utf8"));
 
+  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
+  private final String EXCHANGE_NAME = "log";
   private boolean isItWorking = true;
   private MockMvc mockMvc;
   private HeartbeatRepository heartbeatRepositoryMock;
@@ -120,15 +122,21 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testRabbitMQConsume() throws Exception {
-    messageQueueService.consume();
-    assertTrue(isItWorking);
+  public void testSend() throws Exception {
+    int initialSize = messageQueueService.getCount("testqueue");
+    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
+    int currentSize = messageQueueService.getCount("testqueue");
+    assertEquals(initialSize + 1, currentSize);
   }
 
   @Test
-  public void testRabbitMQSend() throws Exception {
-    messageQueueService.send("Mukodj!");
-    assertTrue(isItWorking);
+  public void testConsume() throws Exception {
+    int initialSize = messageQueueService.getCount("testqueue");
+    if (initialSize != 0) {
+      messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
+      int currentSize = messageQueueService.getCount("testqueue");
+      assertEquals(initialSize - 1, currentSize);
+    }
   }
 
   @Test
@@ -140,10 +148,10 @@ public class MainRestControllerTest {
 
   @Test
   public void testRabbitMqConsumeParadox() throws Exception {
-    messageQueueService.send("WORKING");
-    messageQueueService.consume();
-    String requestedMessage = messageQueueService.getTemporaryMessage();
-    assertTrue(!requestedMessage.equals("This isn't working!"));
+    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
+    messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
+    Message message = new Message();
+    assertEquals( "TestMessage", message.receiveJsonMessage(messageQueueService.getTemporaryMessage()).getMessage());
   }
 
   @Test
