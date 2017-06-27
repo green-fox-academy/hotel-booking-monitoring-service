@@ -222,4 +222,10 @@ public class MainRestControllerTest {
     assembler.returnPageView(eventToDatabaseRepository);
     assertTrue(isItWorking);
   }
+
+  @Test
+  public void testPageViewsEndPoint() throws Exception {
+    mockMvc.perform(get("/pageviews"))
+        .andExpect(status().isOk());
+  }
 }

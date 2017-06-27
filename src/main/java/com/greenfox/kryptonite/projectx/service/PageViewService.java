@@ -51,9 +51,9 @@ public class PageViewService {
 
   private void checkDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       HotelEventQueue hotelEventQueue, ArrayList<EventToDatabase> eventList){
-    for (EventToDatabase anEventList : eventList) {
-      if (anEventList.getPath().equals(hotelEventQueue.getPath())) {
-        updateEventInDatabase(eventToDatabaseRepository, anEventList);
+    for (int i = 0; i < eventToDatabaseRepository.count(); ++i) {
+      if (eventList.get(i).getPath().equals(hotelEventQueue.getPath())) {
+        updateEventInDatabase(eventToDatabaseRepository, eventList.get(i));
       } else {
         saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
       }
@@ -62,6 +62,7 @@ public class PageViewService {
 
   private void saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       HotelEventQueue hotelEventQueue){
+    System.out.println("save");
     EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
         hotelEventQueue.getType());
     eventToDatabaseRepository.save(eventToDatabase);
@@ -69,6 +70,7 @@ public class PageViewService {
 
   private void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       EventToDatabase anEventList){
+    System.out.println("update");
     int count = eventToDatabaseRepository.findOne(anEventList.getId()).getCount();
     eventToDatabaseRepository.findOne(anEventList.getId()).setCount(count+1);
     eventToDatabaseRepository.save(eventToDatabaseRepository.findOne(anEventList.getId()));
