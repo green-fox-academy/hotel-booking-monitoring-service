@@ -73,6 +73,5 @@ public class PageViewService {
     System.out.println("update");
     int count = eventToDatabaseRepository.findOne(anEventList.getId()).getCount();
     eventToDatabaseRepository.findOne(anEventList.getId()).setCount(count+1);
-    eventToDatabaseRepository.save(eventToDatabaseRepository.findOne(anEventList.getId()));
   }
 }
