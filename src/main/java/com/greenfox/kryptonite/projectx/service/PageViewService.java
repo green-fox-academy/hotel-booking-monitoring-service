@@ -52,12 +52,16 @@ public class PageViewService {
 
   private void checkDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       HotelEventQueue hotelEventQueue, ArrayList<EventToDatabase> eventList) {
+    boolean checkList = false;
     for (int i = 0; i < eventToDatabaseRepository.count(); ++i) {
+
       if (eventList.get(i).getPath().equals(hotelEventQueue.getPath())) {
         updateEventInDatabase(eventToDatabaseRepository, eventList.get(i));
-      } else {
-        saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
+      checkList = true;
       }
+    }
+    if(!checkList){
+      saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
     }
   }
 
