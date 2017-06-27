@@ -49,6 +49,7 @@ public class MainRestController {
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public PageViewFormat pageviews() throws Exception {
+    pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
     return assembler.returnPageView();
   }
 

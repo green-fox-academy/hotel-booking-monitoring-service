@@ -20,13 +20,9 @@ public class JsonAssemblerService {
     ArrayList<EventToDatabase> list = returnDatabaseContentInListFormat(eventToDatabaseRepository);
     List<PageViewData> dataList = new ArrayList<>();
     for (int i = 0; i < list.size(); i++) {
-      dataList.add(new PageViewData(list.get(i).getType(), (long) i+1, returnDataAttributesInString(list.get(i).getPath(), list.get(i).getCount())));
+      dataList.add(new PageViewData(list.get(i).getType(), (long) i+1, new DataAttributes(list.get(i).getPath(), list.get(i).getCount())));
     }
     return new PageViewDataList(dataList);
-  }
-
-  public DataAttributes returnDataAttributesInString(String path, int count) {
-    return new DataAttributes(path, count);
   }
 
   public ArrayList<EventToDatabase> returnDatabaseContentInListFormat(EventToDatabaseRepository repository) {
