@@ -1,11 +1,9 @@
-package com.greenfox.kryptonite.projectx.model;
+package com.greenfox.kryptonite.projectx.model.hotelservices;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 import lombok.ToString;
 
 @Getter
@@ -13,8 +11,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class HotelServiceStatusList {
+public class HotelServiceStatus {
 
-  private List<HotelServiceStatus> statuses;
+  private String name;
+  private String status;
 
 }

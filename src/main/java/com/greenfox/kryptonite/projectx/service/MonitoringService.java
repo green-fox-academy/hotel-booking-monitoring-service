@@ -1,8 +1,8 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import com.greenfox.kryptonite.projectx.model.HotelServiceStatus;
-import com.greenfox.kryptonite.projectx.model.HotelServiceStatusList;
-import com.greenfox.kryptonite.projectx.model.HotelServices;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatus;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServices;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.apache.logging.log4j.LogManager;
@@ -53,6 +53,8 @@ public class MonitoringService {
     if (pathVariable.equals("heartbeat")) {
       logger.info("HTTP-REQUEST=GET at /" + pathVariable);
     } else if (pathVariable.equals("monitor")) {
+      logger.info("HTTP-REQUEST=GET at /" + pathVariable);
+    } else if (pathVariable.equals("pageviews")) {
       logger.info("HTTP-REQUEST=GET at /" + pathVariable);
     } else {
       logger.error("HTTP-ERROR at /" + pathVariable);

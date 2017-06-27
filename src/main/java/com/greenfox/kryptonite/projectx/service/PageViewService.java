@@ -1,42 +1,80 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import com.greenfox.kryptonite.projectx.model.pageviews.Links;
-import com.greenfox.kryptonite.projectx.model.pageviews.PageViewData;
-import com.greenfox.kryptonite.projectx.model.pageviews.PageViewDataList;
-import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
-import com.greenfox.kryptonite.projectx.repository.PageViewDataRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
+import com.greenfox.kryptonite.projectx.model.pageviews.HotelEventQueue;
+import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
+@Service
 public class PageViewService {
 
-  @Autowired
-  private
-  PageViewDataRepository pageViewDataRepository;
+  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
+  private final String EXCHANGE_NAME = "log";
 
-  public PageViewFormat createPageViewFormat() {
+  MessageQueueService messageQueueService = new MessageQueueService();
 
-    Links links = new Links("https://greenfox-kryptonite.herokuapp.com/pageviews");
+  private HotelEventQueue createObjectFromJson(String jsonString) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.readValue(jsonString, HotelEventQueue.class);
+  }
 
-
-    List<PageViewData> pageList = new ArrayList<>();
-    for (int i = 0; i < pageViewDataRepository.count(); ++i) {
-      pageList.add(pageViewDataRepository.findOne((long) i));
+  public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository)
+      throws Exception {
+    int times = messageQueueService.getCount("events");
+    for (int i = 0; i < times; ++i) {
+      HotelEventQueue hotelEventQueue = consumeHotelEventQueue();
+      ArrayList<EventToDatabase> eventList = (ArrayList<EventToDatabase>) eventToDatabaseRepository
+          .findAll();
+      if (eventList.size() == 0) {
+        saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
+      } else {
+        checkDatabase(eventToDatabaseRepository, hotelEventQueue, eventList);
+      }
     }
+  }
 
-    PageViewDataList pageViewDataList = new PageViewDataList(pageList);
+  private HotelEventQueue consumeHotelEventQueue() throws Exception {
+    messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
+    String temp = messageQueueService.getTemporaryMessage();
+    return createObjectFromJson(temp);
+  }
 
-    return new PageViewFormat(links, pageViewDataList);
+  private void checkDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      HotelEventQueue hotelEventQueue, ArrayList<EventToDatabase> eventList) {
+    boolean checkList = false;
+    for (int i = 0; i < eventToDatabaseRepository.count(); ++i) {
+
+      if (eventList.get(i).getPath().equals(hotelEventQueue.getPath())) {
+        updateEventInDatabase(eventToDatabaseRepository, eventList.get(i));
+      checkList = true;
+      }
+    }
+    if(!checkList){
+      saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
+    }
+  }
+
+  private void saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      HotelEventQueue hotelEventQueue) {
+    EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
+        hotelEventQueue.getType());
+    eventToDatabaseRepository.save(eventToDatabase);
+  }
+
+  private void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      EventToDatabase anEventList) {
+    anEventList.setCount(anEventList.getCount()+1);
+    eventToDatabaseRepository.save(anEventList);
   }
 }

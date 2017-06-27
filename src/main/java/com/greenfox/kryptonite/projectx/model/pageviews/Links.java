@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Links {
 
-  String links;
+  String self;
 }

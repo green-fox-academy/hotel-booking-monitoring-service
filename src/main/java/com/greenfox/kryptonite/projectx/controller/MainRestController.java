@@ -1,11 +1,14 @@
 package com.greenfox.kryptonite.projectx.controller;
 
 
-import com.greenfox.kryptonite.projectx.model.HotelServiceStatusList;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatus;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
+import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
+import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
-import com.greenfox.kryptonite.projectx.repository.PageViewDataRepository;
+import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,28 +26,36 @@ public class MainRestController {
   @Autowired
   private MonitoringService monitoringService;
 
+
   @Autowired
-  PageViewDataRepository pageViewDataRepository;
+  private EventToDatabaseRepository eventToDatabaseRepository;
+
+  @Autowired
+  PageViewService pageViewService;
+
+  private JsonAssemblerService assembler = new JsonAssemblerService();
 
 
-  @GetMapping(value = "/heartbeat")
+  @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public BookingStatus heartbeat() throws Exception {
     monitoringService.endpointLogger("heartbeat");
     return monitoringService.databaseCheck(heartbeatRepository);
   }
 
-  @GetMapping(value = "/monitor")
+  @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor() throws IOException {
+    monitoringService.endpointLogger("monitor");
     return monitoringService.monitoring();
   }
 
-  @GetMapping(value = "/pageviews")
-  public PageViewFormat pageview() {
-    PageViewService pageViewService = new PageViewService();
-    return pageViewService.createPageViewFormat();
+  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
+  public PageViewFormat pageviews() throws Exception {
+    monitoringService.endpointLogger("pageviews");
+    pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
+    return assembler.returnPageView(eventToDatabaseRepository);
   }
 
-  @GetMapping(value = "/{pathVariable}")
+  @RequestMapping(value = "/{pathVariable}")
   public BookingStatus endpointLogger(@PathVariable(name = "pathVariable") String pathVariable)
       throws Exception {
     monitoringService.endpointLogger(pathVariable);

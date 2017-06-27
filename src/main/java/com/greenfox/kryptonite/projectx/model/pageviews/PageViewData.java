@@ -1,24 +1,23 @@
 package com.greenfox.kryptonite.projectx.model.pageviews;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity
+@ToString
 public class PageViewData {
 
   String type;
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
   long id;
   DataAttributes attributes;
+
+  public PageViewData(String type, long id, DataAttributes attributes) {
+    this.type = type;
+    this.id = id;
+    this.attributes = attributes;
+  }
 }

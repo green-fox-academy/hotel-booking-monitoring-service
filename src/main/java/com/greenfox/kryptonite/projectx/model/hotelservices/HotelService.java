@@ -1,4 +1,4 @@
-package com.greenfox.kryptonite.projectx.model;
+package com.greenfox.kryptonite.projectx.model.hotelservices;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
