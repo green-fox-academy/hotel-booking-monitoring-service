@@ -8,6 +8,7 @@ import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
+import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class MainRestController {
   @Autowired
   PageViewService pageViewService;
 
+  private JsonAssemblerService assembler;
+
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public BookingStatus heartbeat() throws Exception {
@@ -46,8 +49,7 @@ public class MainRestController {
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public PageViewFormat pageviews() throws Exception {
-    EventToDatabase eventToDatabase = new EventToDatabase();
-    return new PageViewFormat();
+    return assembler.returnPageView();
   }
 
   @RequestMapping(value = "/{pathVariable}")

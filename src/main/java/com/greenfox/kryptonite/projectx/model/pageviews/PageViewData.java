@@ -9,12 +9,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PageViewData {
 
-  long id;
   String type;
-  String attributes;
+  long id;
+  DataAttributes attributes;
 
-  public PageViewData(String type, String attributes) {
+  public PageViewData(String type, long id, DataAttributes attributes) {
     this.type = type;
+    this.id = id;
     this.attributes = attributes;
   }
 }
