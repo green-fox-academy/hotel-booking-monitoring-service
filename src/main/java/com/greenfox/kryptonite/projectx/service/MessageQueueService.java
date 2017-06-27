@@ -39,10 +39,11 @@ public class MessageQueueService {
     GetResponse getResponse = channel.basicGet(queueName, autoAck);
     setTemporaryMessage(new String(getResponse.getBody()));
 
-    //Todo filter Attributes in database  and add proper queue
-    PageViewService pageViewService = new PageViewService();
-    pageViewService.addDataAttributesObjectToDatabase(pageViewService.createObjectFromJson(temporaryMessage));
-
+    if(!bindQueue) {
+      PageViewService pageViewService = new PageViewService();
+      pageViewService.addDataAttributesObjectToDatabase(
+          pageViewService.createObjectFromJson(temporaryMessage));
+    }
 
     channel.close();
     connection.close();

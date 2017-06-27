@@ -210,4 +210,12 @@ public class MainRestControllerTest {
 
     assertEquals(expected, readJson);
   }
+
+  @Test
+  public void testConsumeEvent() throws Exception {
+
+      messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
+      assertTrue(isItWorking);
+
+  }
 }
