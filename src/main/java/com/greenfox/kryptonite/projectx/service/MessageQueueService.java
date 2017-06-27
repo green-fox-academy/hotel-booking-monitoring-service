@@ -2,12 +2,9 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.rabbitmq.client.*;
-import com.sun.xml.internal.bind.v2.TODO;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
-@Service
 @Getter
 @Setter
 public class MessageQueueService {
@@ -38,12 +35,6 @@ public class MessageQueueService {
     }
     GetResponse getResponse = channel.basicGet(queueName, autoAck);
     setTemporaryMessage(new String(getResponse.getBody()));
-
-    if(!bindQueue) {
-      PageViewService pageViewService = new PageViewService();
-      pageViewService.addDataAttributesObjectToDatabase(
-          pageViewService.createObjectFromJson(temporaryMessage));
-    }
 
     channel.close();
     connection.close();

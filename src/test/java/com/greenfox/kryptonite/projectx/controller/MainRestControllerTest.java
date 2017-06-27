@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
-import com.greenfox.kryptonite.projectx.repository.DataAttributesRepository;
 import com.greenfox.kryptonite.projectx.service.IOService;
 import com.greenfox.kryptonite.projectx.service.MessageQueueService;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -62,10 +61,6 @@ public class MainRestControllerTest {
 
   @MockBean
   HeartbeatRepository heartbeatRepository;
-
-  @Autowired
-  DataAttributesRepository dataAttributesRepository;
-
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -213,9 +208,9 @@ public class MainRestControllerTest {
 
   @Test
   public void testConsumeEvent() throws Exception {
-
-      messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
-      assertTrue(isItWorking);
-
+    mockMvc.perform(get("/pageviews"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType))
+        .andExpect(jsonPath("$.status", is("ok")));
   }
 }

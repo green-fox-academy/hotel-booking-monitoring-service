@@ -1,8 +1,8 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import com.greenfox.kryptonite.projectx.model.HotelServiceStatus;
-import com.greenfox.kryptonite.projectx.model.HotelServiceStatusList;
-import com.greenfox.kryptonite.projectx.model.HotelServices;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatus;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServices;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import org.apache.logging.log4j.LogManager;
