@@ -49,16 +49,6 @@ public class MonitoringService {
     }
   }
 
-  public void endpointLogger(String pathVariable) {
-    if (pathVariable.equals("heartbeat")) {
-      logger.info("HTTP-REQUEST=GET at /" + pathVariable);
-    } else if (pathVariable.equals("monitor")) {
-      logger.info("HTTP-REQUEST=GET at /" + pathVariable);
-    } else {
-      logger.error("HTTP-ERROR at /" + pathVariable);
-    }
-  }
-
   public HotelServiceStatus monitorOtherServices(String host) {
     HotelServiceStatus hotelServiceStatus;
 

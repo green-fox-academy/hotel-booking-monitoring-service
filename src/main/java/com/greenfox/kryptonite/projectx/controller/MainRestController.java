@@ -6,6 +6,7 @@ import com.greenfox.kryptonite.projectx.model.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,19 +24,13 @@ public class MainRestController {
 
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
-  public BookingStatus heartbeat() throws Exception {
-    monitoringService.endpointLogger("heartbeat");
+  public BookingStatus heartbeat(HttpServletRequest request) throws Exception {
     return monitoringService.databaseCheck(heartbeatRepository);
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
-  public HotelServiceStatusList monitor() throws IOException{
+  public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException{
   return monitoringService.monitoring();
   }
 
-  @RequestMapping(value = "/{pathVariable}")
-  public BookingStatus endpointLogger(@PathVariable(name = "pathVariable") String pathVariable) throws Exception {
-    monitoringService.endpointLogger(pathVariable);
-    return monitoringService.databaseCheck(heartbeatRepository);
-  }
 }
