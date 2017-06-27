@@ -24,4 +24,11 @@ public class LoggingAspect {
     logger.info("Hello");
   }
 
+  @Before("execution(public com.greenfox.kryptonite.projectx..model.BookingStatus com.greenfox.kryptonite.projectx.service.MonitoringService .databaseCheck(com.greenfox.kryptonite.projectx.repository.HeartbeatRepository))")
+  public void LoggingAdvice2() {
+    logger.info("Database checked");
+  }
+
+  
+
 }
