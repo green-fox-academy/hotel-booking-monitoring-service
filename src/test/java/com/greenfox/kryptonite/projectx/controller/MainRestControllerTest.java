@@ -10,11 +10,9 @@ import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
-import com.greenfox.kryptonite.projectx.service.IOService;
-import com.greenfox.kryptonite.projectx.service.MessageQueueService;
+import com.greenfox.kryptonite.projectx.service.*;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
-import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -22,7 +20,6 @@ import com.greenfox.kryptonite.projectx.HotelMonitoringApplication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.greenfox.kryptonite.projectx.service.PageViewService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -216,6 +213,13 @@ public class MainRestControllerTest {
   public void testNorbisBeastMethod() throws Exception {
     PageViewService pageView = new PageViewService();
     pageView.addAttributeToDatabase(eventToDatabaseRepository);
+    assertTrue(isItWorking);
+  }
+
+  @Test
+  public void testPageviewsEndpoint() throws Exception {
+    JsonAssemblerService assembler = new JsonAssemblerService();
+    assembler.returnPageView(eventToDatabaseRepository);
     assertTrue(isItWorking);
   }
 }

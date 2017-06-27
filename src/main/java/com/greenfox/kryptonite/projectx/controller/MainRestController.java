@@ -33,7 +33,7 @@ public class MainRestController {
   @Autowired
   PageViewService pageViewService;
 
-  private JsonAssemblerService assembler;
+  private JsonAssemblerService assembler = new JsonAssemblerService();
 
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
@@ -50,7 +50,7 @@ public class MainRestController {
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public PageViewFormat pageviews() throws Exception {
     pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
-    return assembler.returnPageView();
+    return assembler.returnPageView(eventToDatabaseRepository);
   }
 
   @RequestMapping(value = "/{pathVariable}")
