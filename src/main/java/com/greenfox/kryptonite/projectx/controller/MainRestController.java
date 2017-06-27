@@ -44,11 +44,13 @@ public class MainRestController {
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor() throws IOException {
+    monitoringService.endpointLogger("monitor");
     return monitoringService.monitoring();
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public PageViewFormat pageviews() throws Exception {
+    monitoringService.endpointLogger("pageviews");
     pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
     return assembler.returnPageView(eventToDatabaseRepository);
   }

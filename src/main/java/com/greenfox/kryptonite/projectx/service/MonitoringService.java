@@ -54,6 +54,8 @@ public class MonitoringService {
       logger.info("HTTP-REQUEST=GET at /" + pathVariable);
     } else if (pathVariable.equals("monitor")) {
       logger.info("HTTP-REQUEST=GET at /" + pathVariable);
+    } else if (pathVariable.equals("pageviews")) {
+      logger.info("HTTP-REQUEST=GET at /" + pathVariable);
     } else {
       logger.error("HTTP-ERROR at /" + pathVariable);
     }
