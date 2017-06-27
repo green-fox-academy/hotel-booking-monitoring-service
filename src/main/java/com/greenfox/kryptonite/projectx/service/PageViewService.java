@@ -22,46 +22,56 @@ public class PageViewService {
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
 
-  public HotelEventQueue createObjectFromJson(String jsonString) throws IOException {
+  MessageQueueService messageQueueService = new MessageQueueService();
+
+  private HotelEventQueue createObjectFromJson(String jsonString) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     return mapper.readValue(jsonString, HotelEventQueue.class);
   }
 
   public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository) throws Exception {
-    MessageQueueService messageQueueService = new MessageQueueService();
     int times = messageQueueService.getCount("events");
     for (int i = 0; i < times; ++i) {
-      messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
-
-      String temp = messageQueueService.getTemporaryMessage();
-      System.out.println(temp);
-      HotelEventQueue hotelEventQueue = createObjectFromJson(temp);
-      System.out.println(hotelEventQueue.toString());
-
+      HotelEventQueue hotelEventQueue = consumeHotelEventQueue();
       ArrayList<EventToDatabase> eventList = (ArrayList<EventToDatabase>) eventToDatabaseRepository
               .findAll();
-
       if (eventList.size() == 0) {
-        EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
-                hotelEventQueue.getType());
-        System.out.println(eventToDatabase.toString());
-        eventToDatabaseRepository.save(eventToDatabase);
+        saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
       } else {
-        for (EventToDatabase anEventList : eventList) {
-          if (anEventList.getPath().equals(hotelEventQueue.getPath())) {
-            int count = eventToDatabaseRepository.findOne(anEventList.getId()).getCount();
-            EventToDatabase newEvent = eventToDatabaseRepository.findOne(anEventList.getId());
-            newEvent.setCount(count + 1);
-            System.out.println(newEvent.toString());
-            eventToDatabaseRepository.save(newEvent);
-          } else {
-            EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
-                    hotelEventQueue.getType());
-            System.out.println(eventToDatabase.toString());
-            eventToDatabaseRepository.save(eventToDatabase);
-          }
-        }
+        checkDatabase(eventToDatabaseRepository, hotelEventQueue, eventList);
       }
     }
+  }
+
+  private HotelEventQueue consumeHotelEventQueue() throws Exception {
+    messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
+    String temp = messageQueueService.getTemporaryMessage();
+    return createObjectFromJson(temp);
+  }
+
+  private void checkDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      HotelEventQueue hotelEventQueue, ArrayList<EventToDatabase> eventList){
+    for (EventToDatabase anEventList : eventList) {
+      if (anEventList.getPath().equals(hotelEventQueue.getPath())) {
+        updateEventInDatabase(eventToDatabaseRepository, anEventList);
+      } else {
+        saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
+      }
+    }
+  }
+
+  private void saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      HotelEventQueue hotelEventQueue){
+    EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
+        hotelEventQueue.getType());
+    eventToDatabaseRepository.save(eventToDatabase);
+  }
+
+  private void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      EventToDatabase anEventList){
+    int count = eventToDatabaseRepository.findOne(anEventList.getId()).getCount();
+    EventToDatabase newEvent = eventToDatabaseRepository.findOne(anEventList.getId());
+    newEvent.setCount(count + 1);
+    eventToDatabaseRepository.save(newEvent);
   }
 }
