@@ -71,7 +71,7 @@ public class PageViewService {
   private void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       EventToDatabase anEventList) {
     EventToDatabase eventToDatabase = new EventToDatabase(anEventList.getId(),
-        anEventList.getPath(), anEventList.getType(), anEventList.getCount() + 1)
+        anEventList.getPath(), anEventList.getType(), anEventList.getCount() + 1);
     eventToDatabaseRepository.save(eventToDatabase);
   }
 }
