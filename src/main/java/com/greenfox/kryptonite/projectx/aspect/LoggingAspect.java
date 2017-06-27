@@ -31,14 +31,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class LoggingAspect {
   private Logger logger = LogManager.getLogger(MainRestController.class);
 
-  @Autowired
-  MonitoringService monitoringService;
-
-  @Before("execution(* com.greenfox.kryptonite.projectx.controller.MainRestController+.*(..))")
-  public void LoggingAdvice() {
-    logger.info("Hello");
-  }
-
   @Before("databasecheck()")
   public void LoggingAdvice2() {
     logger.info("Checking database");
@@ -49,15 +41,6 @@ public class LoggingAspect {
     logger.info("Database checked");
   }
 
-  @AfterReturning(pointcut = "databasecheck()", returning = "retVal")
-  public void doAfterReturningTask(Object retVal) throws Exception {
-    System.out.println(retVal.toString());
-    if (retVal == new BookingStatus("ok", "ok", monitoringService.queueCheck())) {
-      logger.info("Status ok");
-    } else if (retVal == new BookingStatus("ok", "error", monitoringService.queueCheck())) {
-      logger.error("Status error");
-    }
-  }
 
   @Pointcut("execution(* com.greenfox.kryptonite.projectx.service.MonitoringService.databaseCheck(*)) ")
   public void databasecheck(){}
