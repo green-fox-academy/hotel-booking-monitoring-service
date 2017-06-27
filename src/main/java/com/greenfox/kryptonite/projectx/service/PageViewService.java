@@ -76,8 +76,5 @@ public class PageViewService {
       EventToDatabase anEventList) {
     anEventList.setCount(anEventList.getCount()+1);
     eventToDatabaseRepository.save(anEventList);
-//    EventToDatabase eventToDatabase = new EventToDatabase(anEventList.getId(),
-//        anEventList.getPath(), anEventList.getType(), anEventList.getCount() + 1);
-//    eventToDatabaseRepository.save(eventToDatabase);
   }
 }
