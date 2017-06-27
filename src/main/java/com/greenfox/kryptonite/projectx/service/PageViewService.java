@@ -53,7 +53,6 @@ public class PageViewService {
             EventToDatabase newEvent = eventToDatabaseRepository.findOne(anEventList.getId());
             newEvent.setCount(count + 1);
             System.out.println(newEvent.toString());
-            eventToDatabaseRepository.save(newEvent);
           } else {
             EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
                     hotelEventQueue.getType());
