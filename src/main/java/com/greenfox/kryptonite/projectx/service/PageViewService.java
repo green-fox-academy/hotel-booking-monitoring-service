@@ -29,12 +29,13 @@ public class PageViewService {
     return mapper.readValue(jsonString, HotelEventQueue.class);
   }
 
-  public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository) throws Exception {
+  public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository)
+      throws Exception {
     int times = messageQueueService.getCount("events");
     for (int i = 0; i < times; ++i) {
       HotelEventQueue hotelEventQueue = consumeHotelEventQueue();
       ArrayList<EventToDatabase> eventList = (ArrayList<EventToDatabase>) eventToDatabaseRepository
-              .findAll();
+          .findAll();
       if (eventList.size() == 0) {
         saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
       } else {
@@ -50,7 +51,7 @@ public class PageViewService {
   }
 
   private void checkDatabase(EventToDatabaseRepository eventToDatabaseRepository,
-      HotelEventQueue hotelEventQueue, ArrayList<EventToDatabase> eventList){
+      HotelEventQueue hotelEventQueue, ArrayList<EventToDatabase> eventList) {
     for (int i = 0; i < eventToDatabaseRepository.count(); ++i) {
       if (eventList.get(i).getPath().equals(hotelEventQueue.getPath())) {
         updateEventInDatabase(eventToDatabaseRepository, eventList.get(i));
@@ -61,17 +62,16 @@ public class PageViewService {
   }
 
   private void saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
-      HotelEventQueue hotelEventQueue){
-    System.out.println("save");
+      HotelEventQueue hotelEventQueue) {
     EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
         hotelEventQueue.getType());
     eventToDatabaseRepository.save(eventToDatabase);
   }
 
   private void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
-      EventToDatabase anEventList){
-    System.out.println("update");
-    int count = eventToDatabaseRepository.findOne(anEventList.getId()).getCount();
-    eventToDatabaseRepository.findOne(anEventList.getId()).setCount(count+1);
+      EventToDatabase anEventList) {
+    EventToDatabase eventToDatabase = new EventToDatabase(anEventList.getId(),
+        anEventList.getPath(), anEventList.getType(), anEventList.getCount() + 1)
+    eventToDatabaseRepository.save(eventToDatabase);
   }
 }
