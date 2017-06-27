@@ -4,7 +4,9 @@ package com.greenfox.kryptonite.projectx.controller;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatus;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
-import com.greenfox.kryptonite.projectx.repository.DataAttributesRepository;
+import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
+import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
@@ -25,7 +27,7 @@ public class MainRestController {
 
 
   @Autowired
-  private DataAttributesRepository dataAttributesRepository;
+  private EventToDatabaseRepository eventToDatabaseRepository;
 
   @Autowired
   PageViewService pageViewService;
@@ -43,8 +45,9 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public HotelServiceStatus pageviews() throws Exception {
-    return pageViewService.addAttributeToDatabase(dataAttributesRepository);
+  public PageViewFormat pageviews() throws Exception {
+    EventToDatabase eventToDatabase = new EventToDatabase();
+    return new PageViewFormat();
   }
 
   @RequestMapping(value = "/{pathVariable}")
