@@ -70,8 +70,7 @@ public class PageViewService {
   private void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       EventToDatabase anEventList){
     int count = eventToDatabaseRepository.findOne(anEventList.getId()).getCount();
-    EventToDatabase newEvent = eventToDatabaseRepository.findOne(anEventList.getId());
-    newEvent.setCount(count + 1);
-    eventToDatabaseRepository.save(newEvent);
+    eventToDatabaseRepository.findOne(anEventList.getId()).setCount(count+1);
+    eventToDatabaseRepository.save(eventToDatabaseRepository.findOne(anEventList.getId()));
   }
 }
