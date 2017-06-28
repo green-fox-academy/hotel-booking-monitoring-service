@@ -23,6 +23,9 @@ import org.springframework.stereotype.Component;
 public class LoggingAspect {
   private Logger logger = LogManager.getLogger(MainRestController.class);
 
+  @Pointcut("execution(* com.greenfox.kryptonite.projectx.service.MonitoringService.databaseCheck(*)) ")
+  public void databasecheck(){}
+
   @Before("databasecheck()")
   public void LoggingAdvice2() {
     logger.info("Checking database");
@@ -33,17 +36,12 @@ public class LoggingAspect {
     logger.info("Database checked");
   }
 
-
-  @Pointcut("execution(* com.greenfox.kryptonite.projectx.service.MonitoringService.databaseCheck(*)) ")
-  public void databasecheck(){}
-
   @Pointcut("execution(* com.greenfox.kryptonite.projectx.controller.MainRestController..*(..))")
   public void controller() {
   }
 
   @Before("controller() && args(.., request)")
   public void logBefore(JoinPoint joinPoint, HttpServletRequest request) {
-    logger.info("HTTP-REQUEST=" + "" + request.getMethod() + " " + request.getRequestURI());
-    System.out.println(joinPoint.toString());
+    logger.info("HTTP-REQUEST=" + request.getMethod() + " " + request.getRequestURI());
   }
 }

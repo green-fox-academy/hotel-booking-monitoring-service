@@ -25,7 +25,7 @@ public class MonitoringService {
 
   public BookingStatus databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
-      logger.error("Database not presented.");
+      logger.error("Database not present.");
       logger.debug("Database may not exist. Check database connection or existence.");
       return new BookingStatus("ok", "error", queueCheck());
     } else if (heartbeatRepository.count() > 0) {
