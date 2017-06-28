@@ -22,6 +22,7 @@ public class MonitoringService {
   private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
   private IOService IOService = new IOService();
+  private RestTemplate restTemplate = new RestTemplate();
 
   public BookingStatus databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
@@ -61,11 +62,11 @@ public class MonitoringService {
     }
   }
 
-  public HotelServiceStatus monitorOtherServices(String host) {
+  public HotelServiceStatus monitorOtherServices(String host, RestTemplate restTemplate) {
     HotelServiceStatus hotelServiceStatus;
 
     try {
-      BookingStatus currentBookingStatus = new RestTemplate().getForObject(host + "/heartbeat", BookingStatus.class);
+      BookingStatus currentBookingStatus = restTemplate.getForObject(host + "/heartbeat", BookingStatus.class);
       hotelServiceStatus = new HotelServiceStatus(host, "ok");
     } catch (HttpServerErrorException ex) {
       hotelServiceStatus = new HotelServiceStatus(host, "error");
@@ -78,7 +79,7 @@ public class MonitoringService {
     HotelServices hotelServices = IOService.readFiles(DATA_PATH);
     int listSize = hotelServices.getServices().size();
     for (int i = 0; i < listSize; i++) {
-      statuses.add(monitorOtherServices(hotelServices.getServices().get(i).getHost()));
+      statuses.add(monitorOtherServices(hotelServices.getServices().get(i).getHost(), restTemplate));
     }
     return new HotelServiceStatusList(statuses);
   }

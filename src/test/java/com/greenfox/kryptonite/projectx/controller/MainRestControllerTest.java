@@ -32,6 +32,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -58,6 +59,7 @@ public class MainRestControllerTest {
   private HeartbeatRepository nullRepo;
   private static final String DATAPATH = "./src/test/resources/test-monitoring-services.json";
   private MessageQueueService messageQueueService;
+  private RestTemplate restTemplate;
 
   @MockBean
   HeartbeatRepository heartbeatRepository;
@@ -74,6 +76,7 @@ public class MainRestControllerTest {
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
     this.messageQueueService = new MessageQueueService();
+    this.restTemplate = new RestTemplate();
   }
 
   @Test
@@ -189,7 +192,7 @@ public class MainRestControllerTest {
   @Test
   public void testMonitorOtherServices() throws Exception {
     MonitoringService monitoringService = new MonitoringService();
-    assertEquals(monitoringService.monitorOtherServices("https://greenfox-kryptonite.herokuapp.com").getStatus(), "ok");
+    assertEquals(monitoringService.monitorOtherServices("https://greenfox-kryptonite.herokuapp.com", restTemplate).getStatus(), "ok");
   }
 
   @Test
