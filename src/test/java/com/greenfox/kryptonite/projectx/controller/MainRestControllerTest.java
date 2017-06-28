@@ -50,18 +50,15 @@ public class MainRestControllerTest {
       MediaType.APPLICATION_JSON.getSubtype(),
       Charset.forName("utf8"));
 
-  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
-  private final String EXCHANGE_NAME = "log";
   private boolean isItWorking = true;
   private MockMvc mockMvc;
   private HeartbeatRepository heartbeatRepositoryMock;
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
   private static final String DATAPATH = "./src/test/resources/test-monitoring-services.json";
-  private MessageQueueService messageQueueService;
 
   @MockBean
-  HeartbeatRepository heartbeatRepository;
+  private HeartbeatRepository heartbeatRepository;
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -74,7 +71,6 @@ public class MainRestControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
-    this.messageQueueService = new MessageQueueService();
   }
 
   @Test
@@ -103,7 +99,6 @@ public class MainRestControllerTest {
     assertEquals(((service.databaseCheck(heartbeatRepositoryMock)).getDatabase()), "ok");
   }
 
-
   @Test
   public void testGetEndpointWithFilledDatabase() throws Exception {
     BDDMockito.given(heartbeatRepository.count()).willReturn(1L);
@@ -125,41 +120,10 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testSend() throws Exception {
-    int initialSize = messageQueueService.getCount("testqueue");
-    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
-    int currentSize = messageQueueService.getCount("testqueue");
-    assertEquals(initialSize + 1, currentSize);
-  }
-
-  @Test
-  public void testConsume() throws Exception {
-    int initialSize = messageQueueService.getCount("testqueue");
-    if (initialSize != 0) {
-      messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
-      int currentSize = messageQueueService.getCount("testqueue");
-      assertEquals(initialSize - 1, currentSize);
-    }
-  }
-
-  @Test
   public void testLogWithMockTime() {
     Timestamp time = new Timestamp();
     String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
     assertEquals(date, time.getDate());
-  }
-
-  @Test
-  public void testRabbitMqConsumeParadox() throws Exception {
-    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
-    messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
-    Message message = new Message();
-    assertEquals( "TestMessage", message.receiveJsonMessage(messageQueueService.getTemporaryMessage()).getMessage());
-  }
-
-  @Test
-  public void testQueuedMessageCount() throws Exception {
-    assertTrue(messageQueueService.getCount("testqueue") == 0);
   }
 
   @Test
@@ -173,23 +137,6 @@ public class MainRestControllerTest {
             .content(jsonInput))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType));
-  }
-  
-  @Test
-  public void testWriteFile() throws JsonProcessingException {
-    IOService IOService = new IOService();
-    assertTrue(IOService.writeToFile(DATAPATH));
-  }
-
-  @Test
-  public void testReadFile() throws IOException {
-    IOService IOService = new IOService();
-
-    ObjectMapper mapper = new ObjectMapper();
-    String readJson = mapper.writeValueAsString(IOService.readFiles(DATAPATH));
-    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"https://booking-resource.herokuapp.com\",\"contact\":\"MrPoopyButthole@podi.com\"}]}";
-
-    assertEquals(expected, readJson);
   }
 
   @Test

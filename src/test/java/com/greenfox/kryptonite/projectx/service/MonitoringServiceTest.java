@@ -28,11 +28,6 @@ public class MonitoringServiceTest {
   @InjectMocks
   MonitoringService monitoringService;
 
-  @Before
-  public void setMockRestTemplate() throws IOException {
-
-  }
-
   @Test
   public void testOkServiceResponseStatus() throws IOException {
     Mockito.when(restTemplate.getForObject("https://hotel-booking-resize-service.herokuapp.com/heartbeat", BookingStatus.class)).thenReturn(bookingStatus);
