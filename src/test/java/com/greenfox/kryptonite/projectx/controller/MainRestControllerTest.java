@@ -59,7 +59,6 @@ public class MainRestControllerTest {
   private HeartbeatRepository nullRepo;
   private static final String DATAPATH = "./src/test/resources/test-monitoring-services.json";
   private MessageQueueService messageQueueService;
-  private RestTemplate restTemplate;
 
   @MockBean
   HeartbeatRepository heartbeatRepository;
@@ -76,7 +75,6 @@ public class MainRestControllerTest {
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
     this.messageQueueService = new MessageQueueService();
-    this.restTemplate = new RestTemplate();
   }
 
   @Test
@@ -176,19 +174,7 @@ public class MainRestControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType));
   }
-
-  @Test
-  public void testMonitorEndPointReturnValue() throws Exception {
-    mockMvc.perform(get("/monitor")
-            .contentType(contentType))
-            .andExpect(status().isOk())
-        .andExpect(content().contentType(contentType));
-//        .andExpect(jsonPath("$.statuses[0].status", is("ok")))
-//        .andExpect(jsonPath("$.statuses[1].status", is("ok")))
-//        .andExpect(jsonPath("$.statuses[2].status", is("ok")))
-//        .andExpect(jsonPath("$.statuses[3].status", is("ok")));
-  }
-
+  
   @Test
   public void testWriteFile() throws JsonProcessingException {
     IOService IOService = new IOService();
