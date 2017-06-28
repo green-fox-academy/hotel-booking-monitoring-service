@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
-import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.service.*;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -180,7 +179,7 @@ public class MainRestControllerTest {
             .contentType(contentType))
             .andExpect(status().isOk())
         .andExpect(content().contentType(contentType))
-        .andExpect(jsonPath("$.statuses[0].status", is("ok")))
+        .andExpect(jsonPath("$.statuses[0].status", is("error")))
         .andExpect(jsonPath("$.statuses[1].status", is("ok")))
         .andExpect(jsonPath("$.statuses[2].status", is("ok")))
         .andExpect(jsonPath("$.statuses[3].status", is("ok")));
