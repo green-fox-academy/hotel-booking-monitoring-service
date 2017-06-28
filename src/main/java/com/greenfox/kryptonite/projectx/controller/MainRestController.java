@@ -13,6 +13,7 @@ import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
@@ -34,6 +35,7 @@ public class MainRestController {
   PageViewService pageViewService;
 
   private JsonAssemblerService assembler = new JsonAssemblerService();
+  private RestTemplate restTemplate= new RestTemplate();
 
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
@@ -45,7 +47,7 @@ public class MainRestController {
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor() throws IOException {
     monitoringService.endpointLogger("monitor");
-    return monitoringService.monitoring();
+    return monitoringService.monitoring(restTemplate);
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
