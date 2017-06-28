@@ -26,6 +26,7 @@ public class MonitoringServiceTest {
   BookingStatus bookingStatus = mock(BookingStatus.class);
 
   @InjectMocks
+
   MonitoringService monitoringService;
 
   @Before
@@ -34,12 +35,15 @@ public class MonitoringServiceTest {
   }
 
   @Test
-  public void testMockedServiceResponse() throws IOException {
-//    Mockito.when(restTemplate.getForObject("https://hotel-booking-resize-service.herokuapp.com/heartbeat", BookingStatus.class)).thenThrow(HttpServerErrorException.class);
-    for (int i = 0; i < monitoringService.getHostNamesList().size(); i++) {
-      Mockito.when(restTemplate.getForObject(monitoringService.getHostNamesList().get(i).getHost(), BookingStatus.class)).thenThrow(HttpServerErrorException.class);
-    }
-    System.out.println(monitoringService.monitorOtherServices("https://booking-resource.herokuapp.com", restTemplate));
+  public void testErrorServiceResponseStatus() throws IOException {
+    Mockito.when(restTemplate.getForObject("https://hotel-booking-resize-service.herokuapp.com/heartbeat", BookingStatus.class)).thenThrow(HttpServerErrorException.class);
+    assertEquals("error", monitoringService.monitorOtherServices("https://hotel-booking-resize-service.herokuapp.com", restTemplate).getStatus());
+  }
+
+  @Test
+  public void testOkServiceResponseStatus() throws IOException {
+    Mockito.when(restTemplate.getForObject("https://hotel-booking-resize-service.herokuapp.com/heartbeat", BookingStatus.class)).thenReturn(bookingStatus);
+    assertEquals("ok", monitoringService.monitorOtherServices("https://hotel-booking-resize-service.herokuapp.com", restTemplate).getStatus());
   }
 
 
