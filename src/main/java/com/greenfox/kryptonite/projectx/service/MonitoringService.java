@@ -1,5 +1,6 @@
 package com.greenfox.kryptonite.projectx.service;
 
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelService;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatus;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServices;
@@ -40,11 +41,11 @@ public class MonitoringService {
     }
   }
 
-  public HotelServiceStatus monitorOtherServices(String host) {
+  public HotelServiceStatus monitorOtherServices(String host, RestTemplate restTemplate) {
     HotelServiceStatus hotelServiceStatus;
 
     try {
-      BookingStatus currentBookingStatus = new RestTemplate().getForObject(host + "/heartbeat", BookingStatus.class);
+      BookingStatus currentBookingStatus = restTemplate.getForObject(host + "/heartbeat", BookingStatus.class);
       hotelServiceStatus = new HotelServiceStatus(host, "ok");
     } catch (HttpServerErrorException ex) {
       hotelServiceStatus = new HotelServiceStatus(host, "error");
@@ -52,14 +53,18 @@ public class MonitoringService {
     return hotelServiceStatus;
   }
 
-  public HotelServiceStatusList monitoring() throws IOException {
+  public HotelServiceStatusList monitoring(RestTemplate restTemplate) throws IOException {
     List<HotelServiceStatus> statuses = new ArrayList<>();
-    HotelServices hotelServices = IOService.readFiles(DATA_PATH);
-    int listSize = hotelServices.getServices().size();
+    int listSize = getHostNamesList().size();
     for (int i = 0; i < listSize; i++) {
-      statuses.add(monitorOtherServices(hotelServices.getServices().get(i).getHost()));
+      statuses.add(monitorOtherServices(getHostNamesList().get(i).getHost(), restTemplate));
     }
     return new HotelServiceStatusList(statuses);
+  }
+
+  public List<HotelService> getHostNamesList() throws IOException {
+    HotelServices hotelServices = IOService.readFiles(DATA_PATH);
+    return hotelServices.getServices();
   }
 
 }

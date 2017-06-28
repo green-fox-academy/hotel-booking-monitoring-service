@@ -31,6 +31,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -56,10 +57,9 @@ public class MainRestControllerTest {
   private MonitoringService service;
   private HeartbeatRepository nullRepo;
   private static final String DATAPATH = "./src/test/resources/test-monitoring-services.json";
-  private MessageQueueService messageQueueService;
 
   @MockBean
-  HeartbeatRepository heartbeatRepository;
+  private HeartbeatRepository heartbeatRepository;
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -72,7 +72,6 @@ public class MainRestControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
     this.service = new MonitoringService();
-    this.messageQueueService = new MessageQueueService();
   }
 
   @Test
@@ -101,7 +100,6 @@ public class MainRestControllerTest {
     assertEquals(((service.databaseCheck(heartbeatRepositoryMock)).getDatabase()), "ok");
   }
 
-
   @Test
   public void testGetEndpointWithFilledDatabase() throws Exception {
     BDDMockito.given(heartbeatRepository.count()).willReturn(1L);
@@ -123,41 +121,10 @@ public class MainRestControllerTest {
   }
 
   @Test
-  public void testSend() throws Exception {
-    int initialSize = messageQueueService.getCount("testqueue");
-    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
-    int currentSize = messageQueueService.getCount("testqueue");
-    assertEquals(initialSize + 1, currentSize);
-  }
-
-  @Test
-  public void testConsume() throws Exception {
-    int initialSize = messageQueueService.getCount("testqueue");
-    if (initialSize != 0) {
-      messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
-      int currentSize = messageQueueService.getCount("testqueue");
-      assertEquals(initialSize - 1, currentSize);
-    }
-  }
-
-  @Test
   public void testLogWithMockTime() {
     Timestamp time = new Timestamp();
     String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
     assertEquals(date, time.getDate());
-  }
-
-  @Test
-  public void testRabbitMqConsumeParadox() throws Exception {
-    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
-    messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
-    Message message = new Message();
-    assertEquals( "TestMessage", message.receiveJsonMessage(messageQueueService.getTemporaryMessage()).getMessage());
-  }
-
-  @Test
-  public void testQueuedMessageCount() throws Exception {
-    assertTrue(messageQueueService.getCount("testqueue") == 0);
   }
 
   @Test
@@ -171,48 +138,6 @@ public class MainRestControllerTest {
             .content(jsonInput))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType));
-  }
-
-  @Test
-  public void testMonitorEndPointReturnValue() throws Exception {
-    mockMvc.perform(get("/monitor")
-            .contentType(contentType))
-            .andExpect(status().isOk())
-        .andExpect(content().contentType(contentType))
-        .andExpect(jsonPath("$.statuses[0].status", is("error")))
-        .andExpect(jsonPath("$.statuses[1].status", is("ok")))
-        .andExpect(jsonPath("$.statuses[2].status", is("ok")))
-        .andExpect(jsonPath("$.statuses[3].status", is("ok")));
-  }
-
-  @Test
-  public void testMonitorOtherServices() throws Exception {
-    MonitoringService monitoringService = new MonitoringService();
-    assertEquals(monitoringService.monitorOtherServices("https://greenfox-kryptonite.herokuapp.com").getStatus(), "ok");
-  }
-
-  @Test
-  public void testWriteFile() throws JsonProcessingException {
-    IOService IOService = new IOService();
-    assertTrue(IOService.writeToFile(DATAPATH));
-  }
-
-  @Test
-  public void testReadFile() throws IOException {
-    IOService IOService = new IOService();
-
-    ObjectMapper mapper = new ObjectMapper();
-    String readJson = mapper.writeValueAsString(IOService.readFiles(DATAPATH));
-    String expected = "{\"services\":[{\"host\":\"https://hotel-booking-resize-service.herokuapp.com\",\"contact\":\"berta@greenfox.com\"},{\"host\":\"https://booking-notification-service.herokuapp.com\",\"contact\":\"tojasmamusza@greenfox.com\"},{\"host\":\"https://hotel-booking-user-service.herokuapp.com\",\"contact\":\"imi@greenfox.com\"},{\"host\":\"https://hotel-booking-payment.herokuapp.com\",\"contact\":\"yesyo@greenfox.com\"},{\"host\":\"https://booking-resource.herokuapp.com\",\"contact\":\"MrPoopyButthole@podi.com\"}]}";
-
-    assertEquals(expected, readJson);
-  }
-
-  @Test
-  public void testNorbisBeastMethod() throws Exception {
-    PageViewService pageView = new PageViewService();
-    pageView.addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
-    assertTrue(isItWorking);
   }
 
   @Test

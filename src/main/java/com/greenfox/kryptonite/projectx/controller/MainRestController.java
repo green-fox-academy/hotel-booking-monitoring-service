@@ -12,6 +12,7 @@ import com.greenfox.kryptonite.projectx.service.PageViewService;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
@@ -34,6 +35,8 @@ public class MainRestController {
   private JsonAssemblerService assembler = new JsonAssemblerService();
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
+  private RestTemplate restTemplate= new RestTemplate();
+
 
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
@@ -49,6 +52,6 @@ public class MainRestController {
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException{
-  return monitoringService.monitoring();
+  return monitoringService.monitoring(restTemplate);
   }
 }
