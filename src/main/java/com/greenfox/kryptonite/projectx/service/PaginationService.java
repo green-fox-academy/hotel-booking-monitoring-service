@@ -3,7 +3,14 @@ package com.greenfox.kryptonite.projectx.service;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import java.util.ArrayList;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@NoArgsConstructor
 public class PaginationService {
 
   final String HOST = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";

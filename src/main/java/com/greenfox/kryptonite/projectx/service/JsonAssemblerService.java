@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public class JsonAssemblerService {
 
-  final String HOST = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
-
   PaginationService paginationService = new PaginationService();
 
   public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page) {
@@ -18,8 +16,8 @@ public class JsonAssemblerService {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
         .findAllByOrderByIdAsc();
 
-    String self = HOST + page;
-    String last = HOST + (int) (Math.ceil((double) allEventList.size() / 20));
+    String self = paginationService.getHOST() + page;
+    String last = paginationService.getHOST() + (int) (Math.ceil((double) allEventList.size() / 20));
     String next = paginationService.checkNextPage(self, last, page);
     String prev = paginationService.checkPrevPage(page);
 
