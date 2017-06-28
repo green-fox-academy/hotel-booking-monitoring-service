@@ -39,7 +39,7 @@ public class MonitoringService {
       return "connection error";
     }
   }
-  
+
   public HotelServiceStatus monitorOtherServices(String host) {
     HotelServiceStatus hotelServiceStatus;
 

@@ -42,7 +42,6 @@ public class MainRestController {
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public PageViewFormat pageviews() throws Exception {
-    monitoringService.endpointLogger("pageviews");
     pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
     return assembler.returnPageView(eventToDatabaseRepository);
   }
