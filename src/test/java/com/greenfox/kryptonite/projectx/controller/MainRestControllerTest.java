@@ -211,7 +211,7 @@ public class MainRestControllerTest {
   @Test
   public void testNorbisBeastMethod() throws Exception {
     PageViewService pageView = new PageViewService();
-    pageView.addAttributeToDatabase(eventToDatabaseRepository);
+    pageView.addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
     assertTrue(isItWorking);
   }
 

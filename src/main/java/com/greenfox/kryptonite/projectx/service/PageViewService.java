@@ -1,11 +1,14 @@
 package com.greenfox.kryptonite.projectx.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.model.pageviews.HotelEventQueue;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.net.URISyntaxException;
+import java.util.List;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,60 +24,75 @@ public class PageViewService {
 
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
+  private String testStringDataAttributes = "not ok";
+  private String testStringEventDatabaseCheck = "not ok";
 
   MessageQueueService messageQueueService = new MessageQueueService();
 
-  private HotelEventQueue createObjectFromJson(String jsonString) throws IOException {
+  public HotelEventQueue createObjectFromJson(String jsonString) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     return mapper.readValue(jsonString, HotelEventQueue.class);
   }
 
-  public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository)
+  public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository, String hostURL, String exchangeName, String queueName, boolean bindQueue, boolean autoAck)
       throws Exception {
-    int times = messageQueueService.getCount("events");
+    int times = messageQueueService.getCount(queueName);
     for (int i = 0; i < times; ++i) {
-      HotelEventQueue hotelEventQueue = consumeHotelEventQueue();
-      ArrayList<EventToDatabase> eventList = (ArrayList<EventToDatabase>) eventToDatabaseRepository
-          .findAll();
+      HotelEventQueue hotelEventQueue = consumeHotelEventQueue(hostURL, exchangeName, queueName, bindQueue, autoAck);
+      List<EventToDatabase> eventList = (List<EventToDatabase>) eventToDatabaseRepository.findAll();
       if (eventList.size() == 0) {
         saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
+        testStringDataAttributes = "empty";
       } else {
-        checkDatabase(eventToDatabaseRepository, hotelEventQueue, eventList);
+        checkEventDatabase(eventToDatabaseRepository, hotelEventQueue, eventList);
+        testStringDataAttributes = "not empty";
       }
     }
   }
 
-  private HotelEventQueue consumeHotelEventQueue() throws Exception {
-    messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "events", false, true);
+  public HotelEventQueue consumeHotelEventQueue(String hostURL, String exchangeName, String queueName, boolean bindQueue, boolean autoAck) throws Exception {
+    messageQueueService.consume(hostURL, exchangeName, queueName, bindQueue, autoAck);
     String temp = messageQueueService.getTemporaryMessage();
     return createObjectFromJson(temp);
   }
 
-  private void checkDatabase(EventToDatabaseRepository eventToDatabaseRepository,
-      HotelEventQueue hotelEventQueue, ArrayList<EventToDatabase> eventList) {
+  public void checkEventDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+                                 HotelEventQueue hotelEventQueue, List<EventToDatabase> eventList) {
     boolean checkList = false;
     for (int i = 0; i < eventToDatabaseRepository.count(); ++i) {
 
       if (eventList.get(i).getPath().equals(hotelEventQueue.getPath())) {
         updateEventInDatabase(eventToDatabaseRepository, eventList.get(i));
       checkList = true;
+      testStringEventDatabaseCheck = "paths are equals";
       }
     }
     if(!checkList){
       saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
+      testStringEventDatabaseCheck = "paths are not equals";
     }
   }
 
-  private void saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+  public EventToDatabase saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       HotelEventQueue hotelEventQueue) {
     EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
         hotelEventQueue.getType());
     eventToDatabaseRepository.save(eventToDatabase);
+    return eventToDatabase;
   }
 
-  private void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
-      EventToDatabase anEventList) {
-    anEventList.setCount(anEventList.getCount()+1);
-    eventToDatabaseRepository.save(anEventList);
+  public void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      EventToDatabase eventToDatabase) {
+    eventToDatabase.setCount(eventToDatabase.getCount()+1);
+    eventToDatabaseRepository.save(eventToDatabase);
   }
+
+  public String sendJsonHotelEventQueue() throws JsonProcessingException, URISyntaxException {
+    HotelEventQueue hotelEventQueue = new HotelEventQueue("test-hotelEventQueue",
+             "/testPath",
+             "5431325134");
+    ObjectMapper mapper = new ObjectMapper();
+    return mapper.writeValueAsString(hotelEventQueue);
+  }
+
 }

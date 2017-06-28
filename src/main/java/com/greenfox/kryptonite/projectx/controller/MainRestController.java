@@ -26,7 +26,6 @@ public class MainRestController {
   @Autowired
   private MonitoringService monitoringService;
 
-
   @Autowired
   private EventToDatabaseRepository eventToDatabaseRepository;
 
@@ -34,6 +33,8 @@ public class MainRestController {
   PageViewService pageViewService;
 
   private JsonAssemblerService assembler = new JsonAssemblerService();
+  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
+  private final String EXCHANGE_NAME = "log";
 
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
@@ -51,7 +52,7 @@ public class MainRestController {
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public PageViewFormat pageviews() throws Exception {
     monitoringService.endpointLogger("pageviews");
-    pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
+    pageViewService.addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events", false ,true);
     return assembler.returnPageView(eventToDatabaseRepository);
   }
 
