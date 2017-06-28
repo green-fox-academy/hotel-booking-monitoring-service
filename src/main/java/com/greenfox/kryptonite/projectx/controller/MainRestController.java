@@ -11,7 +11,10 @@ import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
+import com.sun.deploy.nativesandbox.comm.Request;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -49,10 +52,10 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews() throws Exception {
+  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) int page) throws Exception {
     monitoringService.endpointLogger("pageviews");
     pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
-    return assembler.returnPageView(eventToDatabaseRepository);
+    return assembler.returnPageView(eventToDatabaseRepository, page);
   }
 
   @RequestMapping(value = "/{pathVariable}")
