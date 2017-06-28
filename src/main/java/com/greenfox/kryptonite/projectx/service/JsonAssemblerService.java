@@ -46,6 +46,6 @@ public class JsonAssemblerService {
     } else {
       link = new Links(self, next, last, prev);
     }
-    return new Links(PAGEVIEWHOST);;
+    return new Links(PAGEVIEWHOST);
   }
 }
