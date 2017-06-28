@@ -30,22 +30,16 @@ public class JsonAssemblerService {
   Links createLink(EventToDatabaseRepository repo, int page) {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
         .findAllByOrderByIdAsc();
-    Links link;
     String self = paginationService.getHOST() + page;
     String last =
         paginationService.getHOST() + (int) (Math.ceil((double) allEventList.size() / 20));
     String next = paginationService.checkNextPage(self, last, page);
     String prev = paginationService.checkPrevPage(page);
-    System.out.println();
-    System.out.println();
-    System.out.println(page);
-    System.out.println();
-    System.out.println();
+
     if (page == 0) {
-      link = new Links(PAGEVIEWHOST);
+      return new Links(PAGEVIEWHOST);
     } else {
-      link = new Links(self, next, last, prev);
+      return new Links(self, next, last, prev);
     }
-    return new Links(PAGEVIEWHOST);
   }
 }
