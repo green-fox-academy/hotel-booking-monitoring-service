@@ -192,7 +192,7 @@ public class MainRestControllerTest {
   @Test
   public void testMonitorOtherServices() throws Exception {
     MonitoringService monitoringService = new MonitoringService();
-    assertEquals(monitoringService.monitorOtherServices("https://greenfox-kryptonite.herokuapp.com", restTemplate).getStatus(), "ok");
+    assertEquals(monitoringService.monitorOtherServices("https://greenfox-kryptonite.herokuapp.com", restTemplate).getStatus(), "ok"); 
   }
 
   @Test
