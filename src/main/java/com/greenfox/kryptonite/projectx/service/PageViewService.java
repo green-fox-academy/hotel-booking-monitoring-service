@@ -60,7 +60,6 @@ public class PageViewService {
                                  HotelEventQueue hotelEventQueue, List<EventToDatabase> eventList) {
     boolean checkList = false;
     for (int i = 0; i < eventToDatabaseRepository.count(); ++i) {
-
       if (eventList.get(i).getPath().equals(hotelEventQueue.getPath())) {
         updateEventInDatabase(eventToDatabaseRepository, eventList.get(i));
       checkList = true;
@@ -75,8 +74,7 @@ public class PageViewService {
 
   public EventToDatabase saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       HotelEventQueue hotelEventQueue) {
-    EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
-        hotelEventQueue.getType());
+    EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(), hotelEventQueue.getType());
     eventToDatabaseRepository.save(eventToDatabase);
     return eventToDatabase;
   }
@@ -89,8 +87,7 @@ public class PageViewService {
 
   public String sendJsonHotelEventQueue() throws JsonProcessingException, URISyntaxException {
     HotelEventQueue hotelEventQueue = new HotelEventQueue("test-hotelEventQueue",
-             "/testPath",
-             "5431325134");
+             "/testPath","5431325134");
     ObjectMapper mapper = new ObjectMapper();
     return mapper.writeValueAsString(hotelEventQueue);
   }
