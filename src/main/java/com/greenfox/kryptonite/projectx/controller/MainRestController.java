@@ -35,8 +35,7 @@ public class MainRestController {
   private JsonAssemblerService assembler = new JsonAssemblerService();
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
-  private RestTemplate restTemplate= new RestTemplate();
-
+  private RestTemplate restTemplate = new RestTemplate();
 
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
@@ -44,14 +43,20 @@ public class MainRestController {
     return monitoringService.databaseCheck(heartbeatRepository);
   }
 
-  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews() throws Exception {
-    pageViewService.addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events", false ,true);
-    return assembler.returnPageView(eventToDatabaseRepository);
+  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page)
+      throws Exception {
+    int index = 0;
+    pageViewService
+        .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
+            false, true);
+    if (page != null) {
+      index = Integer.parseInt(page);
+    }
+    return assembler.returnPageView(eventToDatabaseRepository, index);
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
-  public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException{
-  return monitoringService.monitoring(restTemplate);
+  public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException {
+    return monitoringService.monitoring(restTemplate);
   }
 }
