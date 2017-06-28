@@ -10,28 +10,38 @@ import javax.servlet.http.HttpServletRequest;
 public class JsonAssemblerService {
 
   public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page) {
-    return new PageViewFormat(new Links("https://greenfox-kryptonite.herokuapp.com/pageviews"), returnPageViewList(repo, page));
+    return new PageViewFormat(new Links("https://greenfox-kryptonite.herokuapp.com/pageviews"),
+        returnPageViewList(repo, page));
   }
 
   public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page) {
     ArrayList<EventToDatabase> list = pagination(repo, page);
     List<PageViewData> dataList = new ArrayList<>();
     for (int i = 0; i < list.size(); i++) {
-      dataList.add(new PageViewData(list.get(i).getType(), (long) i+1, new DataAttributes(list.get(i).getPath(), list.get(i).getCount())));
+      dataList.add(new PageViewData(list.get(i).getType(), (long) i + 1,
+          new DataAttributes(list.get(i).getPath(), list.get(i).getCount())));
     }
     return dataList;
   }
 
-  private ArrayList<EventToDatabase> pagination(EventToDatabaseRepository repo, int page){
-    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo.findAllByOrderByIdAsc();
+  private ArrayList<EventToDatabase> pagination(EventToDatabaseRepository repo, int page) {
+    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
+        .findAllByOrderByIdAsc();
 
     ArrayList<EventToDatabase> finalList = new ArrayList<>();
-    if(page == 0){
-      finalList = allEventList;
+    int endIndex = 0;
+    if(allEventList.size() < page * 20) {
+      endIndex = allEventList.size();
     } else {
-      for (int i = page - 1; i < page + 18; ++i) {
+      endIndex = page * 20;
+    }
+    
+    if ((page == 1) && (allEventList.size() > 20)) {
+      for (int i = page * 20 -20; i < endIndex; ++i) {
         finalList.add(allEventList.get(i));
       }
+    }  else {
+      finalList = allEventList;
     }
     return finalList;
   }
