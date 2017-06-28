@@ -39,12 +39,12 @@ public class LoggingAspect {
   public void databasecheck(){}
 
   @Before("databasecheck()")
-  public void LoggingAdvice2() {
+  public void beforeDatabaseCheck() {
     logger.info("Checking database");
   }
 
   @After("databasecheck()")
-  public void LoggingAdvice3() {
+  public void afterDatabaseCheck() {
     logger.info("Database checked");
   }
 
@@ -68,7 +68,7 @@ public class LoggingAspect {
   }
 
   @Before("controller() && args(.., request)")
-  public void logBefore(HttpServletRequest request) {
+  public void endpointLogging(HttpServletRequest request) {
     logger.info("HTTP-REQUEST=" + request.getMethod() + " " + request.getRequestURI());
   }
 }
