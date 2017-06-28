@@ -42,7 +42,7 @@ public class MainRestController {
   public BookingStatus heartbeat(HttpServletRequest request) throws Exception {
     return monitoringService.databaseCheck(heartbeatRepository);
   }
-  
+
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page)
       throws Exception {

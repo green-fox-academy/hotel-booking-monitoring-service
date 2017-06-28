@@ -15,4 +15,8 @@ public class Links {
   String next;
   String last;
   String prev;
+
+  public Links(String self) {
+    this.self = self;
+  }
 }
