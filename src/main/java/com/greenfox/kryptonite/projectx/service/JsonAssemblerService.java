@@ -14,11 +14,11 @@ public class JsonAssemblerService {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
         .findAllByOrderByIdAsc();
     String host = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
-    String self =  host + page;
+    String self = host + page;
     String next = "null";
-    String last = host + (int) ( Math.ceil(allEventList.size() / 20));
+    String last = host + (int) (Math.ceil((double) allEventList.size() / 20));
 
-    if(self.equals(last)) {
+    if (self.equals(last)) {
       next = "this is the last page";
     } else {
       next = host + (page + 1);
@@ -44,17 +44,17 @@ public class JsonAssemblerService {
 
     ArrayList<EventToDatabase> finalList = new ArrayList<>();
     int endIndex = 0;
-    if(allEventList.size() < page * 20) {
+    if (allEventList.size() < page * 20) {
       endIndex = allEventList.size();
     } else {
       endIndex = page * 20;
     }
 
     if ((page > 0) && (allEventList.size() > 20)) {
-      for (int i = page * 20 -20; i < endIndex; ++i) {
+      for (int i = page * 20 - 20; i < endIndex; ++i) {
         finalList.add(allEventList.get(i));
       }
-    }  else {
+    } else {
       finalList = allEventList;
     }
     return finalList;
