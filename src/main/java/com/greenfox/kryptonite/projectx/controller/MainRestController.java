@@ -1,6 +1,7 @@
 package com.greenfox.kryptonite.projectx.controller;
 
 
+import com.greenfox.kryptonite.projectx.model.ErrorMessage;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
@@ -11,6 +12,9 @@ import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -46,7 +50,15 @@ public class MainRestController {
     return assembler.returnPageView(eventToDatabaseRepository);
   }
 
+  @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException{
   return monitoringService.monitoring();
   }
+
+  @ExceptionHandler(Exception.class)
+  @ResponseStatus(value = HttpStatus.NOT_FOUND)
+  public ErrorMessage somethingWentWrong(Exception ex, HttpServletRequest request) {
+    return new ErrorMessage("error", ex.getMessage());
+  }
+
 }
