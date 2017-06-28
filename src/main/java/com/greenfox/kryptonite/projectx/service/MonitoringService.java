@@ -19,22 +19,15 @@ import java.util.List;
 public class MonitoringService {
 
   private static final String DATA_PATH = "./src/main/resources/monitoring-services.json";
-  private Logger logger = LogManager.getLogger(this.getClass());
   private MessageQueueService messageQueueService = new MessageQueueService();
   private IOService IOService = new IOService();
 
   public BookingStatus databaseCheck(HeartbeatRepository heartbeatRepository) throws Exception {
     if (heartbeatRepository == null) {
-      logger.error("Database not present.");
-      logger.debug("Database may not exist. Check database connection or existence.");
       return new BookingStatus("ok", "error", queueCheck());
     } else if (heartbeatRepository.count() > 0) {
-      logger.info(
-          "Database connection is ok and contains " + heartbeatRepository.count() + " element(s).");
       return new BookingStatus("ok", "ok", queueCheck());
     } else {
-      logger.info("Database connection is ok.");
-      logger.warn("Database is empty.");
       return new BookingStatus("ok", "error", queueCheck());
     }
   }
