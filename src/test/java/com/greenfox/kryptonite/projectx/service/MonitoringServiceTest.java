@@ -2,7 +2,6 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
