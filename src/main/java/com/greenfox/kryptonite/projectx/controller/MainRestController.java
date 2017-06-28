@@ -52,10 +52,12 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) int page) throws Exception {
+  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page) throws Exception {
+    int index = 0;
     monitoringService.endpointLogger("pageviews");
     pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
-    return assembler.returnPageView(eventToDatabaseRepository, page);
+    if(page != null){ index = Integer.parseInt(page);}
+    return assembler.returnPageView(eventToDatabaseRepository, index);
   }
 
   @RequestMapping(value = "/{pathVariable}")

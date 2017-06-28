@@ -26,9 +26,12 @@ public class JsonAssemblerService {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo.findAllByOrderByIdAsc();
 
     ArrayList<EventToDatabase> finalList = new ArrayList<>();
-
-    for(int i = page -1; i < page + 19; ++i) {
-      finalList.add(allEventList.get(i));
+    if(page == 0){
+      finalList = allEventList;
+    } else {
+      for (int i = page - 1; i < page + 18; ++i) {
+        finalList.add(allEventList.get(i));
+      }
     }
     return finalList;
   }
