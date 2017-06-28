@@ -5,8 +5,6 @@ import com.greenfox.kryptonite.projectx.model.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.HotelServices;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
