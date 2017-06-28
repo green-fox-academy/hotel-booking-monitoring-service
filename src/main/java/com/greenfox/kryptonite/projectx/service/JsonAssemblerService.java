@@ -36,7 +36,11 @@ public class JsonAssemblerService {
         paginationService.getHOST() + (int) (Math.ceil((double) allEventList.size() / 20));
     String next = paginationService.checkNextPage(self, last, page);
     String prev = paginationService.checkPrevPage(page);
-
+    System.out.println();
+    System.out.println();
+    System.out.println(page);
+    System.out.println();
+    System.out.println();
     if (page == 0) {
       link = new Links(PAGEVIEWHOST);
     } else {
