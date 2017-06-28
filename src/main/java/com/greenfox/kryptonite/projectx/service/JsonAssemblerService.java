@@ -35,8 +35,8 @@ public class JsonAssemblerService {
     } else {
       endIndex = page * 20;
     }
-    
-    if ((page == 1) && (allEventList.size() > 20)) {
+
+    if ((page > 0) && (allEventList.size() > 20)) {
       for (int i = page * 20 -20; i < endIndex; ++i) {
         finalList.add(allEventList.get(i));
       }
