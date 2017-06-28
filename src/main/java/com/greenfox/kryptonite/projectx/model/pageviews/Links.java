@@ -14,4 +14,5 @@ public class Links {
   String self;
   String next;
   String last;
+  String prev;
 }
