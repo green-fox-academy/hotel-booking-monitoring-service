@@ -46,6 +46,7 @@ public class MainRestController {
     return assembler.returnPageView(eventToDatabaseRepository);
   }
 
+  @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException{
   return monitoringService.monitoring();
   }
