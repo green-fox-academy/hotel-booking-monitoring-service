@@ -13,12 +13,12 @@ public class JsonAssemblerService {
     String host = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
     String self =  host + page;
     String next = "null";
-    String last = host + Math.ceil(returnPageViewList(repo, page).size() / 20);
+    String last = host + ((int) Math.ceil(returnPageViewList(repo, page).size() / 20));
 
     if(self.equals(last)) {
       next = "this is the last page";
     } else {
-      next = host + page + 1;
+      next = host + (page + 1);
     }
 
     return new PageViewFormat(new Links(self, next, last),
