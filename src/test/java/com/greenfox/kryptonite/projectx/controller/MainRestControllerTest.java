@@ -4,15 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfox.kryptonite.projectx.model.Message;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.service.*;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.HotelMonitoringApplication;
@@ -31,7 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
