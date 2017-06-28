@@ -87,7 +87,6 @@ public class PageViewServiceTest {
     Mockito.when(eventToDatabaseRepositoryMock.findAll()).thenReturn(list);
     pageViewService.addAttributeToDatabase(eventToDatabaseRepositoryMock, RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", true, true);
     assertEquals("empty", pageViewService.getTestStringDataAttributes());
-    System.out.println(pageViewService.getTestStringDataAttributes());
   }
 
   @Test
@@ -97,7 +96,6 @@ public class PageViewServiceTest {
     Mockito.when(eventToDatabaseRepositoryMock.findAll()).thenReturn(list);
     pageViewService.addAttributeToDatabase(eventToDatabaseRepositoryMock, RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", true, true);
     assertEquals("not empty", pageViewService.getTestStringDataAttributes());
-    System.out.println(pageViewService.getTestStringDataAttributes());
   }
 
   @Test
@@ -113,7 +111,6 @@ public class PageViewServiceTest {
     Mockito.when(eventToDatabaseRepositoryMock.count()).thenReturn(1L);
     pageViewService.checkEventDatabase(eventToDatabaseRepositoryMock, hotelEventQueue,testList1);
     assertEquals("paths are equals", pageViewService.getTestStringEventDatabaseCheck());
-    System.out.println(pageViewService.getTestStringEventDatabaseCheck());
   }
 
   @Test
@@ -122,7 +119,6 @@ public class PageViewServiceTest {
     Mockito.when(eventToDatabaseRepositoryMock.count()).thenReturn(1L);
     pageViewService.checkEventDatabase(eventToDatabaseRepositoryMock, hotelEventQueue,testList2);
     assertEquals("paths are not equals", pageViewService.getTestStringEventDatabaseCheck());
-    System.out.println(pageViewService.getTestStringEventDatabaseCheck());
   }
 
   @Test
