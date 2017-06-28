@@ -16,7 +16,7 @@ public class JsonAssemblerService {
     String host = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
     String self =  host + page;
     String next = "null";
-    String last = host + ((int) Math.ceil(allEventList.size() / 20));
+    String last = host + (int) ( Math.ceil(allEventList.size() / 20));
 
     if(self.equals(last)) {
       next = "this is the last page";
