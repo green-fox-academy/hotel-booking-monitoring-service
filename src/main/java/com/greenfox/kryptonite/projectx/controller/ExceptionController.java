@@ -21,4 +21,11 @@ public class ExceptionController {
     return "error";
   }
 
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(Exception.class)
+  public ErrorMessage exceptionHandling(Exception ex, HttpServletRequest request) {
+    logger.error("Something went wrong");
+    return new ErrorMessage("error", ex.getMessage());
+  }
+
 }
