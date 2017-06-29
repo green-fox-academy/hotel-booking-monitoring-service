@@ -139,7 +139,7 @@ public class MainRestControllerTest {
   @Test
   public void testPageviewsEndpoint() throws Exception {
     JsonAssemblerService assembler = new JsonAssemblerService();
-    assembler.returnPageView(eventToDatabaseRepository, 0, "filter");
+    assembler.returnPageView(eventToDatabaseRepository, 0, "filter", 0, 5000);
     assertTrue(isItWorking);
   }
 

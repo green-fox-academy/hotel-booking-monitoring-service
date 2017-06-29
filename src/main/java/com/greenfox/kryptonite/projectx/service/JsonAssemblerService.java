@@ -11,15 +11,17 @@ public class JsonAssemblerService {
   PaginationService paginationService = new PaginationService();
   final String PAGEVIEWHOST = "http://greenfox-kryptonite.herokuapp.com/pageviews";
 
-  public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page, String filter) {
+  public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page, String filter, Integer min, Integer max) {
     return new PageViewFormat(createLink(repo, page),
-        returnPageViewList(repo, page, filter));
+        returnPageViewList(repo, page, filter, min, max));
   }
 
-  public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page, String filter) {
+  public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page, String filter, Integer min, Integer max) {
     ArrayList<EventToDatabase> list = paginationService.pagination(repo, page);
     if (filter != null) {
       list = eventFilter(repo,filter);
+    } else if (min != null || max != null) {
+      list = minmax(repo, min, max);
     }
 
     List<PageViewData> dataList = new ArrayList<>();
@@ -58,6 +60,32 @@ public class JsonAssemblerService {
       }
     }
     return filteredList;
+  }
+
+  private ArrayList<EventToDatabase> minmax(EventToDatabaseRepository repo, Integer min, Integer max) {
+    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
+        .findAllByOrderByIdAsc();
+    ArrayList<EventToDatabase> minmaxList = new ArrayList<>();
+    if (min != null && max != null) {
+      for (EventToDatabase anAllEventList : allEventList) {
+        if (anAllEventList.getCount() > min && anAllEventList.getCount() < max) {
+          minmaxList.add(anAllEventList);
+        }
+      }
+    } else if (min != null) {
+      for (EventToDatabase anAllEventList : allEventList) {
+        if(anAllEventList.getCount() > min) {
+          minmaxList.add(anAllEventList);
+        }
+      }
+      } else if (max != null){
+      for (EventToDatabase anAllEventList : allEventList) {
+        if (anAllEventList.getCount() < max) {
+          minmaxList.add(anAllEventList);
+        }
+      }
+    }
+    return minmaxList;
   }
 
 }
