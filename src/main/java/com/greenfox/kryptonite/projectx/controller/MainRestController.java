@@ -44,7 +44,7 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page)
+  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "filter", required =  false) String filter)
       throws Exception {
     int index = 0;
     pageViewService

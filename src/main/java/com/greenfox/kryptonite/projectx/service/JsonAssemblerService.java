@@ -43,4 +43,17 @@ public class JsonAssemblerService {
       return new LinksWithPrevField(self, next, last, prev);
     }
   }
+
+  private List<EventToDatabase> filter(EventToDatabaseRepository repo, String filter) {
+    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
+        .findAllByOrderByIdAsc();
+    List<EventToDatabase> filteredList = new ArrayList<>();
+    for (EventToDatabase anAllEventList : allEventList) {
+      if (anAllEventList.getPath().equals(filter)) {
+        filteredList.add(anAllEventList);
+      }
+    }
+    return filteredList;
+  }
+
 }
