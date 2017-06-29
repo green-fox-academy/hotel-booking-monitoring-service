@@ -17,10 +17,8 @@ public class JsonAssemblerService {
   }
 
   public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page, String filter) {
-    ArrayList<EventToDatabase> list;
-    if (filter == null) {
-      list = paginationService.pagination(repo, page);
-    } else {
+    ArrayList<EventToDatabase> list = paginationService.pagination(repo, page);
+    if (filter != null) {
       list = eventFilter(repo,filter);
     }
 
