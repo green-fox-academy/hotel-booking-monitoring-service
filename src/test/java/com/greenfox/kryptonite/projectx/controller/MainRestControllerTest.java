@@ -45,8 +45,6 @@ public class MainRestControllerTest {
       MediaType.APPLICATION_JSON.getSubtype(),
       Charset.forName("utf8"));
 
-  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
-  private final String EXCHANGE_NAME = "log";
   private boolean isItWorking = true;
   private MockMvc mockMvc;
   private HeartbeatRepository heartbeatRepositoryMock;
@@ -121,6 +119,7 @@ public class MainRestControllerTest {
     Timestamp time = new Timestamp();
     String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
     assertEquals(date, time.getDate());
+    assertTrue(isItWorking);
   }
 
   @Test
@@ -134,13 +133,6 @@ public class MainRestControllerTest {
             .content(jsonInput))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType));
-  }
-
-  @Test
-  public void testPageviewsEndpoint() throws Exception {
-    JsonAssemblerService assembler = new JsonAssemblerService();
-    assembler.returnPageView(eventToDatabaseRepository, 0);
-    assertTrue(isItWorking);
   }
 
   @Test

@@ -19,7 +19,6 @@ public class JsonAssemblerServiceTest {
   private ArrayList<EventToDatabase> testList;
   private JsonAssemblerService assembler;
 
-
   @Before
   public void setUpTestEnvironment() {
     this.mockRepo = mock(EventToDatabaseRepository.class);
@@ -57,4 +56,12 @@ public class JsonAssemblerServiceTest {
     assertEquals(finalList.get(5).getAttributes().getCount(), assembler.returnPageViewList(mockRepo, 2).get(5).getAttributes().getCount());
   }
 
+  @Test
+  public void testReturnPageView() {
+    Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
+    assertEquals(20, assembler.returnPageView(mockRepo, 2).getData().size());
+    assertEquals(15, assembler.returnPageView(mockRepo, 3).getData().size());
+    assertEquals(HOSTNAME + "?page=2",assembler.returnPageView(mockRepo, 2).getLinks().getSelf());
+    assertEquals(25, assembler.returnPageView(mockRepo, 2).getData().get(5).getAttributes().getCount());
+  }
 }

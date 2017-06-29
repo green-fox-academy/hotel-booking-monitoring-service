@@ -62,5 +62,4 @@ public class PaginationServiceTest {
     }
     assertEquals(lastFive, paginationService.pagination(mockRepo, 2));
   }
-
 }
