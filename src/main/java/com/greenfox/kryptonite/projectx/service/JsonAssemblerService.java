@@ -11,13 +11,19 @@ public class JsonAssemblerService {
   PaginationService paginationService = new PaginationService();
   final String PAGEVIEWHOST = "http://greenfox-kryptonite.herokuapp.com/pageviews";
 
-  public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page) {
+  public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page, String filter) {
     return new PageViewFormat(createLink(repo, page),
-        returnPageViewList(repo, page));
+        returnPageViewList(repo, page, filter));
   }
 
-  public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page) {
-    ArrayList<EventToDatabase> list = paginationService.pagination(repo, page);
+  public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page, String filter) {
+    ArrayList<EventToDatabase> list;
+    if (filter.equals("")) {
+      list = paginationService.pagination(repo, page);
+    } else {
+      list = filter(repo,filter);
+    }
+
     List<PageViewData> dataList = new ArrayList<>();
     for (int i = 0; i < list.size(); i++) {
       dataList.add(new PageViewData(list.get(i).getType(), (long) i + 1,
@@ -44,10 +50,10 @@ public class JsonAssemblerService {
     }
   }
 
-  private List<EventToDatabase> filter(EventToDatabaseRepository repo, String filter) {
+  private ArrayList<EventToDatabase> filter(EventToDatabaseRepository repo, String filter) {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
         .findAllByOrderByIdAsc();
-    List<EventToDatabase> filteredList = new ArrayList<>();
+    ArrayList<EventToDatabase> filteredList = new ArrayList<>();
     for (EventToDatabase anAllEventList : allEventList) {
       if (anAllEventList.getPath().equals(filter)) {
         filteredList.add(anAllEventList);
