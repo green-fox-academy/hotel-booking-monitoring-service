@@ -52,12 +52,6 @@ public class PaginationService {
   }
 
   String checkPrevPage(int page) {
-    String prev;
-    if (page == 1) {
-      prev = "this is the first page";
-    } else {
-      prev = HOST + (page - 1);
-    }
-    return prev;
+    return HOST + (page - 1);
   }
 }

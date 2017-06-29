@@ -40,7 +40,6 @@ public class PaginationServiceTest {
 
   @Test
   public void testCheckPrevPage() {
-    assertEquals("this is the first page", paginationService.checkPrevPage(1));
     assertEquals("https://greenfox-kryptonite.herokuapp.com/pageviews?page=2", paginationService.checkPrevPage(3));
   }
 

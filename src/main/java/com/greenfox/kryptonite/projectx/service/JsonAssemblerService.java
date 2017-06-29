@@ -9,7 +9,7 @@ import java.util.List;
 public class JsonAssemblerService {
 
   PaginationService paginationService = new PaginationService();
-  final String PAGEVIEWHOST = "http://greenfox-kryptonite.herokuapp.com/pageviews";
+  final String PAGEVIEWHOST = "https://greenfox-kryptonite.herokuapp.com/pageviews";
 
   public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page) {
     return new PageViewFormat(createLink(repo, page),
