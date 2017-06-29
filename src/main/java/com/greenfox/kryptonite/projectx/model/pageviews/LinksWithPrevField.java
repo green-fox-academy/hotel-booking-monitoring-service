@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Links {
-
-  String self;
+public class LinksWithPrevField extends Links {
+  String next;
+  String last;
+  String prev;
 }
