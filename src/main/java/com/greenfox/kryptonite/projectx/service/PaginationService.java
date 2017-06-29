@@ -16,9 +16,9 @@ public class PaginationService {
 
 
   ArrayList<EventToDatabase> pagination(EventToDatabaseRepository repo, int page) {
-    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
-        .findAllByOrderByIdAsc();
     ArrayList<EventToDatabase> finalList = new ArrayList<>();
+    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo.findAllByOrderByIdAsc();
+
     int endIndex = checkEndIndex(page, allEventList);
 
     if ((page != 0) && (allEventList.size() > 20)) {
@@ -52,12 +52,6 @@ public class PaginationService {
   }
 
   String checkPrevPage(int page) {
-    String prev;
-    if (page == 1) {
-      prev = "this is the first page";
-    } else {
-      prev = HOST + (page - 1);
-    }
-    return prev;
+    return HOST + (page - 1);
   }
 }

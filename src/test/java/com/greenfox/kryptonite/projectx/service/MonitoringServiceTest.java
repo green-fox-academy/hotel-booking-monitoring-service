@@ -18,6 +18,7 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
 public class MonitoringServiceTest {
+
   @Mock
   RestTemplate restTemplate;
 

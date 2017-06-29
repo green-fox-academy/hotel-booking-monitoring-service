@@ -17,7 +17,6 @@ public class MessageQueueServiceTest {
     this.messageQueueService = new MessageQueueService();
   }
 
-
   @Test
   public void testSend() throws Exception {
     int initialSize = messageQueueService.getCount("testqueue");

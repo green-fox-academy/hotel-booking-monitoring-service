@@ -29,8 +29,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = HotelMonitoringApplication.class)
 @WebAppConfiguration
@@ -40,7 +38,6 @@ public class PageViewServiceTest {
   private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
           MediaType.APPLICATION_JSON.getSubtype(),
           Charset.forName("utf8"));
-
 
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log2";
@@ -54,7 +51,6 @@ public class PageViewServiceTest {
 
   @Autowired
   WebApplicationContext webApplicationContext;
-
 
   @Before
   public void setup() throws Exception {
@@ -137,5 +133,4 @@ public class PageViewServiceTest {
   public void  sendJsonHotelEventQueue() throws Exception {
     assertEquals(pageViewService.sendJsonHotelEventQueue(), objectMapper.writeValueAsString(hotelEventQueue));
   }
-
 }
