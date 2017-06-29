@@ -44,16 +44,14 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "path", required =  false) String path, @RequestParam(name = "min", required =  false) Integer min, @RequestParam(name = "max", required =  false) Integer max)
+  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) Integer page, @RequestParam(name = "path", required =  false) String path, @RequestParam(name = "min", required =  false) Integer min, @RequestParam(name = "max", required =  false) Integer max)
       throws Exception {
-    int index = 0;
+
     pageViewService
         .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
             false, true);
-    if (page != null) {
-      index = Integer.parseInt(page);
-    }
-    return assembler.returnPageView(eventToDatabaseRepository, index, path, min, max);
+
+    return assembler.returnPageView(eventToDatabaseRepository, page, path, min, max);
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
