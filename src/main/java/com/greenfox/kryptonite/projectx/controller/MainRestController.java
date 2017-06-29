@@ -12,6 +12,7 @@ import com.greenfox.kryptonite.projectx.service.PageViewService;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
@@ -25,7 +26,6 @@ public class MainRestController {
   @Autowired
   private MonitoringService monitoringService;
 
-
   @Autowired
   private EventToDatabaseRepository eventToDatabaseRepository;
 
@@ -33,6 +33,9 @@ public class MainRestController {
   PageViewService pageViewService;
 
   private JsonAssemblerService assembler = new JsonAssemblerService();
+  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
+  private final String EXCHANGE_NAME = "log";
+  private RestTemplate restTemplate = new RestTemplate();
 
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
@@ -41,13 +44,20 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews() throws Exception {
-    pageViewService.addAttributeToDatabase(eventToDatabaseRepository);
-    return assembler.returnPageView(eventToDatabaseRepository);
+  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page)
+      throws Exception {
+    int index = 0;
+    pageViewService
+        .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
+            false, true);
+    if (page != null) {
+      index = Integer.parseInt(page);
+    }
+    return assembler.returnPageView(eventToDatabaseRepository, index);
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
-  public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException{
-  return monitoringService.monitoring();
+  public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException {
+    return monitoringService.monitoring(restTemplate);
   }
 }
