@@ -53,7 +53,7 @@ public class MainRestController {
     if (page != null) {
       index = Integer.parseInt(page);
     }
-    return assembler.returnPageView(eventToDatabaseRepository, index);
+    return assembler.returnPageView(eventToDatabaseRepository, index, filter);
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
