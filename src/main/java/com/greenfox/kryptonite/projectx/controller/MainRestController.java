@@ -44,7 +44,7 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "filter", required =  false) String filter)
+  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "path", required =  false) String path)
       throws Exception {
     int index = 0;
     pageViewService
@@ -53,7 +53,7 @@ public class MainRestController {
     if (page != null) {
       index = Integer.parseInt(page);
     }
-    return assembler.returnPageView(eventToDatabaseRepository, index, filter);
+    return assembler.returnPageView(eventToDatabaseRepository, index, path);
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
