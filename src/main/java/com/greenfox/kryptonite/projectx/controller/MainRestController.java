@@ -47,17 +47,13 @@ public class MainRestController {
   public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "path", required =  false) String path)
       throws Exception {
     int index = 0;
-    String filter = "";
     pageViewService
         .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
             false, true);
     if (page != null) {
       index = Integer.parseInt(page);
     }
-    if(path != null){
-      filter = path;
-    }
-    return assembler.returnPageView(eventToDatabaseRepository, index, filter);
+    return assembler.returnPageView(eventToDatabaseRepository, index, path);
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
