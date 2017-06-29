@@ -5,7 +5,6 @@ import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 
 public class JsonAssemblerService {
 
