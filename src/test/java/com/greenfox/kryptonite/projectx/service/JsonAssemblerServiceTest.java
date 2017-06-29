@@ -1,15 +1,13 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
-import com.greenfox.kryptonite.projectx.model.pageviews.Links;
-import com.greenfox.kryptonite.projectx.model.pageviews.LinksWithNextField;
-import com.greenfox.kryptonite.projectx.model.pageviews.LinksWithPrevField;
+import com.greenfox.kryptonite.projectx.model.pageviews.*;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -44,6 +42,19 @@ public class JsonAssemblerServiceTest {
     assertEquals(HOSTNAME + "?page=3", ((LinksWithPrevField) assembler.createLink(mockRepo, 2)).getLast());
     assertEquals(HOSTNAME + "?page=1", ((LinksWithPrevField) assembler.createLink(mockRepo, 2)).getPrev());
     assertEquals("this is the last page", ((LinksWithPrevField) assembler.createLink(mockRepo, 3)).getNext());
+  }
+
+  @Test
+  public void testReturnPageViewList() {
+    Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
+    List<PageViewData> finalList = new ArrayList<>();
+    for (int i = 20; i < 40; i++) {
+      finalList.add(new PageViewData(testList.get(i).getType(), (long) (i-20) + 1,
+              new DataAttributes(testList.get(i).getPath(), testList.get(i).getCount())));
+    }
+    assertEquals(finalList.size() ,assembler.returnPageViewList(mockRepo, 2).size());
+    assertEquals(finalList.get(5).getId(), assembler.returnPageViewList(mockRepo, 2).get(5).getId());
+    assertEquals(finalList.get(5).getAttributes().getCount(), assembler.returnPageViewList(mockRepo, 2).get(5).getAttributes().getCount());
   }
 
 }
