@@ -14,11 +14,12 @@ import lombok.ToString;
 public class PaginationService {
 
   final String HOST = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
+  ArrayList<EventToDatabase> finalList = new ArrayList<>();
 
   ArrayList<EventToDatabase> pagination(EventToDatabaseRepository repo, int page) {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
         .findAllByOrderByIdAsc();
-    ArrayList<EventToDatabase> finalList = new ArrayList<>();
+
     int endIndex = checkEndIndex(page, allEventList);
 
     if ((page > 0) && (allEventList.size() > 20)) {
