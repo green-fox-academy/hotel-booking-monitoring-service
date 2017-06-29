@@ -17,12 +17,12 @@ public class JsonAssemblerService {
   }
 
   public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page, String filter) {
-    ArrayList<EventToDatabase> list = paginationService.pagination(repo, page);
-//    if (filter.equals("")) {
-//      list = paginationService.pagination(repo, page);
-//    } else {
-//      list = eventFilter(repo,filter);
-//    }
+    ArrayList<EventToDatabase> list = new ArrayList<>();
+    if (filter.equals("")) {
+      list = paginationService.pagination(repo, page);
+    } else {
+      list = eventFilter(repo,filter);
+    }
 
     List<PageViewData> dataList = new ArrayList<>();
     for (int i = 0; i < list.size(); i++) {
