@@ -29,6 +29,12 @@ public class EventToDatabase {
     this.type = type;
   }
 
+  public EventToDatabase(String path, String type, int count) {
+    this.path = path;
+    this.type = type;
+    this.count = count;
+  }
+
   public EventToDatabase(long id, String path, String type, int count) {
     this.id = id;
     this.path = path;
