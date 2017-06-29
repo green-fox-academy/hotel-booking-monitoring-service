@@ -51,17 +51,17 @@ public class JsonAssemblerServiceTest {
       finalList.add(new PageViewData(testList.get(i).getType(), (long) (i-20) + 1,
               new DataAttributes(testList.get(i).getPath(), testList.get(i).getCount())));
     }
-    assertEquals(finalList.size() ,assembler.returnPageViewList(mockRepo, 2).size());
-    assertEquals(finalList.get(5).getId(), assembler.returnPageViewList(mockRepo, 2).get(5).getId());
-    assertEquals(finalList.get(5).getAttributes().getCount(), assembler.returnPageViewList(mockRepo, 2).get(5).getAttributes().getCount());
+    assertEquals(finalList.size() ,assembler.returnPageViewList(mockRepo, 2, null, null, null).size());
+    assertEquals(finalList.get(5).getId(), assembler.returnPageViewList(mockRepo, 2, null, null, null).get(5).getId());
+    assertEquals(finalList.get(5).getAttributes().getCount(), assembler.returnPageViewList(mockRepo, 2, null, null, null).get(5).getAttributes().getCount());
   }
 
   @Test
   public void testReturnPageView() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(20, assembler.returnPageView(mockRepo, 2).getData().size());
-    assertEquals(15, assembler.returnPageView(mockRepo, 3).getData().size());
-    assertEquals(HOSTNAME + "?page=2",assembler.returnPageView(mockRepo, 2).getLinks().getSelf());
-    assertEquals(25, assembler.returnPageView(mockRepo, 2).getData().get(5).getAttributes().getCount());
+    assertEquals(20, assembler.returnPageView(mockRepo, 2, null, null, null).getData().size());
+    assertEquals(15, assembler.returnPageView(mockRepo, 3, null, null, null).getData().size());
+    assertEquals(HOSTNAME + "?page=2",assembler.returnPageView(mockRepo, 2, null, null, null).getLinks().getSelf());
+    assertEquals(25, assembler.returnPageView(mockRepo, 2, null, null, null).getData().get(5).getAttributes().getCount());
   }
 }
