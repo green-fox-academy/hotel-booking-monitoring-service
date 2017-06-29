@@ -17,12 +17,12 @@ public class JsonAssemblerService {
   }
 
   public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page, String filter) {
-    ArrayList<EventToDatabase> list;
-    if (filter.equals("")) {
-      list = paginationService.pagination(repo, page);
-    } else {
-      list = filter(repo,filter);
-    }
+    ArrayList<EventToDatabase> list = paginationService.pagination(repo, page);
+//    if (filter.equals("")) {
+//      list = paginationService.pagination(repo, page);
+//    } else {
+//      list = eventFilter(repo,filter);
+//    }
 
     List<PageViewData> dataList = new ArrayList<>();
     for (int i = 0; i < list.size(); i++) {
@@ -50,7 +50,7 @@ public class JsonAssemblerService {
     }
   }
 
-  private ArrayList<EventToDatabase> filter(EventToDatabaseRepository repo, String filter) {
+  private ArrayList<EventToDatabase> eventFilter(EventToDatabaseRepository repo, String filter) {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
         .findAllByOrderByIdAsc();
     ArrayList<EventToDatabase> filteredList = new ArrayList<>();
