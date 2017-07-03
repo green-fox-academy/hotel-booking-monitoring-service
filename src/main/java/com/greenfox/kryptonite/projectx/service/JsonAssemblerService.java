@@ -74,8 +74,7 @@ public class JsonAssemblerService {
     return filteredList;
   }
 
-  public ArrayList<EventToDatabase> minMaxFilter(EventToDatabaseRepository repo, Integer min,
-      Integer max) {
+  public ArrayList<EventToDatabase> minMaxFilter(EventToDatabaseRepository repo, Integer min, Integer max) {
     List<EventToDatabase> allEventList = repo.findAllByOrderByIdAsc();
     ArrayList<EventToDatabase> filteredList = new ArrayList<>();
     for (EventToDatabase event : allEventList) {
