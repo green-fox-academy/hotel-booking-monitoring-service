@@ -8,7 +8,7 @@ import java.util.List;
 
 public class JsonAssemblerService {
 
-  PaginationService paginationService = new PaginationService();
+  private PaginationService paginationService = new PaginationService();
   final String PAGEVIEWHOST = "https://greenfox-kryptonite.herokuapp.com/pageviews";
 
   public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page, String filter, Integer min, Integer max) {
@@ -17,13 +17,18 @@ public class JsonAssemblerService {
   }
 
   public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page, String filter, Integer min, Integer max) {
-    ArrayList<EventToDatabase> list = paginationService.pagination(repo, page);
+    List<EventToDatabase> list;
     if (filter != null) {
       list = pathFilter(repo,filter);
     } else if (min != null || max != null) {
       list = minMaxFilter(repo, min, max);
+    } else {
+      list = paginationService.pagination(repo, page);
     }
+    return createPageViewDataList(list);
+  }
 
+  public List<PageViewData> createPageViewDataList(List<EventToDatabase> list) {
     List<PageViewData> dataList = new ArrayList<>();
     for (int i = 0; i < list.size(); i++) {
       dataList.add(new PageViewData(list.get(i).getType(), (long) i + 1,
@@ -32,9 +37,8 @@ public class JsonAssemblerService {
     return dataList;
   }
 
-  Links createLink(EventToDatabaseRepository repo, int page) {
-    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
-        .findAllByOrderByIdAsc();
+  public Links createLink(EventToDatabaseRepository repo, int page) {
+    List<EventToDatabase> allEventList = repo.findAllByOrderByIdAsc();
     String self = paginationService.getHOST() + page;
     String last =
         paginationService.getHOST() + (int) (Math.ceil((double) allEventList.size() / 20));
@@ -51,8 +55,7 @@ public class JsonAssemblerService {
   }
 
   private ArrayList<EventToDatabase> pathFilter(EventToDatabaseRepository repo, String filter) {
-    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
-        .findAllByOrderByIdAsc();
+    List<EventToDatabase> allEventList = repo.findAllByOrderByIdAsc();
     ArrayList<EventToDatabase> filteredList = new ArrayList<>();
     for (EventToDatabase event : allEventList) {
       if (event.getPath().equals(filter)) {
@@ -63,29 +66,28 @@ public class JsonAssemblerService {
   }
 
   private ArrayList<EventToDatabase> minMaxFilter(EventToDatabaseRepository repo, Integer min, Integer max) {
-    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
-        .findAllByOrderByIdAsc();
-    ArrayList<EventToDatabase> minMaxList = new ArrayList<>();
+    List<EventToDatabase> allEventList =  repo.findAllByOrderByIdAsc();
+    ArrayList<EventToDatabase> filteredList = new ArrayList<>();
     if (min != null && max != null) {
       for (EventToDatabase event : allEventList) {
         if (event.getCount() > min && event.getCount() < max) {
-          minMaxList.add(event);
+          filteredList.add(event);
         }
       }
     } else if (min != null) {
       for (EventToDatabase event : allEventList) {
         if(event.getCount() > min) {
-          minMaxList.add(event);
+          filteredList.add(event);
         }
       }
       } else if (max != null){
       for (EventToDatabase event : allEventList) {
         if (event.getCount() < max) {
-          minMaxList.add(event);
+          filteredList.add(event);
         }
       }
     }
-    return minMaxList;
+    return filteredList;
   }
 
 }
