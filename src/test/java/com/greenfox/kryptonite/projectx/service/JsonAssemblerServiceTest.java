@@ -86,4 +86,15 @@ public class JsonAssemblerServiceTest {
     assertEquals(2, assembler.minMaxFilter(mockRepo,null,2).size());
     assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 0), new EventToDatabase("/search", "pageview", 1)))), assembler.minMaxFilter(mockRepo,null,2));
   }
+
+  @Test
+  public void testPathFilter() {
+    List<EventToDatabase> list = new ArrayList<>();
+    list.add(new EventToDatabase("/search", "pageview", 15));
+    list.add(new EventToDatabase("/hotels", "pageview", 25));
+    list.add(new EventToDatabase("/about", "pageview", 8));
+    Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(list);
+    assertEquals(new ArrayList<EventToDatabase>(Arrays.asList(new EventToDatabase("/search", "pageview", 15))),
+        assembler.pathFilter(mockRepo,"/search"));
+  }
 }
