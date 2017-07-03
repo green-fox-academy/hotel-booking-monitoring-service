@@ -16,7 +16,6 @@ import lombok.ToString;
 @ToString
 public class EventToDatabase {
 
-
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   long id;
@@ -33,5 +32,15 @@ public class EventToDatabase {
     this.path = path;
     this.type = type;
     this.count = count;
+  }
+
+  @Override
+  public boolean equals(Object object) {
+    if (object == null) return false;
+    if (object == this) return true;
+    if (!(object instanceof EventToDatabase))return false;
+    return (((EventToDatabase) object).getCount() == this.getCount() &&
+        ((EventToDatabase) object).getPath() == this.getPath() &&
+        ((EventToDatabase) object).getType() == this.getType());
   }
 }

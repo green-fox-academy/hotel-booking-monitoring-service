@@ -2,6 +2,7 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.pageviews.*;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -64,4 +65,12 @@ public class JsonAssemblerServiceTest {
     assertEquals(HOSTNAME + "?page=2",assembler.returnPageView(mockRepo, 2, null, null, null).getLinks().getSelf());
     assertEquals(25, assembler.returnPageView(mockRepo, 2, null, null, null).getData().get(5).getAttributes().getCount());
   }
+
+  @Test
+  public void testMinMaxFilterBothParam() {
+    Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
+    assertEquals(assembler.minMaxFilter(mockRepo,5,7).size(), 1);
+    assertEquals(assembler.minMaxFilter(mockRepo,5,7), new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6)))));
+  }
+
 }

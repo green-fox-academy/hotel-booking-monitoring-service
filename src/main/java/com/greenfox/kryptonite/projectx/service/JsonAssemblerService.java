@@ -10,6 +10,7 @@ public class JsonAssemblerService {
 
   private PaginationService paginationService = new PaginationService();
   final String PAGEVIEWHOST = "https://greenfox-kryptonite.herokuapp.com/pageviews";
+  final int ITEMS_PER_PAGE = 20;
 
   public PageViewFormat returnPageView(EventToDatabaseRepository repo, int page, String filter, Integer min, Integer max) {
     return new PageViewFormat(createLink(repo, page),
@@ -41,7 +42,7 @@ public class JsonAssemblerService {
     List<EventToDatabase> allEventList = repo.findAllByOrderByIdAsc();
     String self = paginationService.getHOST() + page;
     String last =
-        paginationService.getHOST() + (int) (Math.ceil((double) allEventList.size() / 20));
+        paginationService.getHOST() + (int) (Math.ceil((double) allEventList.size() / ITEMS_PER_PAGE));
     String next = paginationService.checkNextPage(self, last, page);
     String prev = paginationService.checkPrevPage(page);
 
@@ -54,7 +55,7 @@ public class JsonAssemblerService {
     }
   }
 
-  private ArrayList<EventToDatabase> pathFilter(EventToDatabaseRepository repo, String filter) {
+  public ArrayList<EventToDatabase> pathFilter(EventToDatabaseRepository repo, String filter) {
     List<EventToDatabase> allEventList = repo.findAllByOrderByIdAsc();
     ArrayList<EventToDatabase> filteredList = new ArrayList<>();
     for (EventToDatabase event : allEventList) {
@@ -65,7 +66,7 @@ public class JsonAssemblerService {
     return filteredList;
   }
 
-  private ArrayList<EventToDatabase> minMaxFilter(EventToDatabaseRepository repo, Integer min, Integer max) {
+  public ArrayList<EventToDatabase> minMaxFilter(EventToDatabaseRepository repo, Integer min, Integer max) {
     List<EventToDatabase> allEventList =  repo.findAllByOrderByIdAsc();
     ArrayList<EventToDatabase> filteredList = new ArrayList<>();
     if (min != null && max != null) {
