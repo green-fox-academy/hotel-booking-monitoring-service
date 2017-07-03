@@ -19,9 +19,9 @@ public class JsonAssemblerService {
   public List<PageViewData> returnPageViewList(EventToDatabaseRepository repo, int page, String filter, Integer min, Integer max) {
     ArrayList<EventToDatabase> list = paginationService.pagination(repo, page);
     if (filter != null) {
-      list = eventFilter(repo,filter);
+      list = pathFilter(repo,filter);
     } else if (min != null || max != null) {
-      list = minmax(repo, min, max);
+      list = minMaxFilter(repo, min, max);
     }
 
     List<PageViewData> dataList = new ArrayList<>();
@@ -50,42 +50,42 @@ public class JsonAssemblerService {
     }
   }
 
-  private ArrayList<EventToDatabase> eventFilter(EventToDatabaseRepository repo, String filter) {
+  private ArrayList<EventToDatabase> pathFilter(EventToDatabaseRepository repo, String filter) {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
         .findAllByOrderByIdAsc();
     ArrayList<EventToDatabase> filteredList = new ArrayList<>();
-    for (EventToDatabase anAllEventList : allEventList) {
-      if (anAllEventList.getPath().equals(filter)) {
-        filteredList.add(anAllEventList);
+    for (EventToDatabase event : allEventList) {
+      if (event.getPath().equals(filter)) {
+        filteredList.add(event);
       }
     }
     return filteredList;
   }
 
-  private ArrayList<EventToDatabase> minmax(EventToDatabaseRepository repo, Integer min, Integer max) {
+  private ArrayList<EventToDatabase> minMaxFilter(EventToDatabaseRepository repo, Integer min, Integer max) {
     ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
         .findAllByOrderByIdAsc();
-    ArrayList<EventToDatabase> minmaxList = new ArrayList<>();
+    ArrayList<EventToDatabase> minMaxList = new ArrayList<>();
     if (min != null && max != null) {
-      for (EventToDatabase anAllEventList : allEventList) {
-        if (anAllEventList.getCount() > min && anAllEventList.getCount() < max) {
-          minmaxList.add(anAllEventList);
+      for (EventToDatabase event : allEventList) {
+        if (event.getCount() > min && event.getCount() < max) {
+          minMaxList.add(event);
         }
       }
     } else if (min != null) {
-      for (EventToDatabase anAllEventList : allEventList) {
-        if(anAllEventList.getCount() > min) {
-          minmaxList.add(anAllEventList);
+      for (EventToDatabase event : allEventList) {
+        if(event.getCount() > min) {
+          minMaxList.add(event);
         }
       }
       } else if (max != null){
-      for (EventToDatabase anAllEventList : allEventList) {
-        if (anAllEventList.getCount() < max) {
-          minmaxList.add(anAllEventList);
+      for (EventToDatabase event : allEventList) {
+        if (event.getCount() < max) {
+          minMaxList.add(event);
         }
       }
     }
-    return minmaxList;
+    return minMaxList;
   }
 
 }
