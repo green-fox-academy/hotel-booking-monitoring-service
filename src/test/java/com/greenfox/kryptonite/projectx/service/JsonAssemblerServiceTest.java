@@ -79,4 +79,11 @@ public class JsonAssemblerServiceTest {
     assertEquals(2, assembler.minMaxFilter(mockRepo,52,null).size());
     assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53), new EventToDatabase("/search", "pageview", 54)))), assembler.minMaxFilter(mockRepo,52,null));
   }
+
+  @Test
+  public void testMinMaxFilterWithMax() {
+    Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
+    assertEquals(2, assembler.minMaxFilter(mockRepo,null,2).size());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 0), new EventToDatabase("/search", "pageview", 1)))), assembler.minMaxFilter(mockRepo,null,2));
+  }
 }
