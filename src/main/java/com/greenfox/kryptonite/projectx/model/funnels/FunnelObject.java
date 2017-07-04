@@ -1,5 +1,6 @@
 package com.greenfox.kryptonite.projectx.model.funnels;
 
+import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,9 +17,9 @@ public class FunnelObject {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   @OneToMany
-  private List<Steps> included;
+  private List<EventToDatabase> included;
 
-  public FunnelObject(List<Steps> included) {
+  public FunnelObject(List<EventToDatabase> included) {
     this.included = included;
   }
 }

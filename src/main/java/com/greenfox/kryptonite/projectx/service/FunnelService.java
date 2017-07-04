@@ -25,5 +25,4 @@ public class FunnelService {
     funnelRepo.save(tempObject);
     return new FunnelFormat(new Links("url"), new DataObject(tempObject.getId(), new Relationships(funnelStep), tempObject.getIncluded()));
   }
-
 }

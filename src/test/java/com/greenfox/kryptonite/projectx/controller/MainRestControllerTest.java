@@ -145,7 +145,6 @@ public class MainRestControllerTest {
   @Test
   public void testFunnelEndpoint() throws Exception {
     mockMvc.perform(get("/api/funnels"))
-            .andExpect(status().is3xxRedirection());
+            .andExpect(status().isOk());
   }
-
 }
