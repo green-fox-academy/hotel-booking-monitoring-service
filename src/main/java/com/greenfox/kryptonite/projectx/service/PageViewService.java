@@ -92,4 +92,11 @@ public class PageViewService {
     return mapper.writeValueAsString(hotelEventQueue);
   }
 
+  public int returnPageIndex(String page){
+    if (page != null) {
+     return Integer.parseInt(page);
+    } else {
+      return 0;
+    }
+  }
 }
