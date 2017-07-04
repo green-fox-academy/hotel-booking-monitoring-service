@@ -1,6 +1,7 @@
 package com.greenfox.kryptonite.projectx.model.funnels;
 
 
+import com.greenfox.kryptonite.projectx.model.pageviews.Links;
 import lombok.*;
 
 @Getter
@@ -9,6 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class FunnelFormat {
-  private String links;
+  private Links links;
   private DataObject data;
 }

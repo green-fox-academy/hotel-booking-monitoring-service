@@ -1,13 +1,18 @@
 package com.greenfox.kryptonite.projectx.model.funnels;
 
-
 import lombok.*;
+
+import java.util.List;
+
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Relationships {
-  private FunnelStep funnelStep;
+public class FunnelStep {
+
+  private FunnelLinks funnelLinks;
+  private List<StepData> data;
+
 }

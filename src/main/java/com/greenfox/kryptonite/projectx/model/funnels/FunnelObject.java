@@ -2,10 +2,8 @@ package com.greenfox.kryptonite.projectx.model.funnels;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Setter
 @Getter
@@ -16,6 +14,11 @@ import javax.persistence.Id;
 public class FunnelObject {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  Long id;
-  String type;
+  private Long id;
+  @OneToMany
+  private List<Steps> included;
+
+  public FunnelObject(List<Steps> included) {
+    this.included = included;
+  }
 }

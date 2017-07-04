@@ -11,6 +11,7 @@ import com.greenfox.kryptonite.projectx.model.pageviews.Links;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
+import com.greenfox.kryptonite.projectx.service.FunnelService;
 import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
@@ -39,6 +40,9 @@ public class MainRestController {
   @Autowired
   PageViewService pageViewService;
 
+  @Autowired
+  FunnelService funnelService;
+
   private JsonAssemblerService assembler = new JsonAssemblerService();
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
@@ -65,7 +69,7 @@ public class MainRestController {
   }
 
   @PostMapping(value = "/api/funnels")
-  public Heartbeat printFunnel() {
-    return new Heartbeat(true);
+  public FunnelFormat printFunnel(HttpServletRequest request) {
+    return funnelService.createAndSaveFunnelFormat(request);
   }
 }

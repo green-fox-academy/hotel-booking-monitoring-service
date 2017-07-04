@@ -1,7 +1,6 @@
 package com.greenfox.kryptonite.projectx.model.funnels;
 
 import lombok.*;
-
 import java.util.List;
 
 @Getter
@@ -15,4 +14,11 @@ public class DataObject {
   private String type;
   private Relationships relationships;
   private List<Steps> included;
+
+  public DataObject(Long id, Relationships relationships, List<Steps> included) {
+    this.id = id;
+    this.type = "funnels";
+    this.relationships = relationships;
+    this.included = included;
+  }
 }
