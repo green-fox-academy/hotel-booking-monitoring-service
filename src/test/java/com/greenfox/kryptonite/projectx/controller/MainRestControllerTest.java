@@ -24,6 +24,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.web.JsonPath;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -140,4 +141,11 @@ public class MainRestControllerTest {
     mockMvc.perform(get("/pageviews"))
         .andExpect(status().isOk());
   }
+
+  @Test
+  public void testFunnelEndpoint() throws Exception {
+    mockMvc.perform(get("/api/funnels"))
+            .andExpect(status().is3xxRedirection());
+  }
+
 }

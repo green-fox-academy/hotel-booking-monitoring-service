@@ -1,8 +1,13 @@
 package com.greenfox.kryptonite.projectx.controller;
 
 
+import com.greenfox.kryptonite.projectx.model.Heartbeat;
+import com.greenfox.kryptonite.projectx.model.funnels.FunnelFormat;
+import com.greenfox.kryptonite.projectx.model.funnels.FunnelLinks;
+import com.greenfox.kryptonite.projectx.model.funnels.StepAttributes;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
+import com.greenfox.kryptonite.projectx.model.pageviews.Links;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -59,13 +64,8 @@ public class MainRestController {
     return monitoringService.monitoring(restTemplate);
   }
 
-  @RequestMapping(value = "/api/funnels", method = RequestMethod.GET)
-  public void storeFunnel(@RequestParam(name = "path") String path, HttpServletResponse response) throws IOException {
-  response.sendRedirect("/api/funnels/1");
-  }
-
-  @RequestMapping(value = "/api/funnels/{id}")
-  public String printFunnel() {
-    return "Funnel";
+  @PostMapping(value = "/api/funnels")
+  public Heartbeat printFunnel() {
+    return new Heartbeat(true);
   }
 }
