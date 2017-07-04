@@ -10,6 +10,8 @@ import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -55,5 +57,15 @@ public class MainRestController {
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException {
     return monitoringService.monitoring(restTemplate);
+  }
+
+  @RequestMapping(value = "/api/funnels", method = RequestMethod.GET)
+  public void storeFunnel(@RequestParam(name = "path") String path, HttpServletResponse response) throws IOException {
+  response.sendRedirect("/api/funnels/1");
+  }
+
+  @RequestMapping(value = "/api/funnels/{id}")
+  public String printFunnel() {
+    return "Funnel";
   }
 }
