@@ -70,21 +70,21 @@ public class JsonAssemblerServiceTest {
   public void testMinMaxFilterBothParam() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
     assertEquals(2, assembler.minMaxFilter(mockRepo,5,8).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6), new EventToDatabase("/search", "pageview", 7)))), assembler.minMaxFilter(mockRepo,5,8));
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6), new EventToDatabase("/search", "pageview", 7)))).toString(), assembler.minMaxFilter(mockRepo,5,8).toString());
   }
 
   @Test
   public void testMinMaxFilterWithMin() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
     assertEquals(2, assembler.minMaxFilter(mockRepo,52,null).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53), new EventToDatabase("/search", "pageview", 54)))), assembler.minMaxFilter(mockRepo,52,null));
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53), new EventToDatabase("/search", "pageview", 54)))).toString(), assembler.minMaxFilter(mockRepo,52,null).toString());
   }
 
   @Test
   public void testMinMaxFilterWithMax() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
     assertEquals(2, assembler.minMaxFilter(mockRepo,null,2).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 0), new EventToDatabase("/search", "pageview", 1)))), assembler.minMaxFilter(mockRepo,null,2));
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 0), new EventToDatabase("/search", "pageview", 1)))).toString(), assembler.minMaxFilter(mockRepo,null,2).toString());
   }
 
   @Test
@@ -94,7 +94,7 @@ public class JsonAssemblerServiceTest {
     list.add(new EventToDatabase("/hotels", "pageview", 25));
     list.add(new EventToDatabase("/about", "pageview", 8));
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(list);
-    assertEquals(new ArrayList<EventToDatabase>(Arrays.asList(new EventToDatabase("/search", "pageview", 15))),
-        assembler.pathFilter(mockRepo,"/search"));
+    assertEquals(new ArrayList<EventToDatabase>(Arrays.asList(new EventToDatabase("/search", "pageview", 15))).toString(),
+        assembler.pathFilter(mockRepo,"/search").toString());
   }
 }
