@@ -4,14 +4,19 @@ package com.greenfox.kryptonite.projectx.controller;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
+import com.greenfox.kryptonite.projectx.model.pageviews.NewPageViewFormat;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
+import com.greenfox.kryptonite.projectx.service.PageService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
 import java.awt.print.Pageable;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -36,12 +41,13 @@ public class MainRestController {
   @Autowired
   PageViewService pageViewService;
 
+  @Autowired
+  private PageService pageService;
+
   private JsonAssemblerService assembler = new JsonAssemblerService();
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
   private RestTemplate restTemplate = new RestTemplate();
-  private final Integer ITEMS_PER_PAGE = 20;
-
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public BookingStatus heartbeat(HttpServletRequest request) throws Exception {
@@ -63,10 +69,8 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/newpageview")
-  public Iterable<EventToDatabase> listPageviews(@RequestParam(name = "page", required = false) Integer page) {
-    if (page == null) {
-      page = 0;
-    }
-    return eventToDatabaseRepository.findAll(new PageRequest(page,ITEMS_PER_PAGE));
+  public NewPageViewFormat listPageviews(@RequestParam(name = "page", required = false) Integer page, HttpServletRequest request) {
+    System.out.println(request.getRequestURL());
+    return pageService.returnPage(page,request);
   }
 }
