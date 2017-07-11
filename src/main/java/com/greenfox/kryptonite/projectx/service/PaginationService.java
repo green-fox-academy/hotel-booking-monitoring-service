@@ -3,17 +3,22 @@ package com.greenfox.kryptonite.projectx.service;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import java.util.ArrayList;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
+@Service
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PaginationService {
 
-  final String HOST = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
-  final int TWENTY = 20;
+  String HOST = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
+  int TWENTY = 20;
 
   ArrayList<EventToDatabase> pagination(EventToDatabaseRepository repo, int page) {
     ArrayList<EventToDatabase> finalList = new ArrayList<>();
