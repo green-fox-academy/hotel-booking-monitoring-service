@@ -93,10 +93,6 @@ public class PageViewService {
   }
 
   public int returnPageIndex(String page){
-    if (page != null) {
-     return Integer.parseInt(page);
-    } else {
-      return 0;
-    }
+    return page != null ? Integer.parseInt(page) : 0;
   }
 }
