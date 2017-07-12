@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PageService {
 
-  private final Integer ITEMS_PER_PAGE = 20;
+  private final Integer ITEMS_PER_PAGE = 5;
 
 
   @Autowired
@@ -26,6 +26,8 @@ public class PageService {
   public NewPageViewFormat returnPage(Integer pageNumber, HttpServletRequest request) {
     if (pageNumber == null) {
       pageNumber = 0;
+    } else {
+      pageNumber = pageNumber - 1;
     }
     Page page = eventToDatabaseRepository.findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE));
     List<EventToDatabase> list = eventToDatabaseRepository
@@ -42,26 +44,26 @@ public class PageService {
 
   public PageViewLinks createLinks(Page page, HttpServletRequest request) {
     Integer totalPages = page.getTotalPages();
-    PageViewLinks pageViewLinks = new PageViewLinks();
+    Integer pageNumber = page.getNumber() + 1;
     String url = request.getRequestURL().toString();
-    if (totalPages <= 1 || page.isFirst()) {
+    PageViewLinks pageViewLinks = new PageViewLinks();
+
+    pageViewLinks.setLast(url + "?page=" + totalPages);
+
+    if (request.getQueryString() == null) {
       pageViewLinks.setSelf(url);
     } else {
       pageViewLinks.setSelf(url + "?" + request.getQueryString());
     }
 
     if (page.hasNext()) {
-      pageViewLinks.setNext(url + "?page=" + (page.getNumber()+1));
+      pageViewLinks.setNext(url + "?page=" + (pageNumber + 1));
+    } else {
+      pageViewLinks.setLast("this is the last page");
     }
 
     if (page.hasPrevious()) {
-      pageViewLinks.setNext(url + "?page=" + (page.getNumber()-1));
-    }
-
-    if (page.isLast() && !page.isFirst()) {
-      pageViewLinks.setLast("this is the last page");
-    } else {
-      pageViewLinks.setLast(url + "?page=" + totalPages);
+      pageViewLinks.setPrev(url + "?page=" + (pageNumber - 1));
     }
     return pageViewLinks;
   }
