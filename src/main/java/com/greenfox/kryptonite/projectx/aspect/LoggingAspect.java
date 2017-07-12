@@ -48,7 +48,7 @@ public class LoggingAspect {
 
   @AfterReturning(pointcut = "databasecheck()", returning = "retVal")
   public void doAfterReturningTask(BookingStatus retVal) throws Exception {
-    if (retVal.getDatabase() == "error" &&
+    if (retVal.getDatabase().equals("error") &&
         heartbeatRepository == null) {
       logger.error("Database not present.");
       logger.debug("Database may not exist. Check database connection or existence.");
