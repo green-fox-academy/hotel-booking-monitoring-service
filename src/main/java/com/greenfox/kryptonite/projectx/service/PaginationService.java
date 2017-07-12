@@ -22,7 +22,8 @@ public class PaginationService {
 
   ArrayList<EventToDatabase> pagination(EventToDatabaseRepository repo, int page) {
     ArrayList<EventToDatabase> finalList = new ArrayList<>();
-    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo.findAllByOrderByIdAsc();
+    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
+        .findAllByOrderByIdAsc();
 
     int endIndex = checkEndIndex(page, allEventList);
 
