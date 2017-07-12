@@ -33,15 +33,15 @@ public class JsonAssemblerServiceTest {
   @Test
   public void testCreateLink() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(HOSTNAME, assembler.createLink(mockRepo, 0).getSelf());
-    assertEquals(HOSTNAME + "?page=1", assembler.createLink(mockRepo, 1).getSelf());
-    assertEquals(HOSTNAME + "?page=2", ((LinksWithNextField) assembler.createLink(mockRepo, 1)).getNext());
-    assertEquals(HOSTNAME + "?page=3", ((LinksWithNextField) assembler.createLink(mockRepo, 1)).getLast());
-    assertEquals(HOSTNAME + "?page=2", assembler.createLink(mockRepo, 2).getSelf());
-    assertEquals(HOSTNAME + "?page=3", ((LinksWithPrevField) assembler.createLink(mockRepo, 2)).getNext());
-    assertEquals(HOSTNAME + "?page=3", ((LinksWithPrevField) assembler.createLink(mockRepo, 2)).getLast());
-    assertEquals(HOSTNAME + "?page=1", ((LinksWithPrevField) assembler.createLink(mockRepo, 2)).getPrev());
-    assertEquals("this is the last page", ((LinksWithPrevField) assembler.createLink(mockRepo, 3)).getNext());
+    assertEquals(HOSTNAME, assembler.createLinkObject(mockRepo, 0).getSelf());
+    assertEquals(HOSTNAME + "?page=1", assembler.createLinkObject(mockRepo, 1).getSelf());
+    assertEquals(HOSTNAME + "?page=2", ((LinksWithNextField) assembler.createLinkObject(mockRepo, 1)).getNext());
+    assertEquals(HOSTNAME + "?page=3", ((LinksWithNextField) assembler.createLinkObject(mockRepo, 1)).getLast());
+    assertEquals(HOSTNAME + "?page=2", assembler.createLinkObject(mockRepo, 2).getSelf());
+    assertEquals(HOSTNAME + "?page=3", ((LinksWithPrevField) assembler.createLinkObject(mockRepo, 2)).getNext());
+    assertEquals(HOSTNAME + "?page=3", ((LinksWithPrevField) assembler.createLinkObject(mockRepo, 2)).getLast());
+    assertEquals(HOSTNAME + "?page=1", ((LinksWithPrevField) assembler.createLinkObject(mockRepo, 2)).getPrev());
+    assertEquals("this is the last page", ((LinksWithPrevField) assembler.createLinkObject(mockRepo, 3)).getNext());
   }
 
   @Test
@@ -69,22 +69,22 @@ public class JsonAssemblerServiceTest {
   @Test
   public void testMinMaxFilterBothParam() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(2, assembler.minMaxFilter(mockRepo,5,8).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6), new EventToDatabase("/search", "pageview", 7)))).toString(), assembler.minMaxFilter(mockRepo,5,8).toString());
+    assertEquals(2, assembler.filterEventsByCount(mockRepo,5,8).size());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6), new EventToDatabase("/search", "pageview", 7)))).toString(), assembler.filterEventsByCount(mockRepo,5,8).toString());
   }
 
   @Test
   public void testMinMaxFilterWithMin() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(2, assembler.minMaxFilter(mockRepo,52,null).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53), new EventToDatabase("/search", "pageview", 54)))).toString(), assembler.minMaxFilter(mockRepo,52,null).toString());
+    assertEquals(2, assembler.filterEventsByCount(mockRepo,52,null).size());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53), new EventToDatabase("/search", "pageview", 54)))).toString(), assembler.filterEventsByCount(mockRepo,52,null).toString());
   }
 
   @Test
   public void testMinMaxFilterWithMax() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(2, assembler.minMaxFilter(mockRepo,null,2).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 0), new EventToDatabase("/search", "pageview", 1)))).toString(), assembler.minMaxFilter(mockRepo,null,2).toString());
+    assertEquals(2, assembler.filterEventsByCount(mockRepo,null,2).size());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 0), new EventToDatabase("/search", "pageview", 1)))).toString(), assembler.filterEventsByCount(mockRepo,null,2).toString());
   }
 
   @Test
@@ -95,6 +95,6 @@ public class JsonAssemblerServiceTest {
     list.add(new EventToDatabase("/about", "pageview", 8));
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(list);
     assertEquals(new ArrayList<EventToDatabase>(Arrays.asList(new EventToDatabase("/search", "pageview", 15))).toString(),
-        assembler.pathFilter(mockRepo,"/search").toString());
+        assembler.filterEventsByPath(mockRepo,"/search").toString());
   }
 }

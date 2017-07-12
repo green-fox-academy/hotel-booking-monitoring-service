@@ -3,26 +3,32 @@ package com.greenfox.kryptonite.projectx.service;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import java.util.ArrayList;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
 
+@Service
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PaginationService {
 
-  final String HOST = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
-
+  String HOST = "https://greenfox-kryptonite.herokuapp.com/pageviews?page=";
+  int TWENTY = 20;
 
   ArrayList<EventToDatabase> pagination(EventToDatabaseRepository repo, int page) {
     ArrayList<EventToDatabase> finalList = new ArrayList<>();
-    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo.findAllByOrderByIdAsc();
+    ArrayList<EventToDatabase> allEventList = (ArrayList<EventToDatabase>) repo
+        .findAllByOrderByIdAsc();
 
     int endIndex = checkEndIndex(page, allEventList);
 
-    if ((page != 0) && (allEventList.size() > 20)) {
-      for (int i = page * 20 - 20; i < endIndex; ++i) {
+    if ((page != 0) && (allEventList.size() > TWENTY)) {
+      for (int i = page * TWENTY - TWENTY; i < endIndex; ++i) {
         finalList.add(allEventList.get(i));
       }
     } else {
@@ -32,23 +38,11 @@ public class PaginationService {
   }
 
   int checkEndIndex(int page, ArrayList<EventToDatabase> allEventList) {
-    int endIndex = 0;
-    if (allEventList.size() < page * 20) {
-      endIndex = allEventList.size();
-    } else {
-      endIndex = page * 20;
-    }
-    return endIndex;
+    return (allEventList.size() < page * TWENTY) ? allEventList.size() : page * TWENTY;
   }
 
   String checkNextPage(String self, String last, int page) {
-    String next;
-    if (self.equals(last)) {
-      next = "this is the last page";
-    } else {
-      next = HOST + (page + 1);
-    }
-    return next;
+    return self.equals(last) ? "this is the last page" : HOST + (page + 1);
   }
 
   String checkPrevPage(int page) {
