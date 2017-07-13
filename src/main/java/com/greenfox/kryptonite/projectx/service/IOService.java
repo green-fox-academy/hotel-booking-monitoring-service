@@ -3,8 +3,8 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.greenfox.kryptonite.projectx.model.HotelService;
-import com.greenfox.kryptonite.projectx.model.HotelServices;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelService;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServices;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

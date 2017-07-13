@@ -1,13 +1,18 @@
 package com.greenfox.kryptonite.projectx.controller;
 
 
-
-import com.greenfox.kryptonite.projectx.model.HotelServiceStatusList;
+import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
+import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
+import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
+import com.greenfox.kryptonite.projectx.service.PageViewService;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 
@@ -21,21 +26,34 @@ public class MainRestController {
   @Autowired
   private MonitoringService monitoringService;
 
+  @Autowired
+  private EventToDatabaseRepository eventToDatabaseRepository;
+
+  @Autowired
+  PageViewService pageViewService;
+
+  private JsonAssemblerService assembler = new JsonAssemblerService();
+  private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
+  private final String EXCHANGE_NAME = "log";
+  private RestTemplate restTemplate = new RestTemplate();
+
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
-  public BookingStatus heartbeat() throws Exception {
-    monitoringService.endpointLogger("heartbeat");
+  public BookingStatus heartbeat(HttpServletRequest request) throws Exception {
     return monitoringService.databaseCheck(heartbeatRepository);
+  }
+
+  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
+  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "path", required =  false) String path, @RequestParam(name = "min", required =  false) Integer min, @RequestParam(name = "max", required =  false) Integer max)
+      throws Exception {
+    pageViewService
+        .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
+            false, true);
+    return assembler.returnPageView(eventToDatabaseRepository, pageViewService.returnPageIndex(page), path, min, max);
   }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
-  public HotelServiceStatusList monitor() throws IOException{
-  return monitoringService.monitoring();
-  }
-
-  @RequestMapping(value = "/{pathVariable}")
-  public BookingStatus endpointLogger(@PathVariable(name = "pathVariable") String pathVariable) throws Exception {
-    monitoringService.endpointLogger(pathVariable);
-    return monitoringService.databaseCheck(heartbeatRepository);
+  public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException {
+    return monitoringService.monitoring(restTemplate);
   }
 }
