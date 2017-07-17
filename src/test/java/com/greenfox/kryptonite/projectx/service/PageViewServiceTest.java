@@ -80,7 +80,7 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void createObjectFromJsonTestWithQueue() throws Exception {
+  public void testCreateObjectFromJsonWithQueue() throws Exception {
     messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", "nothing important");
     messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", true, true);
     String temp = messageQueueService.getTemporaryMessage();
@@ -110,7 +110,7 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void consumeHotelEventQueueTest() throws Exception {
+  public void testConsumeHotelEventQueue() throws Exception {
     messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", "nothing important");
     HotelEventQueue hotelEventQueueForTests = pageViewService
         .consumeHotelEventQueue(RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", true, true);
@@ -145,9 +145,9 @@ public class PageViewServiceTest {
 
   @Test
   public void saveEventToDatabaseTest() throws Exception {
-    assertEquals(1,
-        pageViewService.saveEventToDatabase(eventToDatabaseRepositoryMock, hotelEventQueue)
-            .getCount());
+    EventToDatabase eventToDatabase = new EventToDatabase("/testPath","test-hotelEventQueue", 1);
+    assertEquals(eventToDatabase.toString(),
+        pageViewService.saveEventToDatabase(eventToDatabaseRepositoryMock, hotelEventQueue).toString());
   }
 
   @Test
