@@ -55,9 +55,7 @@ public class PageService {
   public PageViewLinks createLinks(Integer pageNumber, HttpServletRequest request) {
     String url = request.getRequestURL().toString();
     PageViewLinks pageViewLinks = new PageViewLinks();
-
     setSelf(pageViewLinks, request, url);
-
     if (request.getQueryString() == null || request.getQueryString().contains("page")) {
       Page page = eventToDatabaseRepository.findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE));
       pageNumber++;
@@ -67,7 +65,6 @@ public class PageService {
     }
     return pageViewLinks;
   }
-
 
   public List<PageViewData> createPageViewDataList(List<EventToDatabase> list, Integer pageNumber) {
     List<PageViewData> pageViewDataList = new ArrayList<>();
@@ -109,11 +106,26 @@ public class PageService {
   public List<EventToDatabase> filterPageviews(Integer min, Integer max, String path) {
     if (path != null) {
       return eventToDatabaseRepository.findAllByPath(path);
-//    } else if (min != null || max != null) {
-//      pageviews = filterPageviewsByCount(pageviews, min, max);
+    } else if (min != null || max != null) {
+      return filterPageviewsByCount(min, max);
     } else {
       return eventToDatabaseRepository.findAllByOrderByIdAsc();
     }
+  }
+
+  public ArrayList<EventToDatabase> filterPageviewsByCount(Integer min, Integer max) {
+    List<EventToDatabase> pageviews = eventToDatabaseRepository.findAllByOrderByIdAsc();
+    ArrayList<EventToDatabase> filteredList = new ArrayList<>();
+    for (EventToDatabase pageview : pageviews) {
+      if (min != null && max != null && pageview.getCount() > min && pageview.getCount() < max) {
+        filteredList.add(pageview);
+      } else if (min != null && max == null && pageview.getCount() > min) {
+        filteredList.add(pageview);
+      } else if (max != null && min == null && pageview.getCount() < max) {
+        filteredList.add(pageview);
+      }
+    }
+    return filteredList;
   }
 
 }
