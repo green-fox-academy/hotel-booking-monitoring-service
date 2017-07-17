@@ -33,10 +33,11 @@ public class PageService {
     List<EventToDatabase> list = eventToDatabaseRepository
         .findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE)).getContent();
     List<PageViewData> pageViewDataList = new ArrayList<>();
-    for (int i = 0; i < list.size(); i++) {
-      PageViewData pageView = new PageViewData("pageviews", i,
-          new DataAttributes(list.get(i).getPath(), list.get(i).getCount()));
-      pageViewDataList.add(pageView);
+    long id = (pageNumber * ITEMS_PER_PAGE) + 1;
+    for (EventToDatabase event : list) {
+      pageViewDataList.add(new PageViewData(event.getType(), id,
+          new DataAttributes(event.getPath(), event.getCount())));
+      id++;
     }
     PageViewLinks pageViewLinks = createLinks(page,request);
     return new NewPageViewFormat(pageViewLinks, pageViewDataList);
