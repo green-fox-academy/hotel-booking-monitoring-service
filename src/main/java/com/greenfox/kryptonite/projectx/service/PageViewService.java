@@ -16,9 +16,7 @@ import lombok.ToString;
 import org.springframework.stereotype.Service;
 
 @Getter
-@Setter
 @NoArgsConstructor
-@ToString
 @Service
 public class PageViewService {
 
