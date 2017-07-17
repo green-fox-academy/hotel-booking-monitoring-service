@@ -11,5 +11,5 @@ import lombok.*;
 @ToString
 public class FunnelFormat {
   private Links links;
-  private DataObject data;
+  private FunnelData data;
 }

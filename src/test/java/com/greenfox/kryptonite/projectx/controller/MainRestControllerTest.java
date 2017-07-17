@@ -6,7 +6,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
+import com.greenfox.kryptonite.projectx.model.funnels.Funnel;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
+import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
+import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
 import com.greenfox.kryptonite.projectx.service.*;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
@@ -14,6 +17,7 @@ import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.HotelMonitoringApplication;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.Before;
@@ -62,10 +66,17 @@ public class MainRestControllerTest {
   @Autowired
   private EventToDatabaseRepository eventToDatabaseRepository;
 
+  @Autowired
+  private FunnelRepository funnelRepository;
+
+  @Autowired
+  private FunnelEventRepository funnelEventRepository;
+
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
+    this.funnelRepository = Mockito.mock(FunnelRepository.class);
     this.service = new MonitoringService();
   }
 
@@ -144,7 +155,8 @@ public class MainRestControllerTest {
 
   @Test
   public void testFunnelEndpoint() throws Exception {
-    mockMvc.perform(get("/api/funnels"))
+    Mockito.when(funnelRepository.save(new Funnel())).thenReturn(new Funnel());
+    mockMvc.perform(post("/api/funnels"))
             .andExpect(status().isOk());
   }
 }

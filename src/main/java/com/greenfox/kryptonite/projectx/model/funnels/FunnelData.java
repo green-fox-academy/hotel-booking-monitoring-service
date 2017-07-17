@@ -8,14 +8,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class DataObject {
+public class FunnelData {
 
-  private Long id;
   private String type;
+  private Long id;
   private Relationships relationships;
   private List<Steps> included;
 
-  public DataObject(Long id, Relationships relationships, List<Steps> included) {
+  public FunnelData(Long id, Relationships relationships, List<Steps> included) {
     this.id = id;
     this.type = "funnels";
     this.relationships = relationships;

@@ -38,10 +38,10 @@ public class MainRestController {
   private EventToDatabaseRepository eventToDatabaseRepository;
 
   @Autowired
-  PageViewService pageViewService;
+  private PageViewService pageViewService;
 
   @Autowired
-  FunnelService funnelService;
+  private FunnelService funnelService;
 
   private JsonAssemblerService assembler = new JsonAssemblerService();
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
@@ -69,7 +69,7 @@ public class MainRestController {
   }
 
   @PostMapping(value = "/api/funnels")
-  public FunnelFormat printFunnel(HttpServletRequest request) {
-    return funnelService.createAndSaveFunnelFormat(request);
+  public void createFunnel () {
+    funnelService.createAndSaveFunnelFormat();
   }
 }
