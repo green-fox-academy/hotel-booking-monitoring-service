@@ -59,20 +59,19 @@ public class PageViewService {
     return createObjectFromJson(temp);
   }
 
-  public void checkEventDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+  public boolean checkEventDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       HotelEventQueue hotelEventQueue, List<EventToDatabase> eventList) {
     boolean checkList = false;
     for (int i = 0; i < eventToDatabaseRepository.count(); ++i) {
       if (eventList.get(i).getPath().equals(hotelEventQueue.getPath())) {
         updateEventInDatabase(eventToDatabaseRepository, eventList.get(i));
         checkList = true;
-        testStringEventDatabaseCheck = "paths are equals";
       }
     }
     if (!checkList) {
       saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
-      testStringEventDatabaseCheck = "paths are not equals";
     }
+    return checkList;
   }
 
   public EventToDatabase saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,

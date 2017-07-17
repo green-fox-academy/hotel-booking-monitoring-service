@@ -1,6 +1,9 @@
 package com.greenfox.kryptonite.projectx.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,8 +66,13 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void createObjectFromJsonTest() throws Exception {
+  public void testCreateObjectFromJson() throws Exception {
     assertEquals(hotelEventQueue.toString(), pageViewService.createObjectFromJson("{\"type\":\"test-hotelEventQueue\",\"path\":\"/testPath\",\"trackingId\":\"5431325134\"}").toString());
+  }
+
+  @Test
+  public void testCreateObjectFromJsonNotEquals() throws Exception {
+    assertNotEquals("not equals", pageViewService.createObjectFromJson("{\"type\":\"test-hotelEventQueue\",\"path\":\"/testPath\",\"trackingId\":\"5431325134\"}").toString());
   }
 
   @Test
@@ -106,7 +114,7 @@ public class PageViewServiceTest {
     List<EventToDatabase> testList1 = Arrays.asList(new EventToDatabase(hotelEventQueue.getPath(), hotelEventQueue.getType()));
     Mockito.when(eventToDatabaseRepositoryMock.count()).thenReturn(1L);
     pageViewService.checkEventDatabase(eventToDatabaseRepositoryMock, hotelEventQueue,testList1);
-    assertEquals("paths are equals", pageViewService.getTestStringEventDatabaseCheck());
+    assertTrue( pageViewService.checkEventDatabase(eventToDatabaseRepositoryMock, hotelEventQueue,testList1));
   }
 
   @Test
@@ -114,7 +122,7 @@ public class PageViewServiceTest {
     List<EventToDatabase> testList2 = Arrays.asList(new EventToDatabase(hotelEventQueue.getPath()+"mock", hotelEventQueue.getType()));
     Mockito.when(eventToDatabaseRepositoryMock.count()).thenReturn(1L);
     pageViewService.checkEventDatabase(eventToDatabaseRepositoryMock, hotelEventQueue,testList2);
-    assertEquals("paths are not equals", pageViewService.getTestStringEventDatabaseCheck());
+    assertFalse( pageViewService.checkEventDatabase(eventToDatabaseRepositoryMock, hotelEventQueue,testList2));
   }
 
   @Test
