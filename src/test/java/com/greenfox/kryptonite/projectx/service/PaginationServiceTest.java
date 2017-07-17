@@ -27,21 +27,36 @@ public class PaginationServiceTest {
   }
 
   @Test
-  public void testCheckEndIndex() {
+  public void testCheckEndIndexPageOne() {
     assertEquals(20, paginationService.checkEndIndex(1, testList));
+  }
+
+  @Test
+  public void testCheckEndIndexPageTwo() {
     assertEquals(25, paginationService.checkEndIndex(2, testList));
   }
 
   @Test
-  public void testCheckNextPage() {
-    assertEquals("this is the last page", paginationService.checkNextPage("this", "this", 2));
+  public void testCheckNextPageLastPage() {
+    assertEquals("this is the last page", paginationService.checkNextPage("2", "2", 2));
+  }
+
+  @Test
+  public void testCheckNext() {
     assertEquals("https://greenfox-kryptonite.herokuapp.com/pageviews?page=4", paginationService.checkNextPage("this is", "not equals", 3));
   }
+
 
   @Test
   public void testCheckPrevPage() {
     assertEquals("https://greenfox-kryptonite.herokuapp.com/pageviews?page=2", paginationService.checkPrevPage(3));
   }
+
+  @Test
+  public void testCheckPrevPageNotEquals() {
+    assertNotEquals("https://greenfox-kryptonite.herokuapp.com/pageviews?page=1", paginationService.checkPrevPage(3));
+  }
+
 
   @Test
   public void testPaginationMethodOnPageOne() {
@@ -61,5 +76,10 @@ public class PaginationServiceTest {
       lastFive.add(testList.get(i));
     }
     assertEquals(lastFive, paginationService.pagination(mockRepo, 2));
+  }
+
+  @Test
+  public void testPaginationGetter() {
+    assertEquals(20, paginationService.getTWENTY());
   }
 }

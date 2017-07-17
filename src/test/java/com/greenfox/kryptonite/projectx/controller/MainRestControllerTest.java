@@ -119,7 +119,6 @@ public class MainRestControllerTest {
     Timestamp time = new Timestamp();
     String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
     assertEquals(date, time.getDate());
-    assertTrue(isItWorking);
   }
 
   @Test
@@ -129,15 +128,25 @@ public class MainRestControllerTest {
     ObjectMapper mapper = new ObjectMapper();
     String jsonInput = mapper.writeValueAsString(IOService.readFiles(DATAPATH));
     mockMvc.perform(get("/monitor")
-            .contentType(contentType)
-            .content(jsonInput))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(contentType));
+        .contentType(contentType)
+        .content(jsonInput))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType));
   }
 
   @Test
   public void testPageViewsEndPoint() throws Exception {
-    mockMvc.perform(get("/pageviews"))
-        .andExpect(status().isOk());
+    mockMvc.perform(get("/pageviews")
+        .contentType(contentType))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType));
+  }
+
+  @Test
+  public void testPaginationEndPoint() throws Exception {
+    mockMvc.perform(get("/pageviews?page=1")
+        .contentType(contentType))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType));
   }
 }

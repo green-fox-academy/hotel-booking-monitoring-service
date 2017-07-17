@@ -44,7 +44,30 @@ public class MessageQueueServiceTest {
   }
 
   @Test
+  public void testRabbitMqConsumeParadoxAssertNotEqual() throws Exception {
+    messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", "TestMessage" );
+    messageQueueService.consume(RABBIT_MQ_URL, EXCHANGE_NAME, "testqueue", true, true);
+    Message message = new Message();
+    assertNotEquals( "TestFalse", message.receiveJsonMessage(messageQueueService.getTemporaryMessage()).getMessage());
+  }
+
+  @Test
   public void testQueuedMessageCount() throws Exception {
     assertTrue(messageQueueService.getCount("testqueue") == 0);
+  }
+
+  @Test
+  public void testQueuedMessageCountAssertFalse() throws Exception {
+    assertFalse(messageQueueService.getCount("testqueue") == 1);
+  }
+
+  @Test
+  public void testGetCount() throws Exception {
+    assertEquals(0, (int) messageQueueService.getCount("testqueue"));
+  }
+
+  @Test
+  public void testGetCountNotEquals() throws Exception {
+    assertEquals(1, (int) messageQueueService.getCount("testqueue"));
   }
 }
