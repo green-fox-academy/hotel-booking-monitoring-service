@@ -84,10 +84,11 @@ public class PageViewService {
     return eventToDatabase;
   }
 
-  public void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+  public EventToDatabase updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       EventToDatabase eventToDatabase) {
     eventToDatabase.setCount(eventToDatabase.getCount() + 1);
     eventToDatabaseRepository.save(eventToDatabase);
+    return eventToDatabase;
   }
 
   public String sendJsonHotelEventQueue() throws JsonProcessingException, URISyntaxException {
