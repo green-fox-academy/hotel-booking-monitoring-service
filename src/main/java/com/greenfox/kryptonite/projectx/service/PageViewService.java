@@ -34,9 +34,10 @@ public class PageViewService {
     return mapper.readValue(jsonString, HotelEventQueue.class);
   }
 
-  public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+  public Boolean addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       String hostURL, String exchangeName, String queueName, boolean bindQueue, boolean autoAck)
       throws Exception {
+    Boolean checkAttributes = null;
     int times = messageQueueService.getCount(queueName);
     for (int i = 0; i < times; ++i) {
       HotelEventQueue hotelEventQueue = consumeHotelEventQueue(hostURL, exchangeName, queueName,
@@ -44,12 +45,13 @@ public class PageViewService {
       List<EventToDatabase> eventList = (List<EventToDatabase>) eventToDatabaseRepository.findAll();
       if (eventList.size() == 0) {
         saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
-        testStringDataAttributes = "empty";
+        checkAttributes = false;
       } else {
         checkEventDatabase(eventToDatabaseRepository, hotelEventQueue, eventList);
-        testStringDataAttributes = "not empty";
+        checkAttributes = true;
       }
     }
+    return checkAttributes;
   }
 
   public HotelEventQueue consumeHotelEventQueue(String hostURL, String exchangeName,

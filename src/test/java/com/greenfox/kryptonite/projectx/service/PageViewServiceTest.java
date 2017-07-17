@@ -89,8 +89,7 @@ public class PageViewServiceTest {
     messageQueueService.send(RABBIT_MQ_URL,EXCHANGE_NAME, "testEventQueue", "nothing important");
     Iterable<EventToDatabase> list = Arrays.asList();
     Mockito.when(eventToDatabaseRepositoryMock.findAll()).thenReturn(list);
-    pageViewService.addAttributeToDatabase(eventToDatabaseRepositoryMock, RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", true, true);
-    assertEquals("empty", pageViewService.getTestStringDataAttributes());
+    assertFalse(pageViewService.addAttributeToDatabase(eventToDatabaseRepositoryMock, RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", true, true));
   }
 
   @Test
@@ -98,8 +97,7 @@ public class PageViewServiceTest {
     messageQueueService.send(RABBIT_MQ_URL,EXCHANGE_NAME, "testEventQueue", "nothing important");
     Iterable<EventToDatabase> list = Arrays.asList(new EventToDatabase(hotelEventQueue.getPath(), hotelEventQueue.getType()));
     Mockito.when(eventToDatabaseRepositoryMock.findAll()).thenReturn(list);
-    pageViewService.addAttributeToDatabase(eventToDatabaseRepositoryMock, RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", true, true);
-    assertEquals("not empty", pageViewService.getTestStringDataAttributes());
+    assertTrue(pageViewService.addAttributeToDatabase(eventToDatabaseRepositoryMock, RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", true, true));
   }
 
   @Test
