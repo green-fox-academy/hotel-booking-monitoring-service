@@ -69,8 +69,9 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/newpageview")
-  public NewPageViewFormat listPageviews(@RequestParam(name = "page", required = false) Integer page, HttpServletRequest request) {
+  public NewPageViewFormat listPageviews(@RequestParam(name = "page", required = false) Integer page, HttpServletRequest request,
+      @RequestParam(name = "path", required =  false) String path, @RequestParam(name = "min", required =  false) Integer min, @RequestParam(name = "max", required =  false) Integer max) {
     System.out.println(request.getRequestURL());
-    return pageService.returnPage(page,request);
+    return pageService.returnPage(request, page, min, max, path);
   }
 }

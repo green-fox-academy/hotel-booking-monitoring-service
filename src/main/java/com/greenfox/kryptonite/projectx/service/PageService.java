@@ -23,28 +23,14 @@ public class PageService {
   @Autowired
   EventToDatabaseRepository eventToDatabaseRepository;
 
-  public NewPageViewFormat returnPage(Integer pageNumber, HttpServletRequest request) {
+  public NewPageViewFormat returnPage(HttpServletRequest request, Integer pageNumber,
+      Integer min, Integer max, String path) {
     pageNumber = setPageNumber(pageNumber);
-    Page page = eventToDatabaseRepository.findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE));
-    List<EventToDatabase> list = eventToDatabaseRepository
-        .findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE)).getContent();
-    List<PageViewData> pageViewDataList = createPageViewDataList(list,pageNumber);
-    PageViewLinks pageViewLinks = createLinks(page,request);
+    List<EventToDatabase> requestedPageViews = createListOfFilteredPageViews(pageNumber, min, max,
+        path);
+    List<PageViewData> pageViewDataList = createPageViewDataList(requestedPageViews, pageNumber);
+    PageViewLinks pageViewLinks = createLinks(pageNumber, request);
     return new NewPageViewFormat(pageViewLinks, pageViewDataList);
-  }
-
-  public PageViewLinks createLinks(Page page, HttpServletRequest request) {
-    Integer totalPages = page.getTotalPages();
-    Integer pageNumber = page.getNumber() + 1;
-    String url = request.getRequestURL().toString();
-    PageViewLinks pageViewLinks = new PageViewLinks();
-
-    setSelf(pageViewLinks,request,url);
-    setLast(pageViewLinks,totalPages,url);
-    setNext(pageViewLinks,page,pageNumber,url);
-    setPrevious(pageViewLinks,page,pageNumber,url);
-
-    return pageViewLinks;
   }
 
   public int setPageNumber(Integer pageNumber) {
@@ -55,6 +41,33 @@ public class PageService {
     }
     return pageNumber;
   }
+
+  public List<EventToDatabase> createListOfFilteredPageViews(Integer pageNumber, Integer min,
+      Integer max, String path) {
+    if (min != null || max != null || path != null) {
+      return new ArrayList<>(filterPageviews(min, max, path));
+    } else {
+      return new ArrayList<>(eventToDatabaseRepository
+          .findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE)).getContent());
+    }
+  }
+
+  public PageViewLinks createLinks(Integer pageNumber, HttpServletRequest request) {
+    String url = request.getRequestURL().toString();
+    PageViewLinks pageViewLinks = new PageViewLinks();
+
+    setSelf(pageViewLinks, request, url);
+
+    if (request.getQueryString() == null || request.getQueryString().contains("page")) {
+      Page page = eventToDatabaseRepository.findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE));
+      pageNumber++;
+      setLast(pageViewLinks, page, url);
+      setNext(pageViewLinks, page, pageNumber, url);
+      setPrevious(pageViewLinks, page, pageNumber, url);
+    }
+    return pageViewLinks;
+  }
+
 
   public List<PageViewData> createPageViewDataList(List<EventToDatabase> list, Integer pageNumber) {
     List<PageViewData> pageViewDataList = new ArrayList<>();
@@ -74,8 +87,9 @@ public class PageService {
       pageViewLinks.setSelf(url + "?" + request.getQueryString());
     }
   }
-  public void setLast(PageViewLinks pageViewLinks, Integer totalPages, String url) {
-    pageViewLinks.setLast(url + "?page=" + totalPages);
+
+  public void setLast(PageViewLinks pageViewLinks, Page page, String url) {
+    pageViewLinks.setLast(url + "?page=" + page.getTotalPages());
   }
 
   public void setNext(PageViewLinks pageViewLinks, Page page, Integer pageNumber, String url) {
@@ -92,6 +106,14 @@ public class PageService {
     }
   }
 
-  
+  public List<EventToDatabase> filterPageviews(Integer min, Integer max, String path) {
+    if (path != null) {
+      return eventToDatabaseRepository.findAllByPath(path);
+//    } else if (min != null || max != null) {
+//      pageviews = filterPageviewsByCount(pageviews, min, max);
+    } else {
+      return eventToDatabaseRepository.findAllByOrderByIdAsc();
+    }
+  }
 
 }
