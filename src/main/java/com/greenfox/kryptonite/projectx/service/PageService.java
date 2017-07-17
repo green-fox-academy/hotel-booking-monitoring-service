@@ -39,23 +39,11 @@ public class PageService {
     String url = request.getRequestURL().toString();
     PageViewLinks pageViewLinks = new PageViewLinks();
 
-    pageViewLinks.setLast(url + "?page=" + totalPages);
+    setSelf(pageViewLinks,request,url);
+    setLast(pageViewLinks,totalPages,url);
+    setNext(pageViewLinks,page,pageNumber,url);
+    setPrevious(pageViewLinks,page,pageNumber,url);
 
-    if (request.getQueryString() == null) {
-      pageViewLinks.setSelf(url);
-    } else {
-      pageViewLinks.setSelf(url + "?" + request.getQueryString());
-    }
-
-    if (page.hasNext()) {
-      pageViewLinks.setNext(url + "?page=" + (pageNumber + 1));
-    } else {
-      pageViewLinks.setLast("this is the last page");
-    }
-
-    if (page.hasPrevious()) {
-      pageViewLinks.setPrev(url + "?page=" + (pageNumber - 1));
-    }
     return pageViewLinks;
   }
 
@@ -77,5 +65,31 @@ public class PageService {
     }
     return pageViewDataList;
   }
+
+  public void setSelf(PageViewLinks pageViewLinks, HttpServletRequest request, String url) {
+    if (request.getQueryString() == null) {
+      pageViewLinks.setSelf(url);
+    } else {
+      pageViewLinks.setSelf(url + "?" + request.getQueryString());
+    }
+  }
+  public void setLast(PageViewLinks pageViewLinks, Integer totalPages, String url) {
+    pageViewLinks.setLast(url + "?page=" + totalPages);
+  }
+
+  public void setNext(PageViewLinks pageViewLinks, Page page, Integer pageNumber, String url) {
+    if (page.hasNext()) {
+      pageViewLinks.setNext(url + "?page=" + (pageNumber + 1));
+    } else {
+      pageViewLinks.setLast("This is the last page");
+    }
+  }
+
+  public void setPrevious(PageViewLinks pageViewLinks, Page page, Integer pageNumber, String url) {
+    if (page.hasPrevious()) {
+      pageViewLinks.setPrev(url + "?page=" + (pageNumber - 1));
+    }
+  }
+
 
 }
