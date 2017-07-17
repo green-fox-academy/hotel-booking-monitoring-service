@@ -24,7 +24,7 @@ public class PageService {
   EventToDatabaseRepository eventToDatabaseRepository;
 
   public NewPageViewFormat returnPage(Integer pageNumber, HttpServletRequest request) {
-    checkPageNumber(pageNumber);
+    pageNumber = setPageNumber(pageNumber);
     Page page = eventToDatabaseRepository.findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE));
     List<EventToDatabase> list = eventToDatabaseRepository
         .findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE)).getContent();
@@ -47,12 +47,13 @@ public class PageService {
     return pageViewLinks;
   }
 
-  public void checkPageNumber(Integer pageNumber) {
+  public int setPageNumber(Integer pageNumber) {
     if (pageNumber == null) {
       pageNumber = 0;
     } else {
       pageNumber = pageNumber - 1;
     }
+    return pageNumber;
   }
 
   public List<PageViewData> createPageViewDataList(List<EventToDatabase> list, Integer pageNumber) {
@@ -91,5 +92,6 @@ public class PageService {
     }
   }
 
+  
 
 }
