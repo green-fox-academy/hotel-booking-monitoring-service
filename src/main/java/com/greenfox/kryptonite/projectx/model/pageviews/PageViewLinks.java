@@ -12,8 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PageViewLinks {
-  private String prev;
   private String self;
   private String next;
+  private String prev;
   private String last;
 }
