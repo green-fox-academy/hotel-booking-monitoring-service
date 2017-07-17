@@ -13,6 +13,8 @@ import lombok.ToString;
 @ToString
 public class DataAttributes {
 
-  String path;
-  int count;
+  private String path;
+  private int count;
+
+
 }

@@ -7,11 +7,11 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @ToString
-public class FunnelLinks extends Links {
+public class StepLinks extends Links {
 
   private String related;
 
-  public FunnelLinks(String self, String related) {
+  public StepLinks(String self, String related) {
     super(self);
     this.related = related;
   }

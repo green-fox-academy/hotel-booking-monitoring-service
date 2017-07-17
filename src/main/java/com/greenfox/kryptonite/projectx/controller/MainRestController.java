@@ -3,7 +3,7 @@ package com.greenfox.kryptonite.projectx.controller;
 
 import com.greenfox.kryptonite.projectx.model.Heartbeat;
 import com.greenfox.kryptonite.projectx.model.funnels.FunnelFormat;
-import com.greenfox.kryptonite.projectx.model.funnels.FunnelLinks;
+import com.greenfox.kryptonite.projectx.model.funnels.StepLinks;
 import com.greenfox.kryptonite.projectx.model.funnels.StepAttributes;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;

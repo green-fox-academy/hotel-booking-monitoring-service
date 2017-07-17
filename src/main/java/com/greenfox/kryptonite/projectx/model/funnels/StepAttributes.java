@@ -11,9 +11,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class StepAttributes extends DataAttributes{
-  private long percent;
+  private int percent;
 
-  public StepAttributes(String path, int count, Long percent) {
+  public StepAttributes(String path, int count, int percent) {
     super(path, count);
     this.percent = percent;
   }

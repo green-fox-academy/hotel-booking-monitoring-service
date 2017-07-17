@@ -21,4 +21,5 @@ public class Steps {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   private String type;
+  private StepAttributes attributes;
 }

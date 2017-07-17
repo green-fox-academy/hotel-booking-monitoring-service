@@ -12,7 +12,7 @@ import java.util.List;
 @ToString
 public class FunnelStep {
 
-  private FunnelLinks funnelLinks;
+  private StepLinks stepLinks;
   private List<StepData> data;
 
 }
