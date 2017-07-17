@@ -24,21 +24,11 @@ public class PageService {
   EventToDatabaseRepository eventToDatabaseRepository;
 
   public NewPageViewFormat returnPage(Integer pageNumber, HttpServletRequest request) {
-    if (pageNumber == null) {
-      pageNumber = 0;
-    } else {
-      pageNumber = pageNumber - 1;
-    }
+    checkPageNumber(pageNumber);
     Page page = eventToDatabaseRepository.findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE));
     List<EventToDatabase> list = eventToDatabaseRepository
         .findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE)).getContent();
-    List<PageViewData> pageViewDataList = new ArrayList<>();
-    long id = (pageNumber * ITEMS_PER_PAGE) + 1;
-    for (EventToDatabase event : list) {
-      pageViewDataList.add(new PageViewData(event.getType(), id,
-          new DataAttributes(event.getPath(), event.getCount())));
-      id++;
-    }
+    List<PageViewData> pageViewDataList = createPageViewDataList(list,pageNumber);
     PageViewLinks pageViewLinks = createLinks(page,request);
     return new NewPageViewFormat(pageViewLinks, pageViewDataList);
   }
@@ -67,6 +57,25 @@ public class PageService {
       pageViewLinks.setPrev(url + "?page=" + (pageNumber - 1));
     }
     return pageViewLinks;
+  }
+
+  public void checkPageNumber(Integer pageNumber) {
+    if (pageNumber == null) {
+      pageNumber = 0;
+    } else {
+      pageNumber = pageNumber - 1;
+    }
+  }
+
+  public List<PageViewData> createPageViewDataList(List<EventToDatabase> list, Integer pageNumber) {
+    List<PageViewData> pageViewDataList = new ArrayList<>();
+    long id = (pageNumber * ITEMS_PER_PAGE) + 1;
+    for (EventToDatabase event : list) {
+      pageViewDataList.add(new PageViewData(event.getType(), id,
+          new DataAttributes(event.getPath(), event.getCount())));
+      id++;
+    }
+    return pageViewDataList;
   }
 
 }
