@@ -8,11 +8,11 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table (name = "funnels")
 public class Funnel {
 
