@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EventToDatabaseRepository extends PagingAndSortingRepository<EventToDatabase, Long> {
-  public List<EventToDatabase> findAllByOrderByIdAsc();
-  public List<EventToDatabase> findAllByPath(String path);
+  List<EventToDatabase> findAllByOrderByIdAsc();
+  List<EventToDatabase> findAllByPath(String path);
 }

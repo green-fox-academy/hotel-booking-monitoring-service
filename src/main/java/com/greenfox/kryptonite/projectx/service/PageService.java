@@ -9,16 +9,17 @@ import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class PageService {
 
   private final Integer ITEMS_PER_PAGE = 5;
-
 
   @Autowired
   EventToDatabaseRepository eventToDatabaseRepository;
@@ -34,7 +35,7 @@ public class PageService {
   }
 
   public int setPageNumber(Integer pageNumber) {
-    if (pageNumber == null) {
+    if (pageNumber == null || pageNumber <= 0) {
       pageNumber = 0;
     } else {
       pageNumber = pageNumber - 1;
