@@ -27,7 +27,8 @@ public class PageService {
   public NewPageViewFormat returnPage(HttpServletRequest request, Integer pageNumber,
       Integer min, Integer max, String path) {
     pageNumber = setPageNumber(pageNumber);
-    List<EventToDatabase> requestedPageViews = createListOfFilteredPageViews(pageNumber, min, max,
+    PageRequest pageRequest = new PageRequest(pageNumber,ITEMS_PER_PAGE);
+    List<EventToDatabase> requestedPageViews = createListOfFilteredPageViews(pageRequest, min, max,
         path);
     List<PageViewData> pageViewDataList = createPageViewDataList(requestedPageViews, pageNumber);
     PageViewLinks pageViewLinks = createLinks(pageNumber, request);
@@ -43,13 +44,12 @@ public class PageService {
     return pageNumber;
   }
 
-  public List<EventToDatabase> createListOfFilteredPageViews(Integer pageNumber, Integer min,
+  public List<EventToDatabase> createListOfFilteredPageViews(PageRequest pageRequest, Integer min,
       Integer max, String path) {
     if (min != null || max != null || path != null) {
-      return new ArrayList<>(filterPageviews(min, max, path));
+      return filterPageviews(min, max, path);
     } else {
-      return new ArrayList<>(eventToDatabaseRepository
-          .findAll(new PageRequest(pageNumber, ITEMS_PER_PAGE)).getContent());
+      return eventToDatabaseRepository.findAll(pageRequest).getContent();
     }
   }
 

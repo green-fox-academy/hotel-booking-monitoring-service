@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 public class PageServiceTest {
 
@@ -35,6 +36,21 @@ public class PageServiceTest {
   }
 
   @Test
+  public void createListOfFilteredPageViews() throws Exception {
+    PageRequest pageRequest = new PageRequest(3, 5);
+    Mockito.when(mockRepo.findAll(pageRequest).getContent()).thenReturn(testList);
+    assertEquals(testList, pageService.createListOfFilteredPageViews(pageRequest, null, null, null));
+  }
+
+  @Test
+  public void createLinks() throws Exception {
+  }
+
+  @Test
+  public void createPageViewDataList() throws Exception {
+  }
+
+  @Test
   public void returnPage() throws Exception {
   }
 
@@ -51,18 +67,6 @@ public class PageServiceTest {
   @Test
   public void setPageNumberZero() throws Exception {
     assertEquals(0,pageService.setPageNumber(0));
-  }
-
-  @Test
-  public void createListOfFilteredPageViews() throws Exception {
-  }
-
-  @Test
-  public void createLinks() throws Exception {
-  }
-
-  @Test
-  public void createPageViewDataList() throws Exception {
   }
 
   @Test
