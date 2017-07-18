@@ -2,7 +2,6 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.funnels.*;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
-import com.greenfox.kryptonite.projectx.model.pageviews.Links;
 import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,9 +18,8 @@ public class FunnelService {
   @Autowired
   private EventToDatabase eventToDatabase;
 
-  public void createAndSaveFunnelFormat() {
+  public long createAndSaveFunnelFormat() {
     funnelRepo.save(new Funnel());
+    return funnelRepo.findOne(funnelRepo.count()).getId();
   }
-
-
 }

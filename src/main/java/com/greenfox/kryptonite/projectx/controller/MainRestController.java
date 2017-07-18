@@ -1,13 +1,7 @@
 package com.greenfox.kryptonite.projectx.controller;
 
-
-import com.greenfox.kryptonite.projectx.model.Heartbeat;
-import com.greenfox.kryptonite.projectx.model.funnels.FunnelFormat;
-import com.greenfox.kryptonite.projectx.model.funnels.StepLinks;
-import com.greenfox.kryptonite.projectx.model.funnels.StepAttributes;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
-import com.greenfox.kryptonite.projectx.model.pageviews.Links;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
@@ -16,7 +10,6 @@ import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -69,7 +62,7 @@ public class MainRestController {
   }
 
   @PostMapping(value = "/api/funnels")
-  public void createFunnel () {
-    funnelService.createAndSaveFunnelFormat();
+  public String createFunnel () {
+    return "Funnel has been created with id" + funnelService.createAndSaveFunnelFormat();
   }
 }

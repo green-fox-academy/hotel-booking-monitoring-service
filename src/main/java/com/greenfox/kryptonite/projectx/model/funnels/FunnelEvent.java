@@ -6,19 +6,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
+@Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table (name = "funnels")
-public class Funnel {
-
+@NoArgsConstructor
+public class FunnelEvent {
   @Id
-  @GeneratedValue (strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
-  @OneToMany(mappedBy = "funnel")
-  private List<FunnelEvent> events;
+  private String path;
+  private int count;
+  @ManyToOne
+  @JoinColumn (name = "id_funnel")
+  private Funnel funnel;
 }
