@@ -36,10 +36,31 @@ public class PageServiceTest {
   }
 
   @Test
-  public void createListOfFilteredPageViews() throws Exception {
+  public void createListOfFilteredPageViews_PageRequestGiven() throws Exception {
     PageRequest pageRequest = new PageRequest(3, 5);
-    Mockito.when(mockRepo.findAll(pageRequest).getContent()).thenReturn(testList);
+    Page mockPage = mock(Page.class);
+    Mockito.when(mockRepo.findAll(pageRequest)).thenReturn(mockPage);
+    Mockito.when(mockPage.getContent()).thenReturn(testList);
     assertEquals(testList, pageService.createListOfFilteredPageViews(pageRequest, null, null, null));
+  }
+
+  @Test
+  public void createListOfFilteredPageViews_PageRequestAndMinGiven() throws Exception {
+    PageRequest pageRequest = new PageRequest(3, 5);
+    assertEquals(pageService.filterPageviews(53,null, null),
+        pageService.createListOfFilteredPageViews(pageRequest, 53, null, null));
+  }
+
+  @Test
+  public void createListOfFilteredPageViews_MaxGiven() throws Exception {
+    assertEquals(pageService.filterPageviews(null,2, null),
+        pageService.createListOfFilteredPageViews(null, null, 2, null));
+  }
+
+  @Test
+  public void createListOfFilteredPageViews_MaxAndMinGiven() throws Exception {
+    assertEquals(pageService.filterPageviews(2,10, null),
+        pageService.createListOfFilteredPageViews(null, 2, 10, null));
   }
 
   @Test
