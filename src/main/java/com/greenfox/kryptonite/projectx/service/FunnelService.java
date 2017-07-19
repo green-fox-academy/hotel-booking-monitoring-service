@@ -6,10 +6,18 @@ import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
+import com.sun.jmx.mbeanserver.Repository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Service
 public class FunnelService {
   private final String url = "https://greenfox-kryptonite.herokuapp.com";
@@ -23,14 +31,14 @@ public class FunnelService {
   @Autowired
   private FunnelEventRepository funnelEventRepository;
 
-
-  public long createAndSaveFunnelFormat() {
+  public long createAndSaveFunnelFormat(FunnelRepository funnelRepo) {
     funnelRepo.save(new Funnel());
     return funnelRepo.findOne(funnelRepo.count()).getId();
   }
 
-  public FunnelFormat createFunnelFormatWithNullData(String uri, long id) {
-    PageViewLinks pageviewLinks = new PageViewLinks();
+
+  public FunnelFormat createFunnelFormatWithNullData(String uri, long id, FunnelRepository funnelRepo) {
+    PageViewLinks pageViewLinks = new PageViewLinks();
     FunnelData funnelData = new FunnelData();
     if (funnelRepo.count() == 0) {
       return new FunnelFormat();
@@ -38,12 +46,12 @@ public class FunnelService {
       Iterable<Funnel> funnelList = funnelRepo.findAll();
       for (Funnel f : funnelList) {
         if (f.getId() == id) {
-          pageviewLinks.setSelf(url + uri);
+          pageViewLinks.setSelf(url + uri);
           break;
         }
       }
     }
-    return new FunnelFormat(pageviewLinks, funnelData);
+    return new FunnelFormat(pageViewLinks, funnelData);
   }
 
   public boolean saveFunnelEvent(long id, String path) {
