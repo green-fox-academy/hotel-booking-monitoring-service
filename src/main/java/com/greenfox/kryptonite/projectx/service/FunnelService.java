@@ -24,22 +24,12 @@ public class FunnelService {
 
   @Autowired
   private FunnelRepository funnelRepo;
-
-  @Autowired
-  private EventToDatabaseRepository eventToDatabaseRepository;
-
-  @Autowired
-  private FunnelEventRepository funnelEventRepository;
-
-  @Autowired
-
-
+  
   public long createAndSaveFunnelFormat(FunnelRepository funnelRepo) {
     funnelRepo.save(new Funnel());
     return funnelRepo.findOne(funnelRepo.count()).getId();
   }
-
-
+  
   public FunnelFormat createFunnelFormatWithNullData(String uri, long id, FunnelRepository funnelRepo) {
     PageViewLinks pageViewLinks = new PageViewLinks();
     FunnelData funnelData = new FunnelData();
@@ -67,27 +57,37 @@ public class FunnelService {
     }
     return false;
   }
+  
+  public FunnelFormat returnFunnelJson( long id, FunnelRepository funnelRepository) {
+    List<Steps> included = new ArrayList<>();
+    List<StepData> stepData = new ArrayList<>();
+    for (int i = 0; i < getFunnelEvents(id, funnelRepository).size(); i++) {
+      stepData.add(new StepData(i + 1));
+      included.add(new Steps(i + 1L , "steps", createStepAttributes(i, getFunnelEvents(id, funnelRepository))));
+    }
+    Relationships relationships = new Relationships(createNewFunnelStep(id, stepData));
+    FunnelData funnelData = new FunnelData(id, relationships, included);
+    return new FunnelFormat(createSelfLink(id), funnelData);
+  }
 
   public List<FunnelEvent> getFunnelEvents(long id, FunnelRepository funnelRepo) {
     return funnelRepo.findOne(id).getEvents();
   }
 
-  public FunnelFormat returnFunnelJson( long id, FunnelRepository funnelRepo) {
-    List<FunnelEvent> events = getFunnelEvents(id, funnelRepo);
-    List<Steps> included = new ArrayList<>();
-    List<StepData> stepDatas = new ArrayList<>();
-    for (int i = 0; i < events.size(); i++) {
-      StepData stepData = new StepData(i + 1);
-      stepDatas.add(stepData);
-      StepAttributes stepAttributes = new StepAttributes(events.get(i).getPath(), events.get(i).getCount(), 10000);
-      included.add(new Steps(i + 1L , "steps", stepAttributes));
-    }
-    PageViewLinks pageViewLinks = new PageViewLinks(url + id + "/relationships/steps", null, null, null, url + id + "/steps");
-    FunnelStep funnelStep = new FunnelStep(pageViewLinks, stepDatas);
-    Relationships relationships = new Relationships(funnelStep);
-    FunnelData funnelData = new FunnelData(id, relationships, included);
-    PageViewLinks funnelSelfLink = new PageViewLinks(url + id, null, null, null, null);
-    return new FunnelFormat(funnelSelfLink, funnelData);
+  public PageViewLinks createSelfLink(long id) {
+    return new PageViewLinks(url + id);
+  }
+
+  public PageViewLinks createRelatedLink(long id) {
+    return new PageViewLinks(url + id + "/relationships/steps",url + id + "/steps");
+  }
+
+  public FunnelStep createNewFunnelStep(long id, List<StepData> stepData) {
+    return new FunnelStep(createRelatedLink(id), stepData);
+  }
+
+  public StepAttributes createStepAttributes(int i, List<FunnelEvent> events) {
+    return new StepAttributes(events.get(i).getPath(), events.get(i).getCount(),10000);
   }
 
   public String deleteFunnel(long id) {
@@ -100,5 +100,4 @@ public class FunnelService {
     }
     return temp;
   }
-
 }
