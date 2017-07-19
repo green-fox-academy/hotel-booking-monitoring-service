@@ -28,8 +28,7 @@ public class PageService {
       Integer min, Integer max, String path) {
     pageNumber = setPageNumber(pageNumber);
     PageRequest pageRequest = new PageRequest(pageNumber,ITEMS_PER_PAGE);
-    List<EventToDatabase> requestedPageViews = createListOfFilteredPageViews(pageRequest, min, max,
-        path);
+    List<EventToDatabase> requestedPageViews = createListOfFilteredPageViews(pageRequest, min, max, path);
     List<PageViewData> pageViewDataList = createPageViewDataList(requestedPageViews, pageNumber);
     PageViewLinks pageViewLinks = createLinks(pageNumber, request, pageRequest);
     return new PageViewFormat(pageViewLinks, pageViewDataList);
@@ -71,7 +70,7 @@ public class PageService {
     List<PageViewData> pageViewDataList = new ArrayList<>();
     long id = (pageNumber * ITEMS_PER_PAGE) + 1;
     for (EventToDatabase event : list) {
-      pageViewDataList.add(new PageViewData(event.getType(), id,
+      pageViewDataList.add(new PageViewData("pageviews", id,
           new DataAttributes(event.getPath(), event.getCount())));
       id++;
     }

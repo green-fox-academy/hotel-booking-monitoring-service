@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockingDetails;
 
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import java.util.ArrayList;
@@ -82,10 +83,7 @@ public class PageServiceTest {
 
   @Test
   public void createPageViewDataList() throws Exception {
-  }
-
-  @Test
-  public void returnPage() throws Exception {
+    pageService.createPageViewDataList(testList, 1);
   }
 
   @Test
