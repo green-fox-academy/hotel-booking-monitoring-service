@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @Service
 public class FunnelService {
   private final String url = "https://greenfox-kryptonite.herokuapp.com";

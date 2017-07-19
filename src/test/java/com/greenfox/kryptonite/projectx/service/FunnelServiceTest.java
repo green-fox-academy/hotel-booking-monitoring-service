@@ -16,7 +16,7 @@ public class FunnelServiceTest {
 
   private FunnelRepository mockFunnelRepository;
   private List<Funnel> testList = new ArrayList<>();
-
+  private List<Funnel> zeroList = new ArrayList<>();
   private FunnelService funnelService = new FunnelService();
 
 
@@ -43,8 +43,16 @@ public class FunnelServiceTest {
     Mockito.when(mockFunnelRepository.count()).thenReturn(4L);
     Mockito.when(mockFunnelRepository.findAll()).thenReturn(testList);
     String uri = "test";
-    String expected = "FunnelFormat(links=Links(self=null), data=FunnelData(type=null, id=null, relationships=null, included=null))";
+    String expected = "FunnelFormat(pageViewLinks=PageViewLinks(self=null, next=null, prev=null, last=null), data=FunnelData(type=null, id=null, relationships=null, included=null))";
     assertEquals(expected, funnelService.createFunnelFormatWithNullData(uri, 4L, mockFunnelRepository).toString());
+  }
 
+  @Test
+  public void testCreateFunnelFormatWithNullDataAndWithNoFunnel() {
+    Mockito.when(mockFunnelRepository.count()).thenReturn(0L);
+    Mockito.when(mockFunnelRepository.findAll()).thenReturn(zeroList);
+    String uri = "test";
+    String expected = "FunnelFormat(pageViewLinks=null, data=null)";
+    assertEquals(expected, funnelService.createFunnelFormatWithNullData(uri, 0L, mockFunnelRepository).toString());
   }
 }
