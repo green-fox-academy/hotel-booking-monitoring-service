@@ -88,4 +88,14 @@ public class MainRestController {
   public boolean getStepFunnel(@PathVariable(name = "id") long id, @RequestBody StepBody stepBody) {
     return funnelService.saveFunnelEvent(id, stepBody.getPath(), eventToDatabaseRepository, funnelRepository, funnelEventRepository);
   }
+
+  @RequestMapping(value = "/api/funnels/{id}/steps", method = RequestMethod.GET)
+  public FunnelFormat getNullFunnel(@PathVariable(name = "id") long id) {
+    return funnelService.returnFunnelJson(id);
+  }
+
+  @RequestMapping(value = "/api/funnels/{id}/delete", method = RequestMethod.DELETE)
+  public String deleteFun(@PathVariable(name = "id") long id) {
+    return funnelService.deleteFunnel(id);
+  }
 }

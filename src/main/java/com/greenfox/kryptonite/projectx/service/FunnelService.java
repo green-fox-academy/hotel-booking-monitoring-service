@@ -6,12 +6,10 @@ import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
-import com.sun.jmx.mbeanserver.Repository;
+
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,6 +88,17 @@ public class FunnelService {
     FunnelData funnelData = new FunnelData(id, relationships, included);
     PageViewLinks funnelSelfLink = new PageViewLinks(url + id, null, null, null, null);
     return new FunnelFormat(funnelSelfLink, funnelData);
+  }
+
+  public String deleteFunnel(long id) {
+    String temp = "not working";
+    for(Funnel f : funnelRepo.findAll()) {
+      if (f.getId()==id) {
+        funnelRepo.delete(id);
+        temp = "deleted funnel with id: " + id;
+      }
+    }
+    return temp;
   }
 
 }
