@@ -34,11 +34,11 @@ public class PageViewService {
       String hostURL, String exchangeName, String queueName, boolean bindQueue, boolean autoAck)
       throws Exception {
     Boolean checkAttributes = null;
-    List<EventToDatabase> eventList = (List<EventToDatabase>) eventToDatabaseRepository.findAll();
-    HotelEventQueue hotelEventQueue = consumeHotelEventQueue(hostURL, exchangeName, queueName,
-        bindQueue, autoAck);
 
     for (int i = 0; i < messageQueueService.getCount(queueName); ++i) {
+      List<EventToDatabase> eventList = (List<EventToDatabase>) eventToDatabaseRepository.findAll();
+      HotelEventQueue hotelEventQueue = consumeHotelEventQueue(hostURL, exchangeName, queueName,
+          bindQueue, autoAck);
       if (eventList.size() == 0) {
         saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
         checkAttributes = false;
