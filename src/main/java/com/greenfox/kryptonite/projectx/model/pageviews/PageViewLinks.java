@@ -20,5 +20,12 @@ public class PageViewLinks {
   private String last;
   private String related;
 
+  public PageViewLinks(String self) {
+    this.self = self;
+  }
 
+  public PageViewLinks(String self, String related) {
+    this.self = self;
+    this.related = related;
+  }
 }
