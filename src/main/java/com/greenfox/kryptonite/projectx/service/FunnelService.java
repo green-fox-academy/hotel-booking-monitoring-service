@@ -68,12 +68,12 @@ public class FunnelService {
     return false;
   }
 
-  public List<FunnelEvent> getFunnelEvents(long id) {
+  public List<FunnelEvent> getFunnelEvents(long id, FunnelRepository funnelRepo) {
     return funnelRepo.findOne(id).getEvents();
   }
 
-  public FunnelFormat returnFunnelJson( long id) {
-    List<FunnelEvent> events = getFunnelEvents(id);
+  public FunnelFormat returnFunnelJson( long id, FunnelRepository funnelRepo) {
+    List<FunnelEvent> events = getFunnelEvents(id, funnelRepo);
     List<Steps> included = new ArrayList<>();
     List<StepData> stepDatas = new ArrayList<>();
     for (int i = 0; i < events.size(); i++) {

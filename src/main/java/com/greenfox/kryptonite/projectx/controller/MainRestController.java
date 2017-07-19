@@ -91,7 +91,7 @@ public class MainRestController {
 
   @RequestMapping(value = "/api/funnels/{id}/steps", method = RequestMethod.GET)
   public FunnelFormat getNullFunnel(@PathVariable(name = "id") long id) {
-    return funnelService.returnFunnelJson(id);
+    return funnelService.returnFunnelJson(id, funnelRepository);
   }
 
   @RequestMapping(value = "/api/funnels/{id}/delete", method = RequestMethod.DELETE)

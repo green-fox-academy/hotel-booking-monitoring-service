@@ -90,4 +90,16 @@ public class FunnelServiceTest {
     Mockito.when(mockEventToDatabaseRepository.findAll()).thenReturn(eventList);
     assertFalse(funnelService.saveFunnelEvent(id, "this will assert false", mockEventToDatabaseRepository, mockFunnelRepository, mockFunnelEventRepository));
   }
+
+
+  @Test
+  public void testGetFunnelEvents() {
+    long id = 1;
+    List<FunnelEvent> list = new ArrayList<>();
+    for (int i = 0; i < 4; i++) {
+      list.add(new FunnelEvent("testpath", 5, new Funnel()));
+    }
+    Mockito.when(mockFunnelRepository.findOne(id)).thenReturn(new Funnel(id, list));
+    assertEquals(list, funnelService.getFunnelEvents(id, mockFunnelRepository));
+  }
 }
