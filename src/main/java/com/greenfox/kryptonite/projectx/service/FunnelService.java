@@ -6,12 +6,10 @@ import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
-import com.sun.jmx.mbeanserver.Repository;
+
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,19 +58,19 @@ public class FunnelService {
     return false;
   }
   
-  public FunnelFormat returnFunnelJson( long id) {
+  public FunnelFormat returnFunnelJson( long id, FunnelRepository funnelRepository) {
     List<Steps> included = new ArrayList<>();
     List<StepData> stepData = new ArrayList<>();
-    for (int i = 0; i < getFunnelEvents(id).size(); i++) {
+    for (int i = 0; i < getFunnelEvents(id, funnelRepository).size(); i++) {
       stepData.add(new StepData(i + 1));
-      included.add(new Steps(i + 1L , "steps", createStepAttributes(i, getFunnelEvents(id))));
+      included.add(new Steps(i + 1L , "steps", createStepAttributes(i, getFunnelEvents(id, funnelRepository))));
     }
     Relationships relationships = new Relationships(createNewFunnelStep(id, stepData));
     FunnelData funnelData = new FunnelData(id, relationships, included);
     return new FunnelFormat(createSelfLink(id), funnelData);
   }
 
-  public List<FunnelEvent> getFunnelEvents(long id) {
+  public List<FunnelEvent> getFunnelEvents(long id, FunnelRepository funnelRepo) {
     return funnelRepo.findOne(id).getEvents();
   }
 
@@ -92,5 +90,14 @@ public class FunnelService {
     return new StepAttributes(events.get(i).getPath(), events.get(i).getCount(),10000);
   }
 
-
+  public String deleteFunnel(long id) {
+    String temp = "not working";
+    for(Funnel f : funnelRepo.findAll()) {
+      if (f.getId()==id) {
+        funnelRepo.delete(id);
+        temp = "deleted funnel with id: " + id;
+      }
+    }
+    return temp;
+  }
 }

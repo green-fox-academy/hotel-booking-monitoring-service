@@ -28,4 +28,11 @@ public class PageViewLinks {
     this.self = self;
     this.related = related;
   }
+
+  public PageViewLinks(String self, String next, String prev, String last) {
+    this.self = self;
+    this.next = next;
+    this.prev = prev;
+    this.last = last;
+  }
 }
