@@ -18,4 +18,7 @@ public class PageViewLinks {
   private String next;
   private String prev;
   private String last;
+  private String related;
+
+
 }

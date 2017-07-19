@@ -14,13 +14,16 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Service
 public class FunnelService {
-  private final String url = "https://greenfox-kryptonite.herokuapp.com";
+  private final String url = "https://greenfox-kryptonite.herokuapp.com/api/funnels/";
 
   @Autowired
   private FunnelRepository funnelRepo;
@@ -30,6 +33,9 @@ public class FunnelService {
 
   @Autowired
   private FunnelEventRepository funnelEventRepository;
+
+  @Autowired
+
 
   public long createAndSaveFunnelFormat(FunnelRepository funnelRepo) {
     funnelRepo.save(new Funnel());
@@ -64,4 +70,27 @@ public class FunnelService {
     }
     return false;
   }
+
+  public List<FunnelEvent> getFunnelEvents(long id) {
+    return funnelRepo.findOne(id).getEvents();
+  }
+
+  public FunnelFormat returnFunnelJson( long id) {
+    List<FunnelEvent> events = getFunnelEvents(id);
+    List<Steps> included = new ArrayList<>();
+    List<StepData> stepDatas = new ArrayList<>();
+    for (int i = 0; i < events.size(); i++) {
+      StepData stepData = new StepData(i + 1);
+      stepDatas.add(stepData);
+      StepAttributes stepAttributes = new StepAttributes(events.get(i).getPath(), events.get(i).getCount(), 10000);
+      included.add(new Steps(i + 1L , "steps", stepAttributes));
+    }
+    PageViewLinks pageViewLinks = new PageViewLinks(url + id + "/relationships/steps", null, null, null, url + id + "/steps");
+    FunnelStep funnelStep = new FunnelStep(pageViewLinks, stepDatas);
+    Relationships relationships = new Relationships(funnelStep);
+    FunnelData funnelData = new FunnelData(id, relationships, included);
+    PageViewLinks funnelSelfLink = new PageViewLinks(url + id, null, null, null, null);
+    return new FunnelFormat(funnelSelfLink, funnelData);
+  }
+
 }
