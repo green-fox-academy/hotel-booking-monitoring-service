@@ -4,7 +4,9 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockingDetails;
 
+import com.greenfox.kryptonite.projectx.model.pageviews.DataAttributes;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewData;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
@@ -24,6 +26,7 @@ public class PageServiceTest {
   private PageService pageService;
   private EventToDatabaseRepository mockRepo;
   private ArrayList<EventToDatabase> testList;
+  private final int ITEMS_PER_PAGE = 5;
 
   @Before
   public void setUpTestEnvironment() {
@@ -83,7 +86,14 @@ public class PageServiceTest {
 
   @Test
   public void createPageViewDataList() throws Exception {
-    pageService.createPageViewDataList(testList, 1);
+    List<PageViewData> pageViewDataList = new ArrayList<>();
+    Integer id = 1;
+    for (int i = 0; i < testList.size(); i++) {
+      pageViewDataList.add(new PageViewData("pageviews", id,
+          new DataAttributes(testList.get(i).getPath(), testList.get(i).getCount())));
+      id++;
+    }
+    assertEquals(pageViewDataList.toString(), pageService.createPageViewDataList(testList, 0).toString());
   }
 
   @Test
