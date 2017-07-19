@@ -59,11 +59,12 @@ public class FunnelService {
   }
   
   public FunnelFormat returnFunnelJson( long id, FunnelRepository funnelRepository) {
+    List<FunnelEvent> funnelEvents = new ArrayList<>();
     List<Steps> included = new ArrayList<>();
     List<StepData> stepData = new ArrayList<>();
-    for (int i = 0; i < getFunnelEvents(id, funnelRepository).size(); i++) {
+    for (int i = 0; i < funnelEvents.size(); i++) {
       stepData.add(new StepData(i + 1));
-      included.add(new Steps(i + 1L , "steps", createStepAttributes(i, getFunnelEvents(id, funnelRepository))));
+      included.add(new Steps(i + 1L , "steps", createStepAttributes(i, getFunnelEvents(id, funnelRepository), countPercent(included, funnelEvents.get(i).getCount()))));
     }
     Relationships relationships = new Relationships(createNewFunnelStep(id, stepData));
     FunnelData funnelData = new FunnelData(id, relationships, included);
@@ -86,16 +87,24 @@ public class FunnelService {
     return new FunnelStep(createRelatedLink(id), stepData);
   }
 
-  public StepAttributes createStepAttributes(int i, List<FunnelEvent> events) {
-    return new StepAttributes(events.get(i).getPath(), events.get(i).getCount(),10000);
+  public StepAttributes createStepAttributes(int i, List<FunnelEvent> events, int percent) {
+    return new StepAttributes(events.get(i).getPath(), events.get(i).getCount(),percent);
+  }
+
+  public int countPercent(List<Steps> stepList, int count) {
+    if (stepList.size() == 0) {
+      return 10000;
+    } else {
+      return (count * 10000) / stepList.get(stepList.size() - 1).getAttributes().getCount();
+    }
   }
 
   public String deleteFunnel(long id) {
-    String temp = "not working";
+    String temp = "Something went wrong";
     for(Funnel f : funnelRepo.findAll()) {
       if (f.getId()==id) {
         funnelRepo.delete(id);
-        temp = "deleted funnel with id: " + id;
+        temp = "Funnel has been deleted with id: " + id;
       }
     }
     return temp;
