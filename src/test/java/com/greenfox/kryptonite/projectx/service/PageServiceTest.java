@@ -65,6 +65,19 @@ public class PageServiceTest {
 
   @Test
   public void createLinks() throws Exception {
+    HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+    PageRequest pageRequest = new PageRequest(2,5);
+    Page mockPage = mock(Page.class);
+    Mockito.when(mockRepo.findAll(pageRequest)).thenReturn(mockPage);
+    Mockito.when(mockPage.getContent()).thenReturn(testList);
+    Mockito.when(mockPage.getTotalPages()).thenReturn(5);
+    Mockito.when(mockPage.hasNext()).thenReturn(true);
+    Mockito.when(mockPage.hasPrevious()).thenReturn(true);
+    StringBuffer sb = new StringBuffer("test.com/test");
+    Mockito.when(mockRequest.getRequestURL()).thenReturn(sb);
+    Mockito.when(mockRequest.getQueryString()).thenReturn("page=3");
+    PageViewLinks pageViewLinks = new PageViewLinks("test.com/test?page=3", "test.com/test?page=4", "test.com/test?page=2", "test.com/test?page=5");
+    assertEquals(pageViewLinks.toString() ,pageService.createLinks(2, mockRequest, pageRequest).toString());
   }
 
   @Test

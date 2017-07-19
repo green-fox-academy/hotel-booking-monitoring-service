@@ -54,24 +54,28 @@ public class MainRestController {
     return monitoringService.databaseCheck(heartbeatRepository);
   }
 
-  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "path", required =  false) String path, @RequestParam(name = "min", required =  false) Integer min, @RequestParam(name = "max", required =  false) Integer max)
-      throws Exception {
-    pageViewService
-        .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
-            false, true);
-    return assembler.returnPageView(eventToDatabaseRepository, pageViewService.returnPageIndex(page), path, min, max);
-  }
+//  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
+//  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "path", required =  false) String path, @RequestParam(name = "min", required =  false) Integer min, @RequestParam(name = "max", required =  false) Integer max)
+//      throws Exception {
+//    pageViewService
+//        .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
+//            false, true);
+//    return assembler.returnPageView(eventToDatabaseRepository, pageViewService.returnPageIndex(page), path, min, max);
+//  }
 
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException {
     return monitoringService.monitoring(restTemplate);
   }
 
-  @RequestMapping(value = "/newpageview")
+  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
   public NewPageViewFormat listPageviews(@RequestParam(name = "page", required = false) Integer page, HttpServletRequest request,
-      @RequestParam(name = "path", required =  false) String path, @RequestParam(name = "min", required =  false) Integer min, @RequestParam(name = "max", required =  false) Integer max) {
-    System.out.println(request.getRequestURL());
+      @RequestParam(name = "path", required =  false) String path,
+      @RequestParam(name = "min", required =  false) Integer min,
+      @RequestParam(name = "max", required =  false) Integer max) throws Exception {
+    pageViewService
+        .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
+            false, true);
     return pageService.returnPage(request, page, min, max, path);
   }
 }
