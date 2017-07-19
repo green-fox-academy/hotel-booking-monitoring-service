@@ -49,7 +49,7 @@ public class FunnelServiceTest {
     Mockito.when(mockFunnelRepository.count()).thenReturn(4L);
     Mockito.when(mockFunnelRepository.findAll()).thenReturn(testList);
     String uri = "test";
-    String expected = "FunnelFormat(pageViewLinks=PageViewLinks(self=null, next=null, prev=null, last=null), data=FunnelData(type=null, id=null, relationships=null, included=null))";
+    String expected = "FunnelFormat(pageViewLinks=PageViewLinks(self=null, next=null, prev=null, last=null, related=null), data=FunnelData(type=null, id=null, relationships=null, included=null))";
     assertEquals(expected,
         funnelService.createFunnelFormatWithNullData(uri, 4L, mockFunnelRepository).toString());
   }
