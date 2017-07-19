@@ -16,9 +16,7 @@ import lombok.ToString;
 import org.springframework.stereotype.Service;
 
 @Getter
-@Setter
 @NoArgsConstructor
-@ToString
 @Service
 public class PageViewService {
 
@@ -34,69 +32,71 @@ public class PageViewService {
     return mapper.readValue(jsonString, HotelEventQueue.class);
   }
 
-  public void addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository, String hostURL, String exchangeName, String queueName, boolean bindQueue, boolean autoAck)
+  public Boolean addAttributeToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      String hostURL, String exchangeName, String queueName, boolean bindQueue, boolean autoAck)
       throws Exception {
+    Boolean checkAttributes = null;
     int times = messageQueueService.getCount(queueName);
     for (int i = 0; i < times; ++i) {
-      HotelEventQueue hotelEventQueue = consumeHotelEventQueue(hostURL, exchangeName, queueName, bindQueue, autoAck);
+      HotelEventQueue hotelEventQueue = consumeHotelEventQueue(hostURL, exchangeName, queueName,
+          bindQueue, autoAck);
       List<EventToDatabase> eventList = (List<EventToDatabase>) eventToDatabaseRepository.findAll();
       if (eventList.size() == 0) {
         saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
-        testStringDataAttributes = "empty";
+        checkAttributes = false;
       } else {
         checkEventDatabase(eventToDatabaseRepository, hotelEventQueue, eventList);
-        testStringDataAttributes = "not empty";
+        checkAttributes = true;
       }
     }
+    return checkAttributes;
   }
 
-  public HotelEventQueue consumeHotelEventQueue(String hostURL, String exchangeName, String queueName, boolean bindQueue, boolean autoAck) throws Exception {
+  public HotelEventQueue consumeHotelEventQueue(String hostURL, String exchangeName,
+      String queueName, boolean bindQueue, boolean autoAck) throws Exception {
     messageQueueService.consume(hostURL, exchangeName, queueName, bindQueue, autoAck);
     String temp = messageQueueService.getTemporaryMessage();
     return createObjectFromJson(temp);
   }
 
-  public void checkEventDatabase(EventToDatabaseRepository eventToDatabaseRepository,
-                                 HotelEventQueue hotelEventQueue, List<EventToDatabase> eventList) {
+  public boolean checkEventDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+      HotelEventQueue hotelEventQueue, List<EventToDatabase> eventList) {
     boolean checkList = false;
     for (int i = 0; i < eventToDatabaseRepository.count(); ++i) {
       if (eventList.get(i).getPath().equals(hotelEventQueue.getPath())) {
         updateEventInDatabase(eventToDatabaseRepository, eventList.get(i));
-      checkList = true;
-      testStringEventDatabaseCheck = "paths are equals";
+        checkList = true;
       }
     }
-    if(!checkList){
+    if (!checkList) {
       saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
-      testStringEventDatabaseCheck = "paths are not equals";
     }
+    return checkList;
   }
 
   public EventToDatabase saveEventToDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       HotelEventQueue hotelEventQueue) {
-    EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(), hotelEventQueue.getType());
+    EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
+        hotelEventQueue.getType());
     eventToDatabaseRepository.save(eventToDatabase);
     return eventToDatabase;
   }
 
-  public void updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
+  public EventToDatabase updateEventInDatabase(EventToDatabaseRepository eventToDatabaseRepository,
       EventToDatabase eventToDatabase) {
-    eventToDatabase.setCount(eventToDatabase.getCount()+1);
+    eventToDatabase.setCount(eventToDatabase.getCount() + 1);
     eventToDatabaseRepository.save(eventToDatabase);
+    return eventToDatabase;
   }
 
   public String sendJsonHotelEventQueue() throws JsonProcessingException, URISyntaxException {
     HotelEventQueue hotelEventQueue = new HotelEventQueue("test-hotelEventQueue",
-             "/testPath","5431325134");
+        "/testPath", "5431325134");
     ObjectMapper mapper = new ObjectMapper();
     return mapper.writeValueAsString(hotelEventQueue);
   }
 
-  public int returnPageIndex(String page){
-    if (page != null) {
-     return Integer.parseInt(page);
-    } else {
-      return 0;
-    }
+  public int returnPageIndex(String page) {
+    return page != null ? Integer.parseInt(page) : 0;
   }
 }

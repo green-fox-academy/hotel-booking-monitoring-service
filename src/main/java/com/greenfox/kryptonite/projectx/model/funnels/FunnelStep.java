@@ -1,5 +1,6 @@
 package com.greenfox.kryptonite.projectx.model.funnels;
 
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import lombok.*;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 @ToString
 public class FunnelStep {
 
-  private StepLinks stepLinks;
+  private PageViewLinks pageViewLinks;
   private List<StepData> data;
 
 }

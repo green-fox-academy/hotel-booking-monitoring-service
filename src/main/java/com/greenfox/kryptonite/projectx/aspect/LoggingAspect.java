@@ -47,12 +47,12 @@ public class LoggingAspect {
   }
 
   @AfterReturning(pointcut = "databasecheck()", returning = "retVal")
-  public void doAfterReturningTask(Object retVal) throws Exception {
-    if (retVal == new BookingStatus("ok", "error", monitoringService.queueCheck()) &&
+  public void doAfterReturningTask(BookingStatus retVal) throws Exception {
+    if (retVal.getDatabase().equals("error") &&
         heartbeatRepository == null) {
       logger.error("Database not present.");
       logger.debug("Database may not exist. Check database connection or existence.");
-    } else if (retVal == new BookingStatus("ok", "ok", monitoringService.queueCheck()) ) {
+    } else if (retVal.getDatabase().equals("ok")) {
       logger.info(
           "Database connection is ok and contains " + heartbeatRepository.count() + " element(s).");
     } else {

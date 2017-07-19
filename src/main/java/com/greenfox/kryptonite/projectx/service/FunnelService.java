@@ -2,7 +2,7 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.funnels.*;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
-import com.greenfox.kryptonite.projectx.model.pageviews.Links;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
@@ -30,7 +30,7 @@ public class FunnelService {
   }
 
   public FunnelFormat createFunnelFormatWithNullData(String uri, long id) {
-    Links links = new Links();
+    PageViewLinks pageviewLinks = new PageViewLinks();
     FunnelData funnelData = new FunnelData();
     if (funnelRepo.count() == 0) {
       return new FunnelFormat();
@@ -38,12 +38,12 @@ public class FunnelService {
       Iterable<Funnel> funnelList = funnelRepo.findAll();
       for (Funnel f : funnelList) {
         if (f.getId() == id) {
-          links = new Links(url + uri);
+          pageviewLinks.setSelf(url + uri);
           break;
         }
       }
     }
-    return new FunnelFormat(links, funnelData);
+    return new FunnelFormat(pageviewLinks, funnelData);
   }
 
   public boolean saveFunnelEvent(long id, String path) {

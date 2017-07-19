@@ -2,15 +2,14 @@ package com.greenfox.kryptonite.projectx.controller;
 
 import com.greenfox.kryptonite.projectx.model.funnels.FunnelFormat;
 import com.greenfox.kryptonite.projectx.model.funnels.StepBody;
-import com.greenfox.kryptonite.projectx.model.funnels.Steps;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.FunnelService;
-import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
 import com.greenfox.kryptonite.projectx.service.MonitoringService;
+import com.greenfox.kryptonite.projectx.service.PageService;
 import com.greenfox.kryptonite.projectx.service.PageViewService;
 import javax.servlet.http.HttpServletRequest;
 
@@ -39,29 +38,32 @@ public class MainRestController {
   @Autowired
   private FunnelService funnelService;
 
-  private JsonAssemblerService assembler = new JsonAssemblerService();
+  @Autowired
+  private PageService pageService;
+
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
   private RestTemplate restTemplate = new RestTemplate();
-
 
   @RequestMapping(value = "/heartbeat", method = RequestMethod.GET)
   public BookingStatus heartbeat(HttpServletRequest request) throws Exception {
     return monitoringService.databaseCheck(heartbeatRepository);
   }
 
-  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
-  public PageViewFormat pageviews(@RequestParam(name = "page", required = false) String page, @RequestParam(name = "path", required =  false) String path, @RequestParam(name = "min", required =  false) Integer min, @RequestParam(name = "max", required =  false) Integer max)
-      throws Exception {
-    pageViewService
-        .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
-            false, true);
-    return assembler.returnPageView(eventToDatabaseRepository, pageViewService.returnPageIndex(page), path, min, max);
-  }
-
   @RequestMapping(value = "/monitor", method = RequestMethod.GET)
   public HotelServiceStatusList monitor(HttpServletRequest request) throws IOException {
     return monitoringService.monitoring(restTemplate);
+  }
+
+  @RequestMapping(value = "/pageviews", method = RequestMethod.GET)
+  public PageViewFormat listPageviews(@RequestParam(name = "page", required = false) Integer page, HttpServletRequest request,
+      @RequestParam(name = "path", required =  false) String path,
+      @RequestParam(name = "min", required =  false) Integer min,
+      @RequestParam(name = "max", required =  false) Integer max) throws Exception {
+    pageViewService
+        .addAttributeToDatabase(eventToDatabaseRepository, RABBIT_MQ_URL, EXCHANGE_NAME, "events",
+            false, true);
+    return pageService.returnPage(request, page, min, max, path);
   }
 
   @RequestMapping(value = "/api/funnels", method = RequestMethod.POST)
