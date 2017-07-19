@@ -2,7 +2,7 @@ package com.greenfox.kryptonite.projectx.service;
 
 import com.greenfox.kryptonite.projectx.model.pageviews.DataAttributes;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
-import com.greenfox.kryptonite.projectx.model.pageviews.NewPageViewFormat;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewData;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
@@ -24,7 +24,7 @@ public class PageService {
   @Autowired
   EventToDatabaseRepository eventToDatabaseRepository;
 
-  public NewPageViewFormat returnPage(HttpServletRequest request, Integer pageNumber,
+  public PageViewFormat returnPage(HttpServletRequest request, Integer pageNumber,
       Integer min, Integer max, String path) {
     pageNumber = setPageNumber(pageNumber);
     PageRequest pageRequest = new PageRequest(pageNumber,ITEMS_PER_PAGE);
@@ -32,7 +32,7 @@ public class PageService {
         path);
     List<PageViewData> pageViewDataList = createPageViewDataList(requestedPageViews, pageNumber);
     PageViewLinks pageViewLinks = createLinks(pageNumber, request, pageRequest);
-    return new NewPageViewFormat(pageViewLinks, pageViewDataList);
+    return new PageViewFormat(pageViewLinks, pageViewDataList);
   }
 
   public int setPageNumber(Integer pageNumber) {
