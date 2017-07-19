@@ -1,6 +1,8 @@
 package com.greenfox.kryptonite.projectx.controller;
 
 import com.greenfox.kryptonite.projectx.model.funnels.FunnelFormat;
+import com.greenfox.kryptonite.projectx.model.funnels.StepBody;
+import com.greenfox.kryptonite.projectx.model.funnels.Steps;
 import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusList;
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
@@ -76,8 +78,8 @@ public class MainRestController {
     return funnelService.createFunnelFormatWithNullData(request.getRequestURI(), id, funnelRepository);
   }
 
-  @RequestMapping(value = "/api/funnels/{id}/{path}", method = RequestMethod.POST)
-  public boolean getStepFunnel(@PathVariable(name = "id") long id, @PathVariable(name = "path") String path) {
-    return funnelService.saveFunnelEvent(id, path);
+  @RequestMapping(value = "/api/funnels/{id}/steps", method = RequestMethod.POST)
+  public boolean getStepFunnel(@PathVariable(name = "id") long id, @RequestBody StepBody stepBody) {
+    return funnelService.saveFunnelEvent(id, stepBody.getPath());
   }
 }

@@ -54,11 +54,8 @@ public class FunnelService {
   }
 
   public boolean saveFunnelEvent(long id, String path) {
-    Iterable<EventToDatabase> eventToDatabaseIterable = eventToDatabaseRepository.findAll();
-    for (EventToDatabase e : eventToDatabaseIterable) {
-      System.out.println(e.getPath());
-      System.out.println("/"+path);
-      if (e.getPath().equals("/" + path)) {
+    for (EventToDatabase e : eventToDatabaseRepository.findAll()) {
+      if (e.getPath().equals(path)) {
         FunnelEvent funnelEvent = new FunnelEvent(e.getPath(), e.getCount(), funnelRepo.findOne(id));
         funnelEventRepository.save(funnelEvent);
         return true;
