@@ -26,6 +26,9 @@ public class FunnelService {
   @Autowired
   private FunnelRepository funnelRepo;
 
+
+  private CountPercentInterface countPercentInterface = (step1, step2) -> step1 * 10000 / step2;
+
   public long createAndSaveFunnelFormat(FunnelRepository funnelRepo) {
     funnelRepo.save(new Funnel());
     return funnelRepo.findOne(funnelRepo.count()).getId();
@@ -100,7 +103,6 @@ public class FunnelService {
   }
 
   public int countPercent(List<Steps> stepList, int count) {
-    CountPercentInterface countPercentInterface = (step1, step2) -> step1 * 10000 / step2;
     if (stepList.size() == 0) {
       return 10000;
     } else {
