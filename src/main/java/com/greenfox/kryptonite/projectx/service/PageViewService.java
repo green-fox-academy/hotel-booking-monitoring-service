@@ -22,8 +22,6 @@ public class PageViewService {
 
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
-  private String testStringDataAttributes = "not ok";
-  private String testStringEventDatabaseCheck = "not ok";
 
   MessageQueueService messageQueueService = new MessageQueueService();
 
@@ -36,11 +34,11 @@ public class PageViewService {
       String hostURL, String exchangeName, String queueName, boolean bindQueue, boolean autoAck)
       throws Exception {
     Boolean checkAttributes = null;
-    int times = messageQueueService.getCount(queueName);
-    for (int i = 0; i < times; ++i) {
-      HotelEventQueue hotelEventQueue = consumeHotelEventQueue(hostURL, exchangeName, queueName,
-          bindQueue, autoAck);
-      List<EventToDatabase> eventList = (List<EventToDatabase>) eventToDatabaseRepository.findAll();
+    List<EventToDatabase> eventList = (List<EventToDatabase>) eventToDatabaseRepository.findAll();
+    HotelEventQueue hotelEventQueue = consumeHotelEventQueue(hostURL, exchangeName, queueName,
+        bindQueue, autoAck);
+
+    for (int i = 0; i < messageQueueService.getCount(queueName); ++i) {
       if (eventList.size() == 0) {
         saveEventToDatabase(eventToDatabaseRepository, hotelEventQueue);
         checkAttributes = false;

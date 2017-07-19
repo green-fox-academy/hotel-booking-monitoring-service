@@ -89,7 +89,7 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void addAttributeToEmptyDatabaseTestWithQueue() throws Exception {
+  public void testAddAttributeToEmptyDatabaseWithQueue() throws Exception {
     messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", "nothing important");
     Iterable<EventToDatabase> list = Arrays.asList();
     Mockito.when(eventToDatabaseRepositoryMock.findAll()).thenReturn(list);
@@ -99,7 +99,7 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void addAttributeToNoTEmptyDatabaseTestWithQueue() throws Exception {
+  public void testAddAttributeToNoTEmptyDatabaseWithQueue() throws Exception {
     messageQueueService.send(RABBIT_MQ_URL, EXCHANGE_NAME, "testEventQueue", "nothing important");
     Iterable<EventToDatabase> list = Arrays
         .asList(new EventToDatabase(hotelEventQueue.getPath(), hotelEventQueue.getType()));
@@ -126,7 +126,7 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void checkEventDatabaseWithExistingElementsInDBTest() throws Exception {
+  public void testCheckEventDatabaseWithExistingElementsInDB() throws Exception {
     List<EventToDatabase> testList1 = Arrays
         .asList(new EventToDatabase(hotelEventQueue.getPath(), hotelEventQueue.getType()));
     Mockito.when(eventToDatabaseRepositoryMock.count()).thenReturn(1L);
@@ -135,7 +135,7 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void checkEventDatabaseWithOUTExistingElementsInDBTest() throws Exception {
+  public void testCheckEventDatabaseWithoutExistingElementsInDB() throws Exception {
     List<EventToDatabase> testList2 = Arrays
         .asList(new EventToDatabase(hotelEventQueue.getPath() + "mock", hotelEventQueue.getType()));
     Mockito.when(eventToDatabaseRepositoryMock.count()).thenReturn(1L);
@@ -144,14 +144,15 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void saveEventToDatabaseTest() throws Exception {
-    EventToDatabase eventToDatabase = new EventToDatabase("/testPath","test-hotelEventQueue", 1);
+  public void testSaveEventToDatabase() throws Exception {
+    EventToDatabase eventToDatabase = new EventToDatabase("/testPath", "test-hotelEventQueue", 1);
     assertEquals(eventToDatabase.toString(),
-        pageViewService.saveEventToDatabase(eventToDatabaseRepositoryMock, hotelEventQueue).toString());
+        pageViewService.saveEventToDatabase(eventToDatabaseRepositoryMock, hotelEventQueue)
+            .toString());
   }
 
   @Test
-  public void updateEventToDatabaseTest() throws Exception {
+  public void testUpdateEventToDatabaseWithCorrectInput() throws Exception {
     EventToDatabase eventToDatabase = new EventToDatabase(hotelEventQueue.getPath(),
         hotelEventQueue.getType());
     pageViewService.updateEventInDatabase(eventToDatabaseRepositoryMock, eventToDatabase);
@@ -159,7 +160,7 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void sendJsonHotelEventQueue() throws Exception {
+  public void testSendJsonHotelEventQueue() throws Exception {
     assertEquals(pageViewService.sendJsonHotelEventQueue(),
         objectMapper.writeValueAsString(hotelEventQueue));
   }
@@ -177,16 +178,20 @@ public class PageViewServiceTest {
   }
 
   @Test
-  public void testUpdateEventToDatabase(){
+  public void testUpdateEventToDatabase() {
     EventToDatabase eventToDatabase = new EventToDatabase("path", "type");
     pageViewService.updateEventInDatabase(eventToDatabaseRepositoryMock, eventToDatabase);
-    assertEquals(eventToDatabase.getCount() + 1, pageViewService.updateEventInDatabase(eventToDatabaseRepositoryMock, eventToDatabase).getCount() );
+    assertEquals(eventToDatabase.getCount() + 1,
+        pageViewService.updateEventInDatabase(eventToDatabaseRepositoryMock, eventToDatabase)
+            .getCount());
   }
 
   @Test
-  public void testUpdateEventToDatabaseNotEquals(){
+  public void testUpdateEventToDatabaseNotEquals() {
     EventToDatabase eventToDatabase = new EventToDatabase("path", "type");
     pageViewService.updateEventInDatabase(eventToDatabaseRepositoryMock, eventToDatabase);
-    assertNotEquals(eventToDatabase.getCount(), pageViewService.updateEventInDatabase(eventToDatabaseRepositoryMock, eventToDatabase).getCount() );
+    assertNotEquals(eventToDatabase.getCount(),
+        pageViewService.updateEventInDatabase(eventToDatabaseRepositoryMock, eventToDatabase)
+            .getCount());
   }
 }
