@@ -5,6 +5,7 @@ import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusLi
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
+import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.FunnelService;
 import com.greenfox.kryptonite.projectx.service.JsonAssemblerService;
@@ -37,6 +38,9 @@ public class MainRestController {
   @Autowired
   private FunnelService funnelService;
 
+  @Autowired
+  private FunnelRepository funnelRepository;
+
   private JsonAssemblerService assembler = new JsonAssemblerService();
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
@@ -64,12 +68,12 @@ public class MainRestController {
 
   @RequestMapping(value = "/api/funnels", method = RequestMethod.POST)
   public String funnelSave() {
-    return "funnel has been created with id: " + funnelService.createAndSaveFunnelFormat();
+    return "funnel has been created with id: " + funnelService.createAndSaveFunnelFormat(funnelRepository);
   }
 
   @RequestMapping(value = "/api/funnels/{id}", method = RequestMethod.GET)
   public FunnelFormat getNullFunnel(@PathVariable(name = "id") long id, HttpServletRequest request) {
-    return funnelService.createFunnelFormatWithNullData(request.getRequestURI(), id);
+    return funnelService.createFunnelFormatWithNullData(request.getRequestURI(), id, funnelRepository);
   }
 
   @RequestMapping(value = "/api/funnels/{id}/{path}", method = RequestMethod.POST)

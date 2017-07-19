@@ -66,5 +66,4 @@ public class MonitoringService {
     HotelServices hotelServices = IOService.readFiles(DATA_PATH);
     return hotelServices.getServices();
   }
-
 }
