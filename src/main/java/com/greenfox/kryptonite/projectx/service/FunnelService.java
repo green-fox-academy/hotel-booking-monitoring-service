@@ -20,17 +20,19 @@ import java.util.List;
 @AllArgsConstructor
 @Service
 public class FunnelService {
+
   private final String url = "https://greenfox-kryptonite.herokuapp.com/api/funnels/";
 
   @Autowired
   private FunnelRepository funnelRepo;
-  
+
   public long createAndSaveFunnelFormat(FunnelRepository funnelRepo) {
     funnelRepo.save(new Funnel());
     return funnelRepo.findOne(funnelRepo.count()).getId();
   }
-  
-  public FunnelFormat createFunnelFormatWithNullData(String uri, long id, FunnelRepository funnelRepo) {
+
+  public FunnelFormat createFunnelFormatWithNullData(String uri, long id,
+      FunnelRepository funnelRepo) {
     PageViewLinks pageViewLinks = new PageViewLinks();
     FunnelData funnelData = new FunnelData();
     if (funnelRepo.count() == 0) {
@@ -47,24 +49,30 @@ public class FunnelService {
     return new FunnelFormat(pageViewLinks, funnelData);
   }
 
-  public boolean saveFunnelEvent(long id, String path, EventToDatabaseRepository eventToDatabaseRepository, FunnelRepository funnelRepo, FunnelEventRepository funnelEventRepository) {
+  public boolean saveFunnelEvent(long id, String path,
+      EventToDatabaseRepository eventToDatabaseRepository, FunnelRepository funnelRepo,
+      FunnelEventRepository funnelEventRepository) {
     for (EventToDatabase e : eventToDatabaseRepository.findAll()) {
       if (e.getPath().equals(path)) {
-        FunnelEvent funnelEvent = new FunnelEvent(e.getPath(), e.getCount(), funnelRepo.findOne(id));
+        FunnelEvent funnelEvent = new FunnelEvent(e.getPath(), e.getCount(),
+            funnelRepo.findOne(id));
         funnelEventRepository.save(funnelEvent);
         return true;
       }
     }
     return false;
   }
-  
-  public FunnelFormat returnFunnelJson( long id, FunnelRepository funnelRepository) {
+
+  public FunnelFormat returnFunnelJson(long id, FunnelRepository funnelRepository) {
     List<FunnelEvent> funnelEvents = new ArrayList<>();
     List<Steps> included = new ArrayList<>();
     List<StepData> stepData = new ArrayList<>();
     for (int i = 0; i < funnelEvents.size(); i++) {
       stepData.add(new StepData(i + 1));
-      included.add(new Steps(i + 1L , "steps", createStepAttributes(i, getFunnelEvents(id, funnelRepository), countPercent(included, funnelEvents.get(i).getCount()))));
+      int count = funnelEvents.get(i).getCount();
+      included.add(new Steps(i + 1L, "steps",
+          createStepAttributes(i, getFunnelEvents(id, funnelRepository),
+              countPercent(included, count))));
     }
     Relationships relationships = new Relationships(createNewFunnelStep(id, stepData));
     FunnelData funnelData = new FunnelData(id, relationships, included);
@@ -80,7 +88,7 @@ public class FunnelService {
   }
 
   public PageViewLinks createRelatedLink(long id) {
-    return new PageViewLinks(url + id + "/relationships/steps",url + id + "/steps");
+    return new PageViewLinks(url + id + "/relationships/steps", url + id + "/steps");
   }
 
   public FunnelStep createNewFunnelStep(long id, List<StepData> stepData) {
@@ -88,21 +96,22 @@ public class FunnelService {
   }
 
   public StepAttributes createStepAttributes(int i, List<FunnelEvent> events, int percent) {
-    return new StepAttributes(events.get(i).getPath(), events.get(i).getCount(),percent);
+    return new StepAttributes(events.get(i).getPath(), events.get(i).getCount(), percent);
   }
 
   public int countPercent(List<Steps> stepList, int count) {
+    CountPercentInterface countPercentInterface = (step1, step2) -> step1 * 10000 / step2;
     if (stepList.size() == 0) {
       return 10000;
     } else {
-      return (count * 10000) / stepList.get(stepList.size() - 1).getAttributes().getCount();
+      return countPercentInterface.countPercent(count, stepList.get(stepList.size() - 1).getAttributes().getCount());
     }
   }
 
   public String deleteFunnel(long id) {
     String temp = "Something went wrong";
-    for(Funnel f : funnelRepo.findAll()) {
-      if (f.getId()==id) {
+    for (Funnel f : funnelRepo.findAll()) {
+      if (f.getId() == id) {
         funnelRepo.delete(id);
         temp = "Funnel has been deleted with id: " + id;
       }

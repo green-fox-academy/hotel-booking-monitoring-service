@@ -5,6 +5,8 @@ import static org.mockito.Mockito.mock;
 
 import com.greenfox.kryptonite.projectx.model.funnels.Funnel;
 import com.greenfox.kryptonite.projectx.model.funnels.FunnelEvent;
+import com.greenfox.kryptonite.projectx.model.funnels.StepAttributes;
+import com.greenfox.kryptonite.projectx.model.funnels.Steps;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
@@ -77,7 +79,9 @@ public class FunnelServiceTest {
     Mockito.when(mockEventToDatabaseRepository.findAll()).thenReturn(eventList);
     Mockito.when(mockFunnelRepository.findOne(id)).thenReturn(funnel);
     Mockito.when(mockFunnelEventRepository.save(new FunnelEvent())).thenReturn(new FunnelEvent());
-    assertTrue(funnelService.saveFunnelEvent(id, "testpath 1", mockEventToDatabaseRepository, mockFunnelRepository, mockFunnelEventRepository));
+    assertTrue(funnelService
+        .saveFunnelEvent(id, "testpath 1", mockEventToDatabaseRepository, mockFunnelRepository,
+            mockFunnelEventRepository));
   }
 
   @Test
@@ -88,7 +92,9 @@ public class FunnelServiceTest {
       eventList.add(new EventToDatabase("testpath " + i, "testtype", 5));
     }
     Mockito.when(mockEventToDatabaseRepository.findAll()).thenReturn(eventList);
-    assertFalse(funnelService.saveFunnelEvent(id, "this will assert false", mockEventToDatabaseRepository, mockFunnelRepository, mockFunnelEventRepository));
+    assertFalse(funnelService
+        .saveFunnelEvent(id, "this will assert false", mockEventToDatabaseRepository,
+            mockFunnelRepository, mockFunnelEventRepository));
   }
 
 
@@ -102,4 +108,21 @@ public class FunnelServiceTest {
     Mockito.when(mockFunnelRepository.findOne(id)).thenReturn(new Funnel(id, list));
     assertEquals(list, funnelService.getFunnelEvents(id, mockFunnelRepository));
   }
+
+  @Test
+  public void testCountPercentWithListSizeZero() {
+    List<Steps> stepList = new ArrayList<>();
+    assertEquals(10000, funnelService.countPercent(stepList, 5));
+  }
+
+  @Test
+  public void testCountPercentWithListSizeTwo() {
+    List<Steps> stepList = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      stepList.add(new Steps((long) i, "testtype", new StepAttributes("/testpath", 10, 0)));
+    }
+    assertEquals(5000, funnelService.countPercent(stepList, 5));
+  }
+
+
 }
