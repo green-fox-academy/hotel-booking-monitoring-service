@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +53,7 @@ public class FunnelService {
     return new FunnelFormat(pageViewLinks, funnelData);
   }
 
-  public boolean saveFunnelEvent(long id, String path) {
+  public boolean saveFunnelEvent(long id, String path, EventToDatabaseRepository eventToDatabaseRepository, FunnelRepository funnelRepo, FunnelEventRepository funnelEventRepository) {
     for (EventToDatabase e : eventToDatabaseRepository.findAll()) {
       if (e.getPath().equals(path)) {
         FunnelEvent funnelEvent = new FunnelEvent(e.getPath(), e.getCount(), funnelRepo.findOne(id));

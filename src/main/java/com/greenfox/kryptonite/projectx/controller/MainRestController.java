@@ -6,6 +6,7 @@ import com.greenfox.kryptonite.projectx.model.hotelservices.HotelServiceStatusLi
 import com.greenfox.kryptonite.projectx.model.BookingStatus;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
+import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 import com.greenfox.kryptonite.projectx.service.FunnelService;
@@ -45,6 +46,9 @@ public class MainRestController {
   @Autowired
   private FunnelRepository funnelRepository;
 
+  @Autowired
+  private FunnelEventRepository funnelEventRepository;
+
   private final String RABBIT_MQ_URL = System.getenv("RABBITMQ_BIGWIG_RX_URL");
   private final String EXCHANGE_NAME = "log";
   private RestTemplate restTemplate = new RestTemplate();
@@ -82,6 +86,6 @@ public class MainRestController {
 
   @RequestMapping(value = "/api/funnels/{id}/steps", method = RequestMethod.POST)
   public boolean getStepFunnel(@PathVariable(name = "id") long id, @RequestBody StepBody stepBody) {
-    return funnelService.saveFunnelEvent(id, stepBody.getPath());
+    return funnelService.saveFunnelEvent(id, stepBody.getPath(), eventToDatabaseRepository, funnelRepository, funnelEventRepository);
   }
 }
