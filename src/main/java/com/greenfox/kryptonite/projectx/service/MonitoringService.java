@@ -45,7 +45,7 @@ public class MonitoringService {
     HotelServiceStatus hotelServiceStatus;
 
     try {
-      BookingStatus currentBookingStatus = restTemplate.getForObject(host + "/heartbeat", BookingStatus.class);
+      restTemplate.getForObject(host + "/heartbeat", BookingStatus.class);
       hotelServiceStatus = new HotelServiceStatus(host, "ok");
     } catch (HttpServerErrorException ex) {
       hotelServiceStatus = new HotelServiceStatus(host, "error");
