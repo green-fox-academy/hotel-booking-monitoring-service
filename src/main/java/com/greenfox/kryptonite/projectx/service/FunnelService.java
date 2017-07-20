@@ -67,6 +67,14 @@ public class FunnelService {
     List<FunnelEvent> funnelEvents = new ArrayList<>();
     List<Steps> included = new ArrayList<>();
     List<StepData> stepData = new ArrayList<>();
+    createStepData(id, funnelRepository, funnelEvents, included, stepData);
+    Relationships relationships = new Relationships(createNewFunnelStep(id, stepData));
+    FunnelData funnelData = new FunnelData(id, relationships, included);
+    return new FunnelFormat(createSelfLink(id), funnelData);
+  }
+
+  private void createStepData(long id, FunnelRepository funnelRepository,
+      List<FunnelEvent> funnelEvents, List<Steps> included, List<StepData> stepData) {
     for (int i = 0; i < funnelEvents.size(); i++) {
       stepData.add(new StepData(i + 1));
       int count = funnelEvents.get(i).getCount();
@@ -74,9 +82,6 @@ public class FunnelService {
           createStepAttributes(i, getFunnelEvents(id, funnelRepository),
               countPercent(included, count))));
     }
-    Relationships relationships = new Relationships(createNewFunnelStep(id, stepData));
-    FunnelData funnelData = new FunnelData(id, relationships, included);
-    return new FunnelFormat(createSelfLink(id), funnelData);
   }
 
   public List<FunnelEvent> getFunnelEvents(long id, FunnelRepository funnelRepo) {
