@@ -103,11 +103,8 @@ public class FunnelService {
   }
 
   public int countPercent(List<Steps> stepList, int count) {
-    if (stepList.size() == 0) {
-      return 10000;
-    } else {
-      return countPercentInterface.countPercent(count, stepList.get(stepList.size() - 1).getAttributes().getCount());
-    }
+    return stepList.size() == 0 ? 10000 : countPercentInterface
+        .countPercent(count, stepList.get(stepList.size() - 1).getAttributes().getCount());
   }
 
   public String deleteFunnel(long id) {
