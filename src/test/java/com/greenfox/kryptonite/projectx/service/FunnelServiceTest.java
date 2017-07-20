@@ -53,7 +53,7 @@ public class FunnelServiceTest {
     String uri = "test";
     String expected = "FunnelFormat(pageViewLinks=PageViewLinks(self=null, next=null, prev=null, last=null, related=null), data=FunnelData(type=null, id=null, relationships=null, included=null))";
     assertEquals(expected,
-        funnelService.createFunnelFormatWithNullData(uri, 4L, mockFunnelRepository).toString());
+        funnelService.createFunnelFormatWithNullData(4L, mockFunnelRepository).toString());
   }
 
   @Test
@@ -63,7 +63,7 @@ public class FunnelServiceTest {
     String uri = "test";
     String expected = "FunnelFormat(pageViewLinks=null, data=null)";
     assertEquals(expected,
-        funnelService.createFunnelFormatWithNullData(uri, 0L, mockFunnelRepository).toString());
+        funnelService.createFunnelFormatWithNullData(0L, mockFunnelRepository).toString());
   }
 
   @Test
@@ -112,7 +112,7 @@ public class FunnelServiceTest {
   @Test
   public void testCountPercentWithListSizeZero() {
     List<Steps> stepList = new ArrayList<>();
-    assertEquals(10000, funnelService.countPercent(stepList, 5));
+    assertEquals(10000, funnelService.countPercent(stepList, 5, (step1, step2) -> step1 * 10000 / step2));
   }
 
   @Test
@@ -121,7 +121,7 @@ public class FunnelServiceTest {
     for (int i = 0; i < 5; i++) {
       stepList.add(new Steps((long) i, "testtype", new StepAttributes("/testpath", 10, 0)));
     }
-    assertEquals(5000, funnelService.countPercent(stepList, 5));
+    assertEquals(5000, funnelService.countPercent(stepList, 5, (step1, step2) -> step1 * 10000 / step2));
   }
 
 

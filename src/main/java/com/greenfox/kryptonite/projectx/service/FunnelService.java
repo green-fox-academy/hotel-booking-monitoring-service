@@ -31,7 +31,7 @@ public class FunnelService {
     return funnelRepo.findOne(funnelRepo.count()).getId();
   }
 
-  public FunnelFormat createFunnelFormatWithNullData(String uri, long id,
+  public FunnelFormat createFunnelFormatWithNullData(long id,
       FunnelRepository funnelRepo) {
     PageViewLinks pageViewLinks = new PageViewLinks();
     FunnelData funnelData = new FunnelData();
@@ -41,7 +41,7 @@ public class FunnelService {
       Iterable<Funnel> funnelList = funnelRepo.findAll();
       for (Funnel f : funnelList) {
         if (f.getId() == id) {
-          pageViewLinks.setSelf(url + uri);
+          pageViewLinks.setSelf(url + f.getId());
           break;
         }
       }
@@ -70,7 +70,7 @@ public class FunnelService {
     createStepData(id, funnelRepository, funnelEvents, included, stepData);
     Relationships relationships = new Relationships(createNewFunnelStep(id, stepData));
     FunnelData funnelData = new FunnelData(id, relationships, included);
-    return new FunnelFormat(createSelfLink(id), funnelData);
+    return new FunnelFormat(createLink (id, i -> new PageViewLinks(url + i)), funnelData);
   }
 
   private void createStepData(long id, FunnelRepository funnelRepository,
@@ -80,7 +80,7 @@ public class FunnelService {
       int count = funnelEvents.get(i).getCount();
       included.add(new Steps(i + 1L, "steps",
           createStepAttributes(i, getFunnelEvents(id, funnelRepository),
-              countPercent(included, count))));
+              countPercent(included, count,(step1, step2) -> step1 * 10000 / step2))));
     }
   }
 
@@ -88,24 +88,19 @@ public class FunnelService {
     return funnelRepo.findOne(id).getEvents();
   }
 
-  public PageViewLinks createSelfLink(long id) {
-    return new PageViewLinks(url + id);
-  }
-
-  public PageViewLinks createRelatedLink(long id) {
-    return new PageViewLinks(url + id + "/relationships/steps", url + id + "/steps");
+  public PageViewLinks createLink(long id, LinkCreator linkCreator) {
+    return linkCreator.assembleLinkObject(id);
   }
 
   public FunnelStep createNewFunnelStep(long id, List<StepData> stepData) {
-    return new FunnelStep(createRelatedLink(id), stepData);
+    return new FunnelStep(createLink(id, i -> new PageViewLinks(url + id + "/relationships/steps", url + id + "/steps") ), stepData);
   }
 
   public StepAttributes createStepAttributes(int i, List<FunnelEvent> events, int percent) {
     return new StepAttributes(events.get(i).getPath(), events.get(i).getCount(), percent);
   }
 
-  public int countPercent(List<Steps> stepList, int count) {
-    CountPercentInterface countPercentInterface = (step1, step2) -> step1 * 10000 / step2;
+  public int countPercent(List<Steps> stepList, int count, CountPercentInterface countPercentInterface) {
     return stepList.size() == 0 ? 10000 : countPercentInterface
         .countPercent(count, stepList.get(stepList.size() - 1).getAttributes().getCount());
   }
@@ -120,4 +115,14 @@ public class FunnelService {
     }
     return temp;
   }
+}
+
+@FunctionalInterface
+interface CountPercentInterface {
+  int countPercent(int count, int step);
+}
+
+@FunctionalInterface
+interface LinkCreator {
+  PageViewLinks assembleLinkObject(long id);
 }

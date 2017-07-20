@@ -22,7 +22,7 @@ public class PageService {
   private final Integer ITEMS_PER_PAGE = 5;
 
   @Autowired
-  EventToDatabaseRepository eventToDatabaseRepository;
+  private EventToDatabaseRepository eventToDatabaseRepository;
 
   public PageViewFormat returnPage(HttpServletRequest request, Integer pageNumber,
       Integer min, Integer max, String path) {

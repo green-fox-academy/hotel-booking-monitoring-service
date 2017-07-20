@@ -80,8 +80,8 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/api/funnels/{id}", method = RequestMethod.GET)
-  public FunnelFormat getNullFunnel(@PathVariable(name = "id") long id, HttpServletRequest request) {
-    return funnelService.createFunnelFormatWithNullData(request.getRequestURI(), id, funnelRepository);
+  public FunnelFormat getNullFunnel(@PathVariable(name = "id") long id) {
+    return funnelService.createFunnelFormatWithNullData(id, funnelRepository);
   }
 
   @RequestMapping(value = "/api/funnels/{id}/steps", method = RequestMethod.POST)
@@ -90,7 +90,7 @@ public class MainRestController {
   }
 
   @RequestMapping(value = "/api/funnels/{id}/steps", method = RequestMethod.GET)
-  public FunnelFormat getNullFunnel(@PathVariable(name = "id") long id) {
+  public FunnelFormat getFunnel(@PathVariable(name = "id") long id) {
     return funnelService.returnFunnelJson(id, funnelRepository);
   }
 
