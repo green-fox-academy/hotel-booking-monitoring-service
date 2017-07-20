@@ -161,7 +161,7 @@ public class FunnelServiceTest {
 
   @Test
   public void testReturnFunnelJSON () {
-    String expected = "FunnelFormat(pageViewLinks=PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/1, next=null, prev=null, last=null, related=null), data=FunnelData(type=funnels, id=1, relationships=Relationships(funnelStep=FunnelStep(pageViewLinks=PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/1/relationships/steps, next=null, prev=null, last=null, related=https://greenfox-kryptonite.herokuapp.com/api/funnels/1/steps), data=[])), included=[]))";
+    String expected = "FunnelFormat(pageViewLinks=PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/1, next=null, prev=null, last=null, related=null), data=FunnelData(type=funnels, id=1, relationships=Relationships(funnelStep=FunnelStep(pageViewLinks=PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/1/relationships/steps, next=null, prev=null, last=null, related=https://greenfox-kryptonite.herokuapp.com/api/funnels/1/steps), data=[StepData(type=steps, id=1), StepData(type=steps, id=2), StepData(type=steps, id=3), StepData(type=steps, id=4)])), included=[Steps(id=1, type=steps, attributes=StepAttributes(percent=10000)), Steps(id=2, type=steps, attributes=StepAttributes(percent=10000)), Steps(id=3, type=steps, attributes=StepAttributes(percent=10000)), Steps(id=4, type=steps, attributes=StepAttributes(percent=10000))]))";
      List<FunnelEvent> funnelEventList = new ArrayList<>();
     for (int i = 0; i < 4; i++) {
       funnelEventList.add(new FunnelEvent("testpath", 5, new Funnel()));
