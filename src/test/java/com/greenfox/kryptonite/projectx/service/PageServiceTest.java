@@ -1,11 +1,11 @@
 package com.greenfox.kryptonite.projectx.service;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 
+import com.greenfox.kryptonite.projectx.model.pageviews.DataAttributes;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
-import com.greenfox.kryptonite.projectx.model.pageviews.PageViewFormat;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewData;
 import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import java.util.ArrayList;
@@ -15,12 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 public class PageServiceTest {
 
+  private final int ITEMS_PER_PAGE = 5;
   private PageService pageService;
   private EventToDatabaseRepository mockRepo;
   private ArrayList<EventToDatabase> testList;
@@ -42,32 +42,33 @@ public class PageServiceTest {
     Page mockPage = mock(Page.class);
     Mockito.when(mockRepo.findAll(pageRequest)).thenReturn(mockPage);
     Mockito.when(mockPage.getContent()).thenReturn(testList);
-    assertEquals(testList, pageService.createListOfFilteredPageViews(pageRequest, null, null, null));
+    assertEquals(testList,
+        pageService.createListOfFilteredPageViews(pageRequest, null, null, null));
   }
 
   @Test
   public void createListOfFilteredPageViews_PageRequestAndMinGiven() throws Exception {
     PageRequest pageRequest = new PageRequest(3, 5);
-    assertEquals(pageService.filterPageviews(53,null, null),
+    assertEquals(pageService.filterPageviews(53, null, null),
         pageService.createListOfFilteredPageViews(pageRequest, 53, null, null));
   }
 
   @Test
   public void createListOfFilteredPageViews_MaxGiven() throws Exception {
-    assertEquals(pageService.filterPageviews(null,2, null),
+    assertEquals(pageService.filterPageviews(null, 2, null),
         pageService.createListOfFilteredPageViews(null, null, 2, null));
   }
 
   @Test
   public void createListOfFilteredPageViews_MaxAndMinGiven() throws Exception {
-    assertEquals(pageService.filterPageviews(2,10, null),
+    assertEquals(pageService.filterPageviews(2, 10, null),
         pageService.createListOfFilteredPageViews(null, 2, 10, null));
   }
 
   @Test
   public void createLinks() throws Exception {
     HttpServletRequest mockRequest = mock(HttpServletRequest.class);
-    PageRequest pageRequest = new PageRequest(2,5);
+    PageRequest pageRequest = new PageRequest(2, 5);
     Page mockPage = mock(Page.class);
     Mockito.when(mockRepo.findAll(pageRequest)).thenReturn(mockPage);
     Mockito.when(mockPage.getContent()).thenReturn(testList);
@@ -77,28 +78,38 @@ public class PageServiceTest {
     StringBuffer sb = new StringBuffer("test.com/test");
     Mockito.when(mockRequest.getRequestURL()).thenReturn(sb);
     Mockito.when(mockRequest.getQueryString()).thenReturn("page=3");
-    PageViewLinks pageViewLinks = new PageViewLinks("test.com/test?page=3", "test.com/test?page=4", "test.com/test?page=2", "test.com/test?page=5");
-    assertEquals(pageViewLinks.toString() ,pageService.createLinks(2, mockRequest, pageRequest).toString());
+    PageViewLinks pageViewLinks = new PageViewLinks("test.com/test?page=3", "test.com/test?page=4",
+        "test.com/test?page=2", "test.com/test?page=5");
+    assertEquals(pageViewLinks.toString(),
+        pageService.createLinks(2, mockRequest, pageRequest).toString());
   }
 
   @Test
   public void createPageViewDataList() throws Exception {
-    pageService.createPageViewDataList(testList, 1);
+    List<PageViewData> pageViewDataList = new ArrayList<>();
+    Integer id = 1;
+    for (int i = 0; i < testList.size(); i++) {
+      pageViewDataList.add(new PageViewData("pageviews", id,
+          new DataAttributes(testList.get(i).getPath(), testList.get(i).getCount())));
+      id++;
+    }
+    assertEquals(pageViewDataList.toString(),
+        pageService.createPageViewDataList(testList, 0).toString());
   }
 
   @Test
   public void setPageNumberTwo() throws Exception {
-    assertEquals(1,pageService.setPageNumber(2));
+    assertEquals(1, pageService.setPageNumber(2));
   }
 
   @Test
   public void setPageNumberNull() throws Exception {
-    assertEquals(0,pageService.setPageNumber(null));
+    assertEquals(0, pageService.setPageNumber(null));
   }
 
   @Test
   public void setPageNumberZero() throws Exception {
-    assertEquals(0,pageService.setPageNumber(0));
+    assertEquals(0, pageService.setPageNumber(0));
   }
 
   @Test
@@ -140,7 +151,8 @@ public class PageServiceTest {
     Page mockPage = mock(Page.class);
     Mockito.when(mockPage.hasNext()).thenReturn(false);
     PageViewLinks pageViewLinks = new PageViewLinks();
-    PageViewLinks expectedPageViewLinks = new PageViewLinks(null, null, null, "This is the last page");
+    PageViewLinks expectedPageViewLinks = new PageViewLinks(null, null, null,
+        "This is the last page");
     pageService.setNext(pageViewLinks, mockPage, 5, url);
     assertEquals(expectedPageViewLinks.getLast(), pageViewLinks.getLast());
   }
@@ -169,53 +181,68 @@ public class PageServiceTest {
 
   @Test
   public void filterPageviews_WithPath() throws Exception {
-    Mockito.when(mockRepo.findAllByPath("/main")).thenReturn(new ArrayList<>(Arrays.asList(new EventToDatabase("/main","pageviews", 0))));
-    assertEquals(new ArrayList<>(Arrays.asList(new EventToDatabase("/main","pageviews", 0))).toString(), pageService.filterPageviews(null, null, "/main").toString());
+    Mockito.when(mockRepo.findAllByPath("/main"))
+        .thenReturn(new ArrayList<>(Arrays.asList(new EventToDatabase("/main", "pageviews", 0))));
+    assertEquals(
+        new ArrayList<>(Arrays.asList(new EventToDatabase("/main", "pageviews", 0))).toString(),
+        pageService.filterPageviews(null, null, "/main").toString());
   }
 
   @Test
   public void filterPageviews_WithMin() throws Exception {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53), new EventToDatabase("/search", "pageview", 54)))).toString(), pageService.filterPageviews(52,null,null).toString());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53),
+        new EventToDatabase("/search", "pageview", 54)))).toString(),
+        pageService.filterPageviews(52, null, null).toString());
   }
 
   @Test
   public void filterPageviews_WithMax() throws Exception {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/main", "pageview", 0), new EventToDatabase("/search", "pageview", 1)))).toString(), pageService.filterPageviews(null,2, null).toString());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/main", "pageview", 0),
+        new EventToDatabase("/search", "pageview", 1)))).toString(),
+        pageService.filterPageviews(null, 2, null).toString());
   }
 
   @Test
   public void filterPageviews_WithMaxAndMax() throws Exception {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6), new EventToDatabase("/search", "pageview", 7)))).toString(), pageService.filterPageviews(5,8, null).toString());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6),
+        new EventToDatabase("/search", "pageview", 7)))).toString(),
+        pageService.filterPageviews(5, 8, null).toString());
   }
 
   @Test
   public void filterPageviews_WithNulls() throws Exception {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(testList, pageService.filterPageviews(null,null, null));
+    assertEquals(testList, pageService.filterPageviews(null, null, null));
   }
 
   @Test
   public void testFilterPageviewsByCountBothParam() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(2, pageService.filterPageviewsByCount(5,8).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6), new EventToDatabase("/search", "pageview", 7)))).toString(), pageService.filterPageviewsByCount(5,8).toString());
+    assertEquals(2, pageService.filterPageviewsByCount(5, 8).size());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 6),
+        new EventToDatabase("/search", "pageview", 7)))).toString(),
+        pageService.filterPageviewsByCount(5, 8).toString());
   }
 
   @Test
   public void tesFilterPageviewsByCountWithMin() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(2, pageService.filterPageviewsByCount(52,null).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53), new EventToDatabase("/search", "pageview", 54)))).toString(), pageService.filterPageviewsByCount(52,null).toString());
+    assertEquals(2, pageService.filterPageviewsByCount(52, null).size());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/search", "pageview", 53),
+        new EventToDatabase("/search", "pageview", 54)))).toString(),
+        pageService.filterPageviewsByCount(52, null).toString());
   }
 
   @Test
   public void testFilterPageviewsByCountWithMax() {
     Mockito.when(mockRepo.findAllByOrderByIdAsc()).thenReturn(testList);
-    assertEquals(2, pageService.filterPageviewsByCount(null,2).size());
-    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/main", "pageview", 0), new EventToDatabase("/search", "pageview", 1)))).toString(), pageService.filterPageviewsByCount(null,2).toString());
+    assertEquals(2, pageService.filterPageviewsByCount(null, 2).size());
+    assertEquals(new ArrayList<>((Arrays.asList(new EventToDatabase("/main", "pageview", 0),
+        new EventToDatabase("/search", "pageview", 1)))).toString(),
+        pageService.filterPageviewsByCount(null, 2).toString());
   }
 
 }
