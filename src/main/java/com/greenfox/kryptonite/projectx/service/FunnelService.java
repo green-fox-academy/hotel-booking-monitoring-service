@@ -93,7 +93,7 @@ public class FunnelService {
   }
 
   public FunnelStep createNewFunnelStep(long id, List<StepData> stepData) {
-    return new FunnelStep(createLink(id, i -> new PageViewLinks(url + id + "/relationships/steps", url + id + "/steps") ), stepData);
+    return new FunnelStep(createLink(id, i -> new PageViewLinks(url + i + "/relationships/steps", url + i + "/steps") ), stepData);
   }
 
   public StepAttributes createStepAttributes(int i, List<FunnelEvent> events, int percent) {

@@ -10,6 +10,7 @@ import com.greenfox.kryptonite.projectx.model.funnels.StepAttributes;
 import com.greenfox.kryptonite.projectx.model.funnels.StepData;
 import com.greenfox.kryptonite.projectx.model.funnels.Steps;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
+import com.greenfox.kryptonite.projectx.model.pageviews.PageViewLinks;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
 import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
@@ -129,13 +130,13 @@ public class FunnelServiceTest {
   @Test
   public void testCreateSelfLink() {
     String expected = "PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/5, next=null, prev=null, last=null, related=null)";
-    assertEquals(expected, funnelService.createSelfLink(5L).toString());
+    assertEquals(expected, funnelService.createLink(5L, i -> new PageViewLinks(url + i)).toString());
   }
 
   @Test
   public void testCreateRelatedLink() {
     String expected = "PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/5/relationships/steps, next=null, prev=null, last=null, related=https://greenfox-kryptonite.herokuapp.com/api/funnels/5/steps)";
-    assertEquals(expected, funnelService.createRelatedLink(5L).toString());
+    assertEquals(expected, funnelService.createLink(5L, i -> new PageViewLinks(url + i + "/relationships/steps", url + i + "/steps")).toString());
   }
 
   @Test
