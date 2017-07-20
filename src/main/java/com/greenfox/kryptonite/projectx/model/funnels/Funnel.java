@@ -18,6 +18,7 @@ public class Funnel {
 
   @Id
   @GeneratedValue (strategy = GenerationType.AUTO)
+  @Column(name = "id_funnel")
   private long id;
   @OneToMany(mappedBy = "funnel", cascade = CascadeType.ALL)
   private List<FunnelEvent> events;
