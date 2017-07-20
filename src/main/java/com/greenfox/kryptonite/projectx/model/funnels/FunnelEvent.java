@@ -19,8 +19,8 @@ public class FunnelEvent implements Serializable {
   private long id;
   private String path;
   private int count;
-  @ManyToOne
-  @JoinColumn (name = "id_funnel")
+  @ManyToOne (fetch = FetchType.LAZY)
+  @JoinColumn (name = "funnelid")
   private Funnel funnel;
 
   public FunnelEvent(String path, int count, Funnel funnel) {

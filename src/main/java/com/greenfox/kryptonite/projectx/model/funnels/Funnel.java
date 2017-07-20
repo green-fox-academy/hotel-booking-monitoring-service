@@ -18,9 +18,9 @@ import java.util.List;
 public class Funnel implements Serializable{
 
   @Id
-  @Column(name = "id_funnel")
+  @Column(name = "funnelid")
   @GeneratedValue (strategy = GenerationType.AUTO)
   private long id;
-  @OneToMany(mappedBy = "funnel", cascade = CascadeType.ALL)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "funnel", cascade = CascadeType.ALL)
   private List<FunnelEvent> events;
 }
