@@ -64,7 +64,7 @@ public class FunnelService {
   }
 
   public FunnelFormat returnFunnelJson(long id, FunnelRepository funnelRepository) {
-    List<FunnelEvent> funnelEvents = getFunnelEvents(id, funnelRepository);
+    List<FunnelEvent> funnelEvents = new ArrayList<>();
     List<Steps> included = new ArrayList<>();
     List<StepData> stepData = new ArrayList<>();
     createStepData(id, funnelRepository, funnelEvents, included, stepData);
