@@ -20,7 +20,7 @@ public class FunnelEvent implements Serializable {
   private String path;
   private int count;
   @ManyToOne (fetch = FetchType.LAZY)
-  @JoinColumn (name = "funnelid")
+  @JoinColumn (name = "funnelid", nullable = false)
   private Funnel funnel;
 
   public FunnelEvent(String path, int count, Funnel funnel) {
