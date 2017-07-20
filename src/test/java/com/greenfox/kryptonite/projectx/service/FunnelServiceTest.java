@@ -5,7 +5,9 @@ import static org.mockito.Mockito.mock;
 
 import com.greenfox.kryptonite.projectx.model.funnels.Funnel;
 import com.greenfox.kryptonite.projectx.model.funnels.FunnelEvent;
+import com.greenfox.kryptonite.projectx.model.funnels.FunnelStep;
 import com.greenfox.kryptonite.projectx.model.funnels.StepAttributes;
+import com.greenfox.kryptonite.projectx.model.funnels.StepData;
 import com.greenfox.kryptonite.projectx.model.funnels.Steps;
 import com.greenfox.kryptonite.projectx.model.pageviews.EventToDatabase;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
@@ -25,7 +27,7 @@ public class FunnelServiceTest {
   private List<Funnel> testList = new ArrayList<>();
   private List<Funnel> zeroList = new ArrayList<>();
   private FunnelService funnelService = new FunnelService();
-
+  private String url = "https://greenfox-kryptonite.herokuapp.com/api/funnels/";
 
   @Before
   public void setUpTestEnvironment() {
@@ -124,5 +126,47 @@ public class FunnelServiceTest {
     assertEquals(5000, funnelService.countPercent(stepList, 5));
   }
 
+  @Test
+  public void testCreateSelfLink() {
+    String expected = "PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/5, next=null, prev=null, last=null, related=null)";
+    assertEquals(expected, funnelService.createSelfLink(5L).toString());
+  }
 
+  @Test
+  public void testCreateRelatedLink() {
+    String expected = "PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/5/relationships/steps, next=null, prev=null, last=null, related=https://greenfox-kryptonite.herokuapp.com/api/funnels/5/steps)";
+    assertEquals(expected, funnelService.createRelatedLink(5L).toString());
+  }
+
+  @Test
+  public void testCreateNewFunnelStep() {
+    String expected = "FunnelStep(pageViewLinks=PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/5/relationships/steps, next=null, prev=null, last=null, related=https://greenfox-kryptonite.herokuapp.com/api/funnels/5/steps), data=[StepData(type=steps, id=0), StepData(type=steps, id=1), StepData(type=steps, id=2), StepData(type=steps, id=3), StepData(type=steps, id=4)])" ;
+    List<StepData> stepDataList = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      stepDataList.add(new StepData(i));
+    }
+    assertEquals(expected, funnelService.createNewFunnelStep(5L, stepDataList).toString());
+  }
+
+  @Test
+  public void testCreateStepAttributes() {
+    String expected = "StepAttributes(percent=125)";
+    List<FunnelEvent> funnelEventList = new ArrayList<>();
+    for (int i = 0; i < 5; i++) {
+      funnelEventList.add(new FunnelEvent("testpath", 123, new Funnel()));
+    }
+    assertEquals(expected, funnelService.createStepAttributes(1, funnelEventList, 125).toString());
+  }
+
+  @Test
+  public void testReturnFunnelJSON () {
+    String expected = "FunnelFormat(pageViewLinks=PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/1, next=null, prev=null, last=null, related=null), data=FunnelData(type=funnels, id=1, relationships=Relationships(funnelStep=FunnelStep(pageViewLinks=PageViewLinks(self=https://greenfox-kryptonite.herokuapp.com/api/funnels/1/relationships/steps, next=null, prev=null, last=null, related=https://greenfox-kryptonite.herokuapp.com/api/funnels/1/steps), data=[])), included=[]))";
+     List<FunnelEvent> funnelEventList = new ArrayList<>();
+    for (int i = 0; i < 4; i++) {
+      funnelEventList.add(new FunnelEvent("testpath", 5, new Funnel()));
+    }
+    Funnel funnel = new Funnel(1L, funnelEventList);
+    Mockito.when(mockFunnelRepository.findOne(1L)).thenReturn(funnel);
+    assertEquals(expected, funnelService.returnFunnelJson(1L, mockFunnelRepository).toString());
+  }
 }
