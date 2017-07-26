@@ -56,7 +56,7 @@ public class IOService {
     return runTimeChecker;
   }
 
-  public static HotelServices addContactsToWrite() {
+  public HotelServices addContactsToWrite() {
     HotelService resize = new HotelService("https://hotel-booking-resize-service.herokuapp.com", "berta@greenfox.com");
     HotelService notification = new HotelService("https://booking-notification-service.herokuapp.com", "tojasmamusza@greenfox.com");
     HotelService userSerice = new HotelService("https://hotel-booking-user-service.herokuapp.com", "imi@greenfox.com");

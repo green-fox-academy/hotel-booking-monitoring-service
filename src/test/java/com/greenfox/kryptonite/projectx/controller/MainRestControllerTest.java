@@ -6,7 +6,10 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.greenfox.kryptonite.projectx.model.Timestamp;
+import com.greenfox.kryptonite.projectx.model.funnels.Funnel;
 import com.greenfox.kryptonite.projectx.repository.EventToDatabaseRepository;
+import com.greenfox.kryptonite.projectx.repository.FunnelEventRepository;
+import com.greenfox.kryptonite.projectx.repository.FunnelRepository;
 import com.greenfox.kryptonite.projectx.service.*;
 import com.greenfox.kryptonite.projectx.repository.HeartbeatRepository;
 
@@ -14,6 +17,7 @@ import java.nio.charset.Charset;
 
 import com.greenfox.kryptonite.projectx.HotelMonitoringApplication;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.Before;
@@ -24,6 +28,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.web.JsonPath;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -61,10 +66,17 @@ public class MainRestControllerTest {
   @Autowired
   private EventToDatabaseRepository eventToDatabaseRepository;
 
+  @Autowired
+  private FunnelRepository funnelRepository;
+
+  @Autowired
+  private FunnelEventRepository funnelEventRepository;
+
   @Before
   public void setup() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
     this.heartbeatRepositoryMock = Mockito.mock(HeartbeatRepository.class);
+    this.funnelRepository = Mockito.mock(FunnelRepository.class);
     this.service = new MonitoringService();
   }
 
@@ -119,7 +131,6 @@ public class MainRestControllerTest {
     Timestamp time = new Timestamp();
     String date = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss").format(new Date());
     assertEquals(date, time.getDate());
-    assertTrue(isItWorking);
   }
 
   @Test
@@ -129,15 +140,32 @@ public class MainRestControllerTest {
     ObjectMapper mapper = new ObjectMapper();
     String jsonInput = mapper.writeValueAsString(IOService.readFiles(DATAPATH));
     mockMvc.perform(get("/monitor")
-            .contentType(contentType)
-            .content(jsonInput))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(contentType));
+        .contentType(contentType)
+        .content(jsonInput))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType));
   }
 
   @Test
   public void testPageViewsEndPoint() throws Exception {
-    mockMvc.perform(get("/pageviews"))
-        .andExpect(status().isOk());
+    mockMvc.perform(get("/pageviews")
+        .contentType(contentType))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType));
+  }
+
+  @Test
+  public void testPaginationEndPoint() throws Exception {
+    mockMvc.perform(get("/pageviews?page=1")
+        .contentType(contentType))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(contentType));
+  }
+
+  @Test
+  public void testFunnelEndpoint() throws Exception {
+    Mockito.when(funnelRepository.save(new Funnel())).thenReturn(new Funnel());
+    mockMvc.perform(post("/api/funnels"))
+            .andExpect(status().isOk());
   }
 }
